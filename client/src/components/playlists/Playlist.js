@@ -1,26 +1,26 @@
 import React from 'react';
 import TrackAlbumRes from '../../TrackAlbumRes';
 
-const Playlist = ({ setIsClicked, chooseTrack, playList }) => {
+const Playlist = ({ setIsClicked, chooseTrack, playList, detail }) => {
   return (
     <>
       <div
-        className='margin-le'
         style={{
           backgroundColor: 'rgba(0,0,0,0.8)',
-          width: 'calc(100% - 40px)',
+          width: '100%',
           padding: '0 100px',
           paddingTop: '40px',
           position: 'fixed',
           top: '0px',
+          left: '0',
           color: 'white',
-          marginLeft: '133px',
+          zIndex: '999',
         }}
       >
         <div
           style={{
             width: '100%',
-            height: '88vh',
+            height: '100vh',
             position: 'sticky',
             bottom: '0px',
             overflow: 'auto',
@@ -45,12 +45,13 @@ const Playlist = ({ setIsClicked, chooseTrack, playList }) => {
                 alignItems: 'center',
               }}
             >
-              <img src={playList?.items[3].album.images[1].url} alt='' />
+              <img src={detail?.images[0].url} alt='' width='250px' />
 
               <div style={{ marginLeft: '30px' }}>
                 <p>playlist</p>
-                <h2 style={{ fontSize: '60px' }}>{playList.items[3].name}</h2>
-                <p>user 7 songs, 34 minutes 26 seconds</p>
+                <h2 style={{ fontSize: '60px' }}>{detail.name}</h2>
+                <p>{detail.description}</p>
+                <h4>{detail.tracks.total} songs</h4>
               </div>
             </div>
             <div>
@@ -88,15 +89,16 @@ const Playlist = ({ setIsClicked, chooseTrack, playList }) => {
                   time
                 </div>
               </div>
-              {playList.items?.map((track) => {
-                return (
-                  <TrackAlbumRes
-                    track={track}
-                    key={track.uri}
-                    chooseTrack={chooseTrack}
-                  />
-                );
-              })}
+              {playList &&
+                playList.items?.map((track, i) => {
+                  return (
+                    <TrackAlbumRes
+                      track={track}
+                      key={i}
+                      chooseTrack={chooseTrack}
+                    />
+                  );
+                })}
             </div>
           </div>
         </div>

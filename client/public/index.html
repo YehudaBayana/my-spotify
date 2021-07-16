@@ -24,6 +24,7 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
+
     <title>React App</title>
   </head>
   <body>
@@ -39,5 +40,18 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
+    <script src="http://schauhan.in/Examples/ecommerce_product_slider/jquery-3.5.1.js"></script>
+    <script src="http://schauhan.in/Examples/ecommerce_product_slider/lightslider.js"></script>
+    <script>
+      $(document).ready(function () {
+        $('#autoWidth').lightSlider({
+          autoWidth: true,
+          loop: true,
+          onSliderLoad: function () {
+            $('#autoWidth').removeClass('cS-hidden');
+          },
+        });
+      });
+    </script>
   </body>
 </html>

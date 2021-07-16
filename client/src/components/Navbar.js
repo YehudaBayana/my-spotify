@@ -1,7 +1,6 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 import { code } from '../App';
-import '../index.css';
 
 const AUTH_URL =
   'https://accounts.spotify.com/authorize?client_id=057cdd5b992444f2858403e816dcae20&response_type=code&redirect_uri=http://localhost:3000&scope=streaming%20user-read-email%20user-read-private%20user-library-read%20user-library-modify%20user-read-playback-state%20user-modify-playback-state';
@@ -51,7 +50,7 @@ const Img = styled.img`
 `;
 const Navbar = () => {
   return (
-    <div className='margin-le'>
+    <div>
       <MyNavbar>
         <h2>Yehuda music</h2>
         {code ? <h3>user</h3> : <Button href={AUTH_URL}>try it free</Button>}

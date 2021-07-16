@@ -18,25 +18,24 @@ export default function Dashboard({ code }) {
   const [searchResults, setSearchResults] = useState([]);
   const [playingTrack, setPlayingTrack] = useState();
   const [isClicked, setIsClicked] = useState(false);
-  const [isClicked1, setIsClicked1] = useState(false);
-  const [isClicked2, setIsClicked2] = useState(false);
-  const [isClicked3, setIsClicked3] = useState(false);
   const [lyrics, setLyrics] = useState('');
   const [playList, setPlayList] = useState();
-  const [playList1, setPlayList1] = useState();
-  const [playList2, setPlayList2] = useState();
-  const [playList3, setPlayList3] = useState();
-  const [israeliPlaylists, setIsraeliPlaylists] = useState();
+  const [all, setAll] = useState();
+  const [allUs, setAllUs] = useState();
+  const [detail, setDetail] = useState();
 
-  function AlbumImg({ imgUrl, setIsClicked }) {
+  function AlbumImg({ imgUrl, setIsClicked, getOne }) {
     return (
       <>
         <img
-          onClick={() => setIsClicked((oldvaue) => !oldvaue)}
+          onClick={() => {
+            getOne();
+            setIsClicked((oldvaue) => !oldvaue);
+          }}
           src={imgUrl}
           alt=''
-          width='20%'
-          style={{ margin: '0 15px' }}
+          // width='260px'
+          // style={{ margin: '0 15px' }}
         />
       </>
     );
@@ -73,26 +72,6 @@ export default function Dashboard({ code }) {
     if (!search) return setSearchResults([]);
     if (!accessToken) return;
 
-    // spotifyApi.getArtistAlbums('50co4Is1HCEo8bhOyUWKpn').then(
-    //   function (data) {
-    //     console.log('Artist albums', data.body.items);
-    //     spotifyApi
-    //       .getAlbumTracks(data.body.items[0].id, { limit: 20, offset: 1 })
-    //       .then(
-    //         function (data) {
-    //           console.log(data.body);
-    //           setPlayList3((old) => [...old, data.body]);
-    //         },
-    //         function (err) {
-    //           console.log('Something went wrong!', err);
-    //         }
-    //       );
-    //   },
-    //   function (err) {
-    //     console.error(err);
-    //   }
-    // );
-
     let cancel = false;
     spotifyApi.searchTracks(search).then((res) => {
       if (cancel) return;
@@ -121,155 +100,76 @@ export default function Dashboard({ code }) {
 
   let israelis = [];
 
-  function getSome() {
-    // spotifyApi.getPlaylist('37i9dQZF1E38R5RgAFSVxR').then(
-    //   function (data) {
-    //     console.log('Some information about this playlist', data.body);
-    //   },
-    //   function (err) {
-    //     console.log('Something went wrong!', err);
-    //   }
-    // );
-
+  function getOne(id) {
+    let one;
+    if (all.find((item) => item.id === id)) {
+      one = all.find((item) => item.id === id);
+    } else {
+      one = allUs.find((item) => item.id === id);
+    }
+    setDetail(one);
     spotifyApi
-      .getFeaturedPlaylists({
-        limit: 20,
+      .getPlaylistTracks(one.id, {
         offset: 1,
-        country: 'IL',
-        timestamp: '2020-10-23T09:00:00',
+        limit: 100,
+        fields: 'items',
       })
       .then(
-        function (res) {
-          console.log(res.body);
-          res.body.playlists.items.forEach((iterator) => {
-            spotifyApi
-              .getPlaylistTracks(iterator.id, {
-                offset: 1,
-                limit: 50,
-                fields: 'items',
-              })
-              .then(
-                function (data) {
-                  console.log('The playlist contains these tracks', data.body);
-                  israelis.push(
-                    data.body.items.map((item) => {
-                      return item.track;
-                    })
-                  );
-                  console.log(israelis);
-                  setIsraeliPlaylists({ items: israelis[0] });
-                },
-                function (err) {
-                  console.log('Something went wrong!', err);
-                }
-              );
+        function (data) {
+          console.log('The playlist contains these tracks', data.body);
+          setPlayList({
+            items: data.body.items.map((item) => {
+              return item.track;
+            }),
           });
+          // setIsraeliPlaylists({ items: israelis[0] });
         },
         function (err) {
           console.log('Something went wrong!', err);
         }
       );
-    // console.log(israelis);
-    (async () => {
-      const me = await spotifyApi.getMe();
-      // console.log(me.body);
-      getUserPlaylists(me.body.id);
-    })().catch((e) => {
-      console.error(e);
-    });
+    console.log(playList);
   }
 
-  let playlists = [];
-  //GET MY PLAYLISTS
-  async function getUserPlaylists(userName) {
-    const data = await spotifyApi.getUserPlaylists(userName);
-
-    // console.log('---------------+++++++++++++++++++++++++');
-    // console.log(data.body.items);
-
-    for (let playlist of data.body.items) {
-      // console.log(playlist.name + ' ' + playlist.id);
-      let items = await getPlaylistTracks(playlist.id, playlist.name);
-      const tracksJSON = { items };
-      playlists.push(tracksJSON);
-      // console.log(tracksJSON);
-    }
-    setPlayList2(playlists[0]);
-    setPlayList1(playlists[1]);
-    setPlayList(playlists[2]);
-    console.log(playlists);
-    // console.log(israeliPlaylists);
+  function getSome() {
+    spotifyApi
+      .getFeaturedPlaylists({
+        limit: 20,
+        offset: 1,
+        country: 'IL',
+        timestamp: new Date().toISOString(),
+      })
+      .then(
+        function (res) {
+          console.log(res.body);
+          setAll(res.body.playlists.items);
+        },
+        function (err) {
+          console.log('Something went wrong!', err);
+        }
+      );
+    spotifyApi
+      .getFeaturedPlaylists({
+        limit: 20,
+        offset: 1,
+        country: 'US',
+        timestamp: new Date().toISOString(),
+      })
+      .then(
+        function (res) {
+          console.log(res.body);
+          setAllUs(res.body.playlists.items);
+        },
+        function (err) {
+          console.log('Something went wrong!', err);
+        }
+      );
   }
-
-  //GET SONGS FROM PLAYLIST
-  async function getPlaylistTracks(playlistId, playlistName) {
-    const data = await spotifyApi.getPlaylistTracks(playlistId, {
-      offset: 1,
-      limit: 100,
-      fields: 'items',
-    });
-    let tracks = [];
-
-    for (let track_obj of data.body.items) {
-      const track = track_obj.track;
-      tracks.push(track);
-    }
-
-    console.log('---------------+++++++++++++++++++++++++');
-    return tracks;
-  }
-  // function getSome1() {
-  //   (async () => {
-  //     const me = await spotifyApi.getMe();
-  //     // console.log(me.body);
-  //     getUserPlaylists1();
-  //   })().catch((e) => {
-  //     console.error(e);
-  //   });
-  // }
-
-  // //GET MY PLAYLISTS
-  // async function getUserPlaylists1() {
-  //   const data = await spotifyApi.getArtistAlbums('1HY2Jd0NmPuamShAr6KMms');
-  //   console.log('---------------+++++++++++++++++++++++++');
-  //   console.log(data.body['items']);
-
-  //   // for (let playlist of data.body.items) {
-  //   //   // console.log(playlist.name + ' ' + playlist.id);
-  //   //   let tracks = await getPlaylistTracks(playlist.id, playlist.name);
-  //   //   const tracksJSON = { tracks };
-  //   //   // playlists.push(tracksJSON);
-  //   //   console.log(tracksJSON);
-  //   // }
-  //   // setPlayList2(playlists[0]);
-  //   // setPlayList1(playlists[1]);
-  //   // setPlayList(playlists[2]);
-  //   // console.log(playlists);
-  // }
-
-  // //GET SONGS FROM PLAYLIST
-  // async function getPlaylistTracks(playlistId, playlistName) {
-  //   const data = await spotifyApi.getPlaylistTracks(playlistId, {
-  //     offset: 1,
-  //     limit: 100,
-  //     fields: 'items',
-  //   });
-  //   let tracks = [];
-
-  //   for (let track_obj of data.body.items) {
-  //     const track = track_obj.track;
-  //     tracks.push(track);
-  //   }
-
-  //   console.log('---------------+++++++++++++++++++++++++');
-  //   return tracks;
-  // }
 
   return (
     <>
-      {console.log(israelis)}
       <div
-        className='d-flex flex-column py-2 margin-le'
+        className='d-flex flex-column py-2'
         style={{ height: 'fit-content' }}
       >
         <div style={{ maxWidth: '1320px', margin: '0 auto' }}>
@@ -287,7 +187,7 @@ export default function Dashboard({ code }) {
         </div>
       </div>
       <div
-        className='flex-grow-1 my-2 margin-le'
+        className='flex-grow-1 my-2'
         style={{ overflowY: 'auto', height: 'fit-content' }}
       >
         {searchResults.map((track) => (
@@ -298,81 +198,95 @@ export default function Dashboard({ code }) {
           />
         ))}
       </div>
-      <div style={{ maxWidth: '1320px', margin: '0 auto' }}>
-        <div className='margin-le'>
-          <h2>recommendation: </h2>
-          <button
-            onClick={() => {
-              getSome();
-            }}
-          >
-            fetch all music
-          </button>
-        </div>
-      </div>
-      <div style={{ maxWidth: '1320px', margin: '0 auto' }}>
-        <div
-          className='d-flex flex-row py-2 justify-content-start align-items-start margin-le'
-          style={{ height: 'calc(100vh - 123px)' }}
+      <div>
+        <h2>recommendation: </h2>
+        <button
+          onClick={() => {
+            getSome();
+          }}
         >
-          <AlbumImg
-            setIsClicked={setIsClicked}
-            imgUrl={
-              playList?.items[3].album.images[1].url
-              // playList.items[3].album.images[1].url
-            }
-          />
-          <AlbumImg
-            setIsClicked={setIsClicked1}
-            imgUrl={playList1?.items[3].album.images[1].url}
-          />
-          <AlbumImg
-            setIsClicked={setIsClicked2}
-            imgUrl={playList2?.items[3].album.images[1].url}
-          />
-          <AlbumImg
-            setIsClicked={setIsClicked3}
-            imgUrl={israeliPlaylists?.items[3].album.images[1].url}
-          />
-        </div>
+          fetch all music
+        </button>
       </div>
+      <section class='slider'>
+        <ul id='autoWidth' class='cs-hidden'>
+          {allUs?.map((item) => {
+            return (
+              <>
+                <li class='item-a'>
+                  <div class='box'>
+                    <div class='slide-img'>
+                      <AlbumImg
+                        setIsClicked={setIsClicked}
+                        imgUrl={item.images[0].url}
+                        getOne={() => getOne(item.id)}
+                      />
+                      <div class='overlay'>
+                        <button
+                          onClick={() => {
+                            setIsClicked((oldVal) => !oldVal);
+                            return getOne(item.id);
+                          }}
+                          class='open-btn'
+                        >
+                          open playlist
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              </>
+            );
+          })}
+          {all?.map((item) => {
+            return (
+              <>
+                <li class='item-a'>
+                  <div class='box'>
+                    <div class='slide-img'>
+                      <AlbumImg
+                        setIsClicked={setIsClicked}
+                        imgUrl={item.images[0].url}
+                        getOne={() => getOne(item.id)}
+                      />
+                      <div class='overlay'>
+                        <button
+                          onClick={() => {
+                            setIsClicked((oldVal) => !oldVal);
+                            return getOne(item.id);
+                          }}
+                          class='open-btn'
+                        >
+                          open playlist
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              </>
+            );
+          })}
+        </ul>
+      </section>
 
       {isClicked && (
         <Playlist
           setIsClicked={setIsClicked}
           chooseTrack={chooseTrack}
           playList={playList}
-        />
-      )}
-      {isClicked1 && (
-        <Playlist
-          setIsClicked={setIsClicked1}
-          chooseTrack={chooseTrack}
-          playList={playList1}
-        />
-      )}
-      {isClicked2 && (
-        <Playlist
-          setIsClicked={setIsClicked2}
-          chooseTrack={chooseTrack}
-          playList={playList2}
-        />
-      )}
-      {isClicked3 && (
-        <Playlist
-          setIsClicked={setIsClicked3}
-          chooseTrack={chooseTrack}
-          playList={israeliPlaylists}
+          detail={detail}
         />
       )}
       <div
         style={{
-          position: 'sticky',
+          position: 'fixed',
           bottom: '0px',
-          width: '100%',
+          width: '71%',
+          left: '14.5%',
+          zIndex: '9999',
         }}
       >
-        <div className='margin-le'>
+        <div>
           <Player accessToken={accessToken} trackUri={playingTrack?.uri} />
         </div>
       </div>
