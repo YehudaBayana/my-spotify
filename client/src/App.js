@@ -1,6 +1,9 @@
 import Login from './Login';
 import Dashboard from './Dashboard';
 import styled from 'styled-components';
+import Header from './components/Header';
+import HeroSection from './components/HeroSection';
+import { BrowserRouter as Router } from 'react-router-dom';
 
 export const code = new URLSearchParams(window.location.search).get('code');
 
@@ -13,10 +16,21 @@ const Container = styled.div`
 function App() {
   return (
     <>
-      <Container>
+      <Router>
         {/* <Navbar /> */}
-        {code ? <Dashboard code={code} /> : <Login />}
-      </Container>
+        {code ? (
+          <Container>
+            <Dashboard code={code} />
+          </Container>
+        ) : (
+          <>
+            {' '}
+            <Header />
+            {/* <Login /> */}
+            <HeroSection />
+          </>
+        )}
+      </Router>
     </>
   );
 }

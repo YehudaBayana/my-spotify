@@ -7,7 +7,7 @@ import axios from 'axios';
 import Playlist from './components/playlists/Playlist';
 import './index.css';
 import Navbar from './components/Navbar';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import { Container, Card, Row, Col } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import Slider from 'react-slick';
@@ -249,30 +249,29 @@ export default function Dashboard({ code }) {
 
   return (
     <>
-      <Router>
-        <Navbar search={search} setSearch={setSearch} />
-        <Switch>
-          <Route exact path='/'>
-            <div
-              className='flex-grow-1'
-              style={{
-                overflowY: 'auto',
-                height: 'fit-content',
-                marginTop: '55px',
-              }}
-            >
-              {searchResults.map((track) => (
-                <TrackSearchResult
-                  track={track}
-                  key={track.uri}
-                  chooseTrack={chooseTrack}
-                />
-              ))}
-            </div>
-            {/* <div style={{ marginTop: '55px' }}>
+      <Navbar search={search} setSearch={setSearch} />
+      <Switch>
+        <Route exact path='/'>
+          <div
+            className='flex-grow-1'
+            style={{
+              overflowY: 'auto',
+              height: 'fit-content',
+              marginTop: '55px',
+            }}
+          >
+            {searchResults.map((track) => (
+              <TrackSearchResult
+                track={track}
+                key={track.uri}
+                chooseTrack={chooseTrack}
+              />
+            ))}
+          </div>
+          {/* <div style={{ marginTop: '55px' }}>
               <h2>recommendation: </h2>
             </div> */}
-            {/* <section class='slider'>
+          {/* <section class='slider'>
               <ul id='autoWidth'>
                 {allUs?.map((item) => {
                   return (
@@ -332,177 +331,176 @@ export default function Dashboard({ code }) {
                 })}
               </ul>
             </section> */}
-            {/* carousel 2 */}
-            <Container style={{ margin: '40px 0' }}>
-              <h2>recommendation</h2>
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  margin: '10px auto',
-                  // padding: '0 20px',
-                }}
-              >
-                <p>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Voluptate, quasi!
-                </p>
-                <Link
-                  to='/'
-                  style={{
-                    backgroundColor: '#6fc1ff',
-                    height: 'fit-content',
-                    padding: ' 6px 24px',
-                    borderRadius: '5px',
-                    boxShadow: '1px 1px 15px lightgrey',
-                  }}
-                >
-                  see all
-                </Link>
-              </div>
-              <Slider {...settings}>
-                {allUs?.map(function (item) {
-                  return (
-                    <>
-                      <Link to='/'>
-                        <Col>
-                          <Card
-                            style={{
-                              display: 'flex',
-                              justifyContent: 'center',
-                              alignItems: 'center',
-                              flexDirection: 'column',
-                            }}
-                          >
-                            <div style={{ width: '200px' }}>
-                              <AlbumImg
-                                setIsClicked={setIsClicked}
-                                imgUrl={item.images[0].url}
-                                getOne={() => getOne(item.id)}
-                              />
-                            </div>
-                            <Card.Body>
-                              <span>{item.name}</span>
-                            </Card.Body>
-                          </Card>
-                        </Col>
-                      </Link>
-                    </>
-                  );
-                })}
-              </Slider>
-            </Container>
-            <hr />
-            <Container style={{ margin: '40px 0' }}>
-              <h2>Israel's top tracks</h2>
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  margin: '10px auto',
-                }}
-              >
-                <p>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Maiores, veritatis!
-                </p>
-                <Link
-                  to='/'
-                  style={{
-                    backgroundColor: '#6fc1ff',
-                    height: 'fit-content',
-                    padding: ' 6px 24px',
-                    borderRadius: '5px',
-                    boxShadow: '1px 1px 15px lightgrey',
-                  }}
-                >
-                  see all
-                </Link>
-              </div>
-              <Slider {...settings}>
-                {all?.map(function (item) {
-                  return (
-                    <>
-                      <Link to='/'>
-                        <Col>
-                          <Card
-                            style={{
-                              display: 'flex',
-                              justifyContent: 'center',
-                              alignItems: 'center',
-                              flexDirection: 'column',
-                            }}
-                          >
-                            <div style={{ width: '200px' }}>
-                              <AlbumImg
-                                setIsClicked={setIsClicked}
-                                imgUrl={item.images[0].url}
-                                getOne={() => getOne(item.id)}
-                              />
-                            </div>
-                            <Card.Body>
-                              <span>{item.name}</span>
-                            </Card.Body>
-                          </Card>
-                        </Col>
-                      </Link>
-                    </>
-                  );
-                })}
-              </Slider>
-            </Container>
-            {/* carousel 2 end */}
-
-            {/* gallery */}
-            <article className='flow'>
-              <h1>playlists</h1>
+          {/* carousel 2 */}
+          <Container style={{ margin: '40px 0' }}>
+            <h2>recommendation</h2>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                margin: '10px auto',
+                // padding: '0 20px',
+              }}
+            >
               <p>
                 Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Consectetur, recusandae nemo earum tempora quos ratione
-                asperiores illo fuga in officiis.
+                Voluptate, quasi!
               </p>
-              <div className='team'>
-                <ul className='auto-grid' role='list'>
-                  {all?.map((item) => {
-                    return (
-                      <li
-                        onClick={() => {
-                          setIsClicked((oldVal) => !oldVal);
-                          return getOne(item.id);
-                        }}
-                      >
-                        <a className='profile'>
-                          {/* <h5 className='profile__name'>{item.description}</h5> */}
-                          <p>{item.name}</p>
-                          <AlbumImg
-                            setIsClicked={setIsClicked}
-                            imgUrl={item.images[0].url}
-                            getOne={() => getOne(item.id)}
-                          />
-                        </a>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
-            </article>
-            {/* gallery end*/}
+              <Link
+                to='/'
+                style={{
+                  backgroundColor: '#6fc1ff',
+                  height: 'fit-content',
+                  padding: ' 6px 24px',
+                  borderRadius: '5px',
+                  boxShadow: '1px 1px 15px lightgrey',
+                }}
+              >
+                see all
+              </Link>
+            </div>
+            <Slider {...settings}>
+              {allUs?.map(function (item) {
+                return (
+                  <>
+                    <Link to='/'>
+                      <Col>
+                        <Card
+                          style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            flexDirection: 'column',
+                          }}
+                        >
+                          <div style={{ width: '200px' }}>
+                            <AlbumImg
+                              setIsClicked={setIsClicked}
+                              imgUrl={item.images[0].url}
+                              getOne={() => getOne(item.id)}
+                            />
+                          </div>
+                          <Card.Body>
+                            <span>{item.name}</span>
+                          </Card.Body>
+                        </Card>
+                      </Col>
+                    </Link>
+                  </>
+                );
+              })}
+            </Slider>
+          </Container>
+          <hr />
+          <Container style={{ margin: '40px 0' }}>
+            <h2>Israel's top tracks</h2>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                margin: '10px auto',
+              }}
+            >
+              <p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                Maiores, veritatis!
+              </p>
+              <Link
+                to='/'
+                style={{
+                  backgroundColor: '#6fc1ff',
+                  height: 'fit-content',
+                  padding: ' 6px 24px',
+                  borderRadius: '5px',
+                  boxShadow: '1px 1px 15px lightgrey',
+                }}
+              >
+                see all
+              </Link>
+            </div>
+            <Slider {...settings}>
+              {all?.map(function (item) {
+                return (
+                  <>
+                    <Link to='/'>
+                      <Col>
+                        <Card
+                          style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            flexDirection: 'column',
+                          }}
+                        >
+                          <div style={{ width: '200px' }}>
+                            <AlbumImg
+                              setIsClicked={setIsClicked}
+                              imgUrl={item.images[0].url}
+                              getOne={() => getOne(item.id)}
+                            />
+                          </div>
+                          <Card.Body>
+                            <span>{item.name}</span>
+                          </Card.Body>
+                        </Card>
+                      </Col>
+                    </Link>
+                  </>
+                );
+              })}
+            </Slider>
+          </Container>
+          {/* carousel 2 end */}
 
-            {isClicked && (
-              <Playlist
-                setIsClicked={setIsClicked}
-                chooseTrack={chooseTrack}
-                playList={playList}
-                detail={detail}
-              />
-            )}
-          </Route>
-          <Route path='/savedTracks'>
-            <h1 style={{ marginTop: '77px' }}>saved tracks</h1>
-            <Saved chooseTrack={chooseTrack} playList={savedTracks} />
-          </Route>
-        </Switch>
-      </Router>
+          {/* gallery */}
+          <article className='flow'>
+            <h1>playlists</h1>
+            <p>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              Consectetur, recusandae nemo earum tempora quos ratione asperiores
+              illo fuga in officiis.
+            </p>
+            <div className='team'>
+              <ul className='auto-grid' role='list'>
+                {all?.map((item) => {
+                  return (
+                    <li
+                      onClick={() => {
+                        setIsClicked((oldVal) => !oldVal);
+                        return getOne(item.id);
+                      }}
+                    >
+                      <a className='profile'>
+                        {/* <h5 className='profile__name'>{item.description}</h5> */}
+                        <p>{item.name}</p>
+                        <AlbumImg
+                          setIsClicked={setIsClicked}
+                          imgUrl={item.images[0].url}
+                          getOne={() => getOne(item.id)}
+                        />
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          </article>
+          {/* gallery end*/}
+
+          {isClicked && (
+            <Playlist
+              setIsClicked={setIsClicked}
+              chooseTrack={chooseTrack}
+              playList={playList}
+              detail={detail}
+            />
+          )}
+        </Route>
+        <Route path='/savedTracks'>
+          <h1 style={{ marginTop: '77px' }}>saved tracks</h1>
+          <Saved chooseTrack={chooseTrack} playList={savedTracks} />
+        </Route>
+      </Switch>
       <div
         style={{
           position: 'fixed',

@@ -18,6 +18,11 @@ li {
   list-style: none;
 }
 
+.container {
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
 .inactive-item {
   opacity: 0;
 }
@@ -77,16 +82,6 @@ a {
 /* gallery */
 
 /* Globals */
-
-h1 {
-  font-weight: 900;
-  font-size: 2.7rem;
-  max-width: 20ch;
-}
-
-p {
-  max-width: 60ch;
-}
 
 a {
   color: currentcolor;
