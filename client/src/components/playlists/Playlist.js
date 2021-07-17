@@ -58,15 +58,22 @@ const Playlist = ({ setIsClicked, chooseTrack, playList, detail }) => {
               <div
                 className='d-flex m-2 align-items-center'
                 style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  margin: '10px',
                   cursor: 'context-menu',
-                  justifyContent: 'space-between',
                   borderBottom: '1px solid gray',
                   paddingBottom: '15px',
                 }}
               >
+                <div style={{ width: '64px' }}></div>
                 <div
                   className='ml-3'
-                  style={{ width: '30%', textAlign: 'center' }}
+                  style={{
+                    width: '30%',
+                    textAlign: 'center',
+                    marginLeft: '10px',
+                  }}
                 >
                   Title
                 </div>

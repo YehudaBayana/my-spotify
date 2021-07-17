@@ -20,15 +20,28 @@ const TrackAlbumRes = ({ track, chooseTrack }) => {
   }
 
   return (
-    <TrackDiv className='d-flex m-2 align-items-center' onClick={handlePlay}>
+    <TrackDiv
+      className='d-flex m-2 align-items-center'
+      style={{ display: 'flex', alignItems: 'center', margin: '10px' }}
+      onClick={handlePlay}
+    >
       <img
         src={track.album.images[0].url}
         alt=''
         style={{ height: '64px', width: '64px' }}
       />
-      <div className='ml-3' style={{ width: '30%' }}>
+      <div className='ml-3' style={{ width: '30%', marginLeft: '10px' }}>
         <div>{track.name}</div>
-        <div style={{ color: 'lightgray' }}>{track.album?.artists[0].name}</div>
+        <div
+          style={{
+            color: 'lightgray',
+            fontSize: '0.9rem',
+            opacity: '0.7',
+            marginTop: '8px',
+          }}
+        >
+          {track.album?.artists[0].name}
+        </div>
       </div>
       <div style={{ width: '30%', textAlign: 'center' }} className='ml-3'>
         {track.album.name}

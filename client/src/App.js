@@ -1,16 +1,20 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
 import Login from './Login';
 import Dashboard from './Dashboard';
-import Navbar from './components/Navbar';
-import { Container } from 'react-bootstrap';
+import styled from 'styled-components';
 
 export const code = new URLSearchParams(window.location.search).get('code');
+
+const Container = styled.div`
+  max-width: 1125px;
+  margin: 0 auto;
+  padding: 0 22px;
+`;
 
 function App() {
   return (
     <>
-      <Container className='d-flex flex-column'>
-        <Navbar />
+      <Container>
+        {/* <Navbar /> */}
         {code ? <Dashboard code={code} /> : <Login />}
       </Container>
     </>

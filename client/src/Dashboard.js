@@ -2,11 +2,17 @@ import { useState, useEffect } from 'react';
 import useAuth from './useAuth';
 import Player from './Player';
 import TrackSearchResult from './TrackSearchResult';
-import { Container, Form } from 'react-bootstrap';
 import SpotifyWebApi from 'spotify-web-api-node';
 import axios from 'axios';
 import Playlist from './components/playlists/Playlist';
 import './index.css';
+import Navbar from './components/Navbar';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { Container, Card, Row, Col } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 
 const spotifyApi = new SpotifyWebApi({
   clientId: '057cdd5b992444f2858403e816dcae20',
@@ -20,6 +26,7 @@ export default function Dashboard({ code }) {
   const [isClicked, setIsClicked] = useState(false);
   const [lyrics, setLyrics] = useState('');
   const [playList, setPlayList] = useState();
+  const [savedTracks, setSavedTracks] = useState();
   const [all, setAll] = useState();
   const [allUs, setAllUs] = useState();
   const [detail, setDetail] = useState();
@@ -34,8 +41,7 @@ export default function Dashboard({ code }) {
           }}
           src={imgUrl}
           alt=''
-          // width='260px'
-          // style={{ margin: '0 15px' }}
+          width='100%'
         />
       </>
     );
@@ -64,7 +70,7 @@ export default function Dashboard({ code }) {
 
   useEffect(() => {
     if (!accessToken) return;
-    console.log(accessToken);
+    // console.log(accessToken);
     spotifyApi.setAccessToken(accessToken);
   }, [accessToken]);
 
@@ -128,10 +134,11 @@ export default function Dashboard({ code }) {
           console.log('Something went wrong!', err);
         }
       );
-    console.log(playList);
+    // console.log(playList);
   }
 
-  function getSome() {
+  useEffect(() => {
+    if (!accessToken) return;
     spotifyApi
       .getFeaturedPlaylists({
         limit: 20,
@@ -141,7 +148,7 @@ export default function Dashboard({ code }) {
       })
       .then(
         function (res) {
-          console.log(res.body);
+          // console.log(res.body);
           setAll(res.body.playlists.items);
         },
         function (err) {
@@ -157,126 +164,345 @@ export default function Dashboard({ code }) {
       })
       .then(
         function (res) {
-          console.log(res.body);
+          // console.log(res.body);
           setAllUs(res.body.playlists.items);
         },
         function (err) {
           console.log('Something went wrong!', err);
         }
       );
+
+    spotifyApi
+      .getMySavedTracks({
+        market: 'ES',
+        limit: 50,
+        offset: 0,
+      })
+      .then((data) => {
+        console.log(data.body);
+        setSavedTracks({
+          items: data.body.items.map((item) => {
+            return item.track;
+          }),
+        });
+      });
+  }, [accessToken]);
+
+  function Saved({ playList, chooseTrack }) {
+    function handleClick(track) {
+      chooseTrack(track);
+    }
+    return (
+      <>
+        {playList &&
+          playList.items?.map((track, i) => {
+            return (
+              <>
+                <img
+                  onClick={() => handleClick(track)}
+                  src={track.album.images[0].url}
+                  alt=''
+                  style={{ height: '64px', width: '64px' }}
+                />
+                <div
+                  className='ml-3'
+                  style={{ width: '30%', marginLeft: '10px' }}
+                >
+                  <div>{track.name}</div>
+                  <div
+                    style={{
+                      color: 'lightgray',
+                      fontSize: '0.9rem',
+                      opacity: '0.7',
+                      marginTop: '8px',
+                    }}
+                  >
+                    {track.album?.artists[0].name}
+                  </div>
+                </div>
+                <div
+                  style={{ width: '30%', textAlign: 'center' }}
+                  className='ml-3'
+                >
+                  {track.album.name}
+                </div>
+                <div
+                  style={{ width: '20%', textAlign: 'center' }}
+                  className='ml-3'
+                >
+                  {track.album.release_date}
+                </div>
+              </>
+            );
+          })}
+      </>
+    );
   }
+  let settings = {
+    dots: false,
+    arrows: true,
+    infinite: false,
+    speed: 500,
+    slidesToShow: 5,
+    slidesToScroll: 2,
+  };
 
   return (
     <>
-      <div
-        className='d-flex flex-column py-2'
-        style={{ height: 'fit-content' }}
-      >
-        <div style={{ maxWidth: '1320px', margin: '0 auto' }}>
-          <Container
-            className='d-flex flex-column py-2 '
-            style={{ height: 'fit-content' }}
-          >
-            <Form.Control
-              type='search'
-              placeholder='Search Songs/Artists'
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </Container>
-        </div>
-      </div>
-      <div
-        className='flex-grow-1 my-2'
-        style={{ overflowY: 'auto', height: 'fit-content' }}
-      >
-        {searchResults.map((track) => (
-          <TrackSearchResult
-            track={track}
-            key={track.uri}
-            chooseTrack={chooseTrack}
-          />
-        ))}
-      </div>
-      <div>
-        <h2>recommendation: </h2>
-        <button
-          onClick={() => {
-            getSome();
-          }}
-        >
-          fetch all music
-        </button>
-      </div>
-      <section class='slider'>
-        <ul id='autoWidth' class='cs-hidden'>
-          {allUs?.map((item) => {
-            return (
-              <>
-                <li class='item-a'>
-                  <div class='box'>
-                    <div class='slide-img'>
-                      <AlbumImg
-                        setIsClicked={setIsClicked}
-                        imgUrl={item.images[0].url}
-                        getOne={() => getOne(item.id)}
-                      />
-                      <div class='overlay'>
-                        <button
-                          onClick={() => {
-                            setIsClicked((oldVal) => !oldVal);
-                            return getOne(item.id);
-                          }}
-                          class='open-btn'
-                        >
-                          open playlist
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </li>
-              </>
-            );
-          })}
-          {all?.map((item) => {
-            return (
-              <>
-                <li class='item-a'>
-                  <div class='box'>
-                    <div class='slide-img'>
-                      <AlbumImg
-                        setIsClicked={setIsClicked}
-                        imgUrl={item.images[0].url}
-                        getOne={() => getOne(item.id)}
-                      />
-                      <div class='overlay'>
-                        <button
-                          onClick={() => {
-                            setIsClicked((oldVal) => !oldVal);
-                            return getOne(item.id);
-                          }}
-                          class='open-btn'
-                        >
-                          open playlist
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </li>
-              </>
-            );
-          })}
-        </ul>
-      </section>
+      <Router>
+        <Navbar search={search} setSearch={setSearch} />
+        <Switch>
+          <Route exact path='/'>
+            <div
+              className='flex-grow-1'
+              style={{
+                overflowY: 'auto',
+                height: 'fit-content',
+                marginTop: '55px',
+              }}
+            >
+              {searchResults.map((track) => (
+                <TrackSearchResult
+                  track={track}
+                  key={track.uri}
+                  chooseTrack={chooseTrack}
+                />
+              ))}
+            </div>
+            {/* <div style={{ marginTop: '55px' }}>
+              <h2>recommendation: </h2>
+            </div> */}
+            {/* <section class='slider'>
+              <ul id='autoWidth'>
+                {allUs?.map((item) => {
+                  return (
+                    <>
+                      <li class='item-a'>
+                        <div class='box'>
+                          <div class='slide-img'>
+                            <AlbumImg
+                              setIsClicked={setIsClicked}
+                              imgUrl={item.images[0].url}
+                              getOne={() => getOne(item.id)}
+                            />
+                            <div class='overlay'>
+                              <button
+                                onClick={() => {
+                                  setIsClicked((oldVal) => !oldVal);
+                                  return getOne(item.id);
+                                }}
+                                class='open-btn'
+                              >
+                                open playlist
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </li>
+                    </>
+                  );
+                })}
+                {all?.map((item) => {
+                  return (
+                    <>
+                      <li class='item-a'>
+                        <div class='box'>
+                          <div class='slide-img'>
+                            <AlbumImg
+                              setIsClicked={setIsClicked}
+                              imgUrl={item.images[0].url}
+                              getOne={() => getOne(item.id)}
+                            />
+                            <div class='overlay'>
+                              <button
+                                onClick={() => {
+                                  setIsClicked((oldVal) => !oldVal);
+                                  return getOne(item.id);
+                                }}
+                                class='open-btn'
+                              >
+                                open playlist
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </li>
+                    </>
+                  );
+                })}
+              </ul>
+            </section> */}
+            {/* carousel 2 */}
+            <Container style={{ margin: '40px 0' }}>
+              <h2>recommendation</h2>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  margin: '10px auto',
+                  // padding: '0 20px',
+                }}
+              >
+                <p>
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                  Voluptate, quasi!
+                </p>
+                <Link
+                  to='/'
+                  style={{
+                    backgroundColor: '#6fc1ff',
+                    height: 'fit-content',
+                    padding: ' 6px 24px',
+                    borderRadius: '5px',
+                    boxShadow: '1px 1px 15px lightgrey',
+                  }}
+                >
+                  see all
+                </Link>
+              </div>
+              <Slider {...settings}>
+                {allUs?.map(function (item) {
+                  return (
+                    <>
+                      <Link to='/'>
+                        <Col>
+                          <Card
+                            style={{
+                              display: 'flex',
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                              flexDirection: 'column',
+                            }}
+                          >
+                            <div style={{ width: '200px' }}>
+                              <AlbumImg
+                                setIsClicked={setIsClicked}
+                                imgUrl={item.images[0].url}
+                                getOne={() => getOne(item.id)}
+                              />
+                            </div>
+                            <Card.Body>
+                              <span>{item.name}</span>
+                            </Card.Body>
+                          </Card>
+                        </Col>
+                      </Link>
+                    </>
+                  );
+                })}
+              </Slider>
+            </Container>
+            <hr />
+            <Container style={{ margin: '40px 0' }}>
+              <h2>Israel's top tracks</h2>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  margin: '10px auto',
+                }}
+              >
+                <p>
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                  Maiores, veritatis!
+                </p>
+                <Link
+                  to='/'
+                  style={{
+                    backgroundColor: '#6fc1ff',
+                    height: 'fit-content',
+                    padding: ' 6px 24px',
+                    borderRadius: '5px',
+                    boxShadow: '1px 1px 15px lightgrey',
+                  }}
+                >
+                  see all
+                </Link>
+              </div>
+              <Slider {...settings}>
+                {all?.map(function (item) {
+                  return (
+                    <>
+                      <Link to='/'>
+                        <Col>
+                          <Card
+                            style={{
+                              display: 'flex',
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                              flexDirection: 'column',
+                            }}
+                          >
+                            <div style={{ width: '200px' }}>
+                              <AlbumImg
+                                setIsClicked={setIsClicked}
+                                imgUrl={item.images[0].url}
+                                getOne={() => getOne(item.id)}
+                              />
+                            </div>
+                            <Card.Body>
+                              <span>{item.name}</span>
+                            </Card.Body>
+                          </Card>
+                        </Col>
+                      </Link>
+                    </>
+                  );
+                })}
+              </Slider>
+            </Container>
+            {/* carousel 2 end */}
 
-      {isClicked && (
-        <Playlist
-          setIsClicked={setIsClicked}
-          chooseTrack={chooseTrack}
-          playList={playList}
-          detail={detail}
-        />
-      )}
+            {/* gallery */}
+            <article className='flow'>
+              <h1>playlists</h1>
+              <p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                Consectetur, recusandae nemo earum tempora quos ratione
+                asperiores illo fuga in officiis.
+              </p>
+              <div className='team'>
+                <ul className='auto-grid' role='list'>
+                  {all?.map((item) => {
+                    return (
+                      <li
+                        onClick={() => {
+                          setIsClicked((oldVal) => !oldVal);
+                          return getOne(item.id);
+                        }}
+                      >
+                        <a className='profile'>
+                          {/* <h5 className='profile__name'>{item.description}</h5> */}
+                          <p>{item.name}</p>
+                          <AlbumImg
+                            setIsClicked={setIsClicked}
+                            imgUrl={item.images[0].url}
+                            getOne={() => getOne(item.id)}
+                          />
+                        </a>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            </article>
+            {/* gallery end*/}
+
+            {isClicked && (
+              <Playlist
+                setIsClicked={setIsClicked}
+                chooseTrack={chooseTrack}
+                playList={playList}
+                detail={detail}
+              />
+            )}
+          </Route>
+          <Route path='/savedTracks'>
+            <h1 style={{ marginTop: '77px' }}>saved tracks</h1>
+            <Saved chooseTrack={chooseTrack} playList={savedTracks} />
+          </Route>
+        </Switch>
+      </Router>
       <div
         style={{
           position: 'fixed',
