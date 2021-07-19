@@ -7,12 +7,13 @@ import axios from 'axios';
 import Playlist from './components/playlists/Playlist';
 import './index.css';
 import Navbar from './components/Navbar';
-import { Switch, Route } from 'react-router-dom';
-import { Container, Card, Row, Col } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
-import Slider from 'react-slick';
+import { Switch, Route, useParams } from 'react-router-dom';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import SavedTracks from './components/SavedTracks';
+import Discover from './components/Discover';
+import EachSlider from './components/EachSlider';
+import SeeMore from './components/SeeMore';
 
 const spotifyApi = new SpotifyWebApi({
   clientId: '057cdd5b992444f2858403e816dcae20',
@@ -30,6 +31,9 @@ export default function Dashboard({ code }) {
   const [all, setAll] = useState();
   const [allUs, setAllUs] = useState();
   const [detail, setDetail] = useState();
+  const [userPlaylists, setUserPlaylists] = useState();
+  const [partyPlaylist, setPartyPlaylist] = useState([]);
+  const [categories, setCategories] = useState();
 
   function AlbumImg({ imgUrl, setIsClicked, getOne }) {
     return (
@@ -104,15 +108,20 @@ export default function Dashboard({ code }) {
     return () => (cancel = true);
   }, [search, accessToken]);
 
-  let israelis = [];
+  const ppppp = [allUs, all, ...partyPlaylist];
+  const [pppppDes, setPppppDes] = useState([
+    'recommendation: ',
+    "Israel's Top Hits: ",
+  ]);
 
   function getOne(id) {
     let one;
-    if (all.find((item) => item.id === id)) {
-      one = all.find((item) => item.id === id);
-    } else {
-      one = allUs.find((item) => item.id === id);
-    }
+    ppppp.forEach((play) => {
+      if (play.find((item) => item.id === id)) {
+        one = play.find((item) => item.id === id);
+      }
+    });
+
     setDetail(one);
     spotifyApi
       .getPlaylistTracks(one.id, {
@@ -122,7 +131,7 @@ export default function Dashboard({ code }) {
       })
       .then(
         function (data) {
-          console.log('The playlist contains these tracks', data.body);
+          // console.log('The playlist contains these tracks', data.body);
           setPlayList({
             items: data.body.items.map((item) => {
               return item.track;
@@ -139,6 +148,66 @@ export default function Dashboard({ code }) {
 
   useEffect(() => {
     if (!accessToken) return;
+    setTimeout(() => {
+      spotifyApi.getMe().then(
+        function (data) {
+          console.log(
+            'Some information about the authenticated user',
+            data.body
+          );
+
+          spotifyApi.getUserPlaylists(data.body.id).then(
+            function (data) {
+              // console.log('Retrieved playlists', data.body);
+              setUserPlaylists(data.body.items);
+            },
+            function (err) {
+              console.log('Something went wrong!', err);
+            }
+          );
+        },
+        function (err) {
+          console.log('Something went wrong!', err);
+        }
+      );
+
+      spotifyApi
+        .getCategories({
+          limit: 10,
+          offset: 0,
+          country: 'US',
+        })
+        .then(
+          function (data) {
+            console.log('chec', data.body);
+            setCategories(data.body.categories.items);
+            data.body.categories.items.forEach((category) => {
+              spotifyApi
+                .getPlaylistsForCategory(category.id, {
+                  country: 'US',
+                  limit: 10,
+                  offset: 0,
+                })
+                .then(
+                  function (data) {
+                    console.log(`${category.id} `, data.body);
+                    setPppppDes((old) => [...old, category.name]);
+                    setPartyPlaylist((old) => [
+                      ...old,
+                      data.body.playlists.items,
+                    ]);
+                  },
+                  function (err) {
+                    console.log('Something went wrong!', err);
+                  }
+                );
+            });
+          },
+          function (err) {
+            console.log('Something went wrong!', err);
+          }
+        );
+    }, 2000);
     spotifyApi
       .getFeaturedPlaylists({
         limit: 20,
@@ -164,7 +233,7 @@ export default function Dashboard({ code }) {
       })
       .then(
         function (res) {
-          // console.log(res.body);
+          console.log('last ', res.body.playlists.items);
           setAllUs(res.body.playlists.items);
         },
         function (err) {
@@ -179,7 +248,7 @@ export default function Dashboard({ code }) {
         offset: 0,
       })
       .then((data) => {
-        console.log(data.body);
+        // console.log(data.body);
         setSavedTracks({
           items: data.body.items.map((item) => {
             return item.track;
@@ -188,58 +257,8 @@ export default function Dashboard({ code }) {
       });
   }, [accessToken]);
 
-  function Saved({ playList, chooseTrack }) {
-    function handleClick(track) {
-      chooseTrack(track);
-    }
-    return (
-      <>
-        {playList &&
-          playList.items?.map((track, i) => {
-            return (
-              <>
-                <img
-                  onClick={() => handleClick(track)}
-                  src={track.album.images[0].url}
-                  alt=''
-                  style={{ height: '64px', width: '64px' }}
-                />
-                <div
-                  className='ml-3'
-                  style={{ width: '30%', marginLeft: '10px' }}
-                >
-                  <div>{track.name}</div>
-                  <div
-                    style={{
-                      color: 'lightgray',
-                      fontSize: '0.9rem',
-                      opacity: '0.7',
-                      marginTop: '8px',
-                    }}
-                  >
-                    {track.album?.artists[0].name}
-                  </div>
-                </div>
-                <div
-                  style={{ width: '30%', textAlign: 'center' }}
-                  className='ml-3'
-                >
-                  {track.album.name}
-                </div>
-                <div
-                  style={{ width: '20%', textAlign: 'center' }}
-                  className='ml-3'
-                >
-                  {track.album.release_date}
-                </div>
-              </>
-            );
-          })}
-      </>
-    );
-  }
   let settings = {
-    dots: false,
+    dots: true,
     arrows: true,
     infinite: false,
     speed: 500,
@@ -268,188 +287,23 @@ export default function Dashboard({ code }) {
               />
             ))}
           </div>
-          {/* <div style={{ marginTop: '55px' }}>
-              <h2>recommendation: </h2>
-            </div> */}
-          {/* <section class='slider'>
-              <ul id='autoWidth'>
-                {allUs?.map((item) => {
-                  return (
-                    <>
-                      <li class='item-a'>
-                        <div class='box'>
-                          <div class='slide-img'>
-                            <AlbumImg
-                              setIsClicked={setIsClicked}
-                              imgUrl={item.images[0].url}
-                              getOne={() => getOne(item.id)}
-                            />
-                            <div class='overlay'>
-                              <button
-                                onClick={() => {
-                                  setIsClicked((oldVal) => !oldVal);
-                                  return getOne(item.id);
-                                }}
-                                class='open-btn'
-                              >
-                                open playlist
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </li>
-                    </>
-                  );
-                })}
-                {all?.map((item) => {
-                  return (
-                    <>
-                      <li class='item-a'>
-                        <div class='box'>
-                          <div class='slide-img'>
-                            <AlbumImg
-                              setIsClicked={setIsClicked}
-                              imgUrl={item.images[0].url}
-                              getOne={() => getOne(item.id)}
-                            />
-                            <div class='overlay'>
-                              <button
-                                onClick={() => {
-                                  setIsClicked((oldVal) => !oldVal);
-                                  return getOne(item.id);
-                                }}
-                                class='open-btn'
-                              >
-                                open playlist
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </li>
-                    </>
-                  );
-                })}
-              </ul>
-            </section> */}
-          {/* carousel 2 */}
-          <Container style={{ margin: '40px 0' }}>
-            <h2>recommendation</h2>
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                margin: '10px auto',
-                // padding: '0 20px',
-              }}
-            >
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Voluptate, quasi!
-              </p>
-              <Link
-                to='/'
-                style={{
-                  backgroundColor: '#6fc1ff',
-                  height: 'fit-content',
-                  padding: ' 6px 24px',
-                  borderRadius: '5px',
-                  boxShadow: '1px 1px 15px lightgrey',
-                }}
-              >
-                see all
-              </Link>
-            </div>
-            <Slider {...settings}>
-              {allUs?.map(function (item) {
-                return (
-                  <>
-                    <Link to='/'>
-                      <Col>
-                        <Card
-                          style={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            flexDirection: 'column',
-                          }}
-                        >
-                          <div style={{ width: '200px' }}>
-                            <AlbumImg
-                              setIsClicked={setIsClicked}
-                              imgUrl={item.images[0].url}
-                              getOne={() => getOne(item.id)}
-                            />
-                          </div>
-                          <Card.Body>
-                            <span>{item.name}</span>
-                          </Card.Body>
-                        </Card>
-                      </Col>
-                    </Link>
-                  </>
-                );
-              })}
-            </Slider>
-          </Container>
-          <hr />
-          <Container style={{ margin: '40px 0' }}>
-            <h2>Israel's top tracks</h2>
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                margin: '10px auto',
-              }}
-            >
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Maiores, veritatis!
-              </p>
-              <Link
-                to='/'
-                style={{
-                  backgroundColor: '#6fc1ff',
-                  height: 'fit-content',
-                  padding: ' 6px 24px',
-                  borderRadius: '5px',
-                  boxShadow: '1px 1px 15px lightgrey',
-                }}
-              >
-                see all
-              </Link>
-            </div>
-            <Slider {...settings}>
-              {all?.map(function (item) {
-                return (
-                  <>
-                    <Link to='/'>
-                      <Col>
-                        <Card
-                          style={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            flexDirection: 'column',
-                          }}
-                        >
-                          <div style={{ width: '200px' }}>
-                            <AlbumImg
-                              setIsClicked={setIsClicked}
-                              imgUrl={item.images[0].url}
-                              getOne={() => getOne(item.id)}
-                            />
-                          </div>
-                          <Card.Body>
-                            <span>{item.name}</span>
-                          </Card.Body>
-                        </Card>
-                      </Col>
-                    </Link>
-                  </>
-                );
-              })}
-            </Slider>
-          </Container>
+          {ppppp.map((item, i) => {
+            // if (item.length === 0) {
+            //   return;
+            // }
+            console.log('item', item);
+            return (
+              <EachSlider
+                key={i}
+                allUs={item}
+                AlbumImg={AlbumImg}
+                getOne={getOne}
+                setIsClicked={setIsClicked}
+                des={pppppDes[i]}
+              />
+            );
+          })}
+
           {/* carousel 2 end */}
 
           {/* gallery */}
@@ -462,9 +316,10 @@ export default function Dashboard({ code }) {
             </p>
             <div className='team'>
               <ul className='auto-grid' role='list'>
-                {all?.map((item) => {
+                {userPlaylists?.map((item) => {
                   return (
                     <li
+                      key={item.id}
                       onClick={() => {
                         setIsClicked((oldVal) => !oldVal);
                         return getOne(item.id);
@@ -485,6 +340,7 @@ export default function Dashboard({ code }) {
               </ul>
             </div>
           </article>
+
           {/* gallery end*/}
 
           {isClicked && (
@@ -498,9 +354,53 @@ export default function Dashboard({ code }) {
         </Route>
         <Route path='/savedTracks'>
           <h1 style={{ marginTop: '77px' }}>saved tracks</h1>
-          <Saved chooseTrack={chooseTrack} playList={savedTracks} />
+          <SavedTracks chooseTrack={chooseTrack} playList={savedTracks} />
+        </Route>
+        <Route path='/discover'>
+          <h1 style={{ marginTop: '77px' }}>party playlist</h1>
+          <Discover
+            partyPlaylist={partyPlaylist}
+            setIsClicked={setIsClicked}
+            getOne={getOne}
+            AlbumImg={AlbumImg}
+          />
+          {isClicked && (
+            <Playlist
+              setIsClicked={setIsClicked}
+              chooseTrack={chooseTrack}
+              playList={playList}
+              detail={detail}
+            />
+          )}
+        </Route>
+        <Route path='/:id'>
+          <h1 style={{ marginTop: '77px' }}>party playlist</h1>
+
+          <SeeMore
+            partyPlaylist={ppppp}
+            setIsClicked={setIsClicked}
+            getOne={getOne}
+            AlbumImg={AlbumImg}
+          />
+          {isClicked && (
+            <Playlist
+              setIsClicked={setIsClicked}
+              chooseTrack={chooseTrack}
+              playList={playList}
+              detail={detail}
+            />
+          )}
         </Route>
       </Switch>
+      {/* {categories?.map((item) => {
+        return (
+          <>
+            <h2>{item.name}</h2>
+            <img src={item.icons[0].url} alt='' />
+          </>
+        );
+      })} */}
+      <div style={{ height: '30px', marginBottom: '70px' }}></div>
       <div
         style={{
           position: 'fixed',

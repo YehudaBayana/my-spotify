@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import '../index.css';
 
 const Header = styled.header`
   background-color: #00598d;
@@ -106,7 +107,6 @@ const SearchToggle = styled.button`
   font-size: 0;
   width: 34px;
   height: 34px;
-  /* background: url("../img/header-3/search.svg") center right/22px no-repeat; */
   border: 0;
   display: none;
   @media (min-width: 865px) {
@@ -118,7 +118,6 @@ const SearchToggle = styled.button`
     position: absolute;
     right: 5.5rem;
     top: 0.65rem;
-    /* background: url("../img/header-3/search.svg") center/22px no-repeat; } } */
   }
 `;
 
@@ -169,6 +168,7 @@ const Navbar = ({ search, setSearch }) => {
 
   return (
     <Header
+      className='site-header'
       style={{
         position: 'fixed ',
         top: '0',
@@ -177,13 +177,15 @@ const Navbar = ({ search, setSearch }) => {
         zIndex: '998',
       }}
     >
-      <Wrapper>
-        <SiteHeaderStart>
-          <Brand>Yudafy</Brand>
-          <Search>
-            <SearchToggle aria-label='Open search'>Search</SearchToggle>
+      <Wrapper className='wrapper site-header__wrapper'>
+        <SiteHeaderStart className='site-header__start'>
+          <Brand class='brand'>Yudafy</Brand>
+          <Search className='search'>
+            <SearchToggle className='search_toggle' aria-label='Open search'>
+              Search
+            </SearchToggle>
             <SearchForm className='search__form' action=''>
-              <label className='sr-only' for='search'>
+              <label className='sr-only' htmlFor='search'>
                 Search
               </label>
               <input
@@ -196,18 +198,18 @@ const Navbar = ({ search, setSearch }) => {
             </SearchForm>
           </Search>
         </SiteHeaderStart>
-        <SiteHeaderStart>
+        <SiteHeaderStart className='site-header__end'>
           <nav className='nav'>
             <NavToggle
               onClick={myClick}
-              className='nav__toggle'
+              class='nav__toggle'
               aria-expanded='false'
               type='button'
             >
               menu
             </NavToggle>
-            <Ul ref={navWrapper} id='aaa'>
-              <NavItem className='active'>
+            <ul class='nav__wrapper' ref={navWrapper} id='aaa'>
+              <NavItem class='nav__item active'>
                 <Link to='/'>
                   <i className='fas fa-home'></i>
                   <span>Home</span>
@@ -219,17 +221,17 @@ const Navbar = ({ search, setSearch }) => {
                   <span>Liked songs</span>
                 </Link>
               </NavItem>
-            </Ul>
+              <NavItem className='nav__item'>
+                <Link to='/discover'>
+                  <i className='fas fa-heart'></i>
+                  <span>Discover</span>
+                </Link>
+              </NavItem>
+            </ul>
           </nav>
         </SiteHeaderStart>
       </Wrapper>
     </Header>
-    // <div>
-    //   <MyNavbar>
-    //     <h2>Yehuda music</h2>
-    //     {code ? <h3>user</h3> : <Button href={AUTH_URL}>try it free</Button>}
-    //   </MyNavbar>
-    // </div>
   );
 };
 

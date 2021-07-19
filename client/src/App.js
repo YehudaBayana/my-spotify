@@ -1,4 +1,3 @@
-import Login from './Login';
 import Dashboard from './Dashboard';
 import styled from 'styled-components';
 import Header from './components/Header';
@@ -7,8 +6,8 @@ import { BrowserRouter as Router } from 'react-router-dom';
 
 export const code = new URLSearchParams(window.location.search).get('code');
 
-const Container = styled.div`
-  max-width: 1125px;
+export const Container = styled.div`
+  /* max-width: 2000px; */
   margin: 0 auto;
   padding: 0 22px;
 `;

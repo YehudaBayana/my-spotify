@@ -92,7 +92,7 @@ a {
   display: grid;
   grid-template-columns: repeat(
     auto-fill,
-    minmax(var(--auto-grid-min-size, 14rem), 1fr)
+    minmax(var(--auto-grid-min-size, 12rem), 1fr)
   );
   grid-gap: var(--auto-grid-gap, 0);
   padding: 0;
@@ -119,6 +119,7 @@ a {
   backface-visibility: hidden;
   text-decoration: none;
   overflow: hidden;
+  margin: 5px;
 }
 
 .profile::before,
@@ -178,7 +179,7 @@ a {
   margin: 0;
   z-index: -1;
   object-fit: cover;
-  filter: grayscale(1);
+  /* filter: grayscale(1); */
   transition: filter 200ms ease, transform 250ms linear;
 }
 
@@ -219,7 +220,7 @@ a {
 .profile:focus::after,
 .profile:hover::before,
 .profile:focus::before {
-  opacity: 0.7;
+  opacity: 0.5;
 }
 
 .profile:hover p,
@@ -235,3 +236,29 @@ a {
 }
 
 /* gallery end  */
+/* ------------------------------ */
+
+@media (min-width: 865px) {
+  .nav__wrapper {
+    display: flex;
+  }
+}
+@media (max-width: 864px) {
+  .nav__wrapper {
+    position: absolute;
+    top: calc(100% + 35px);
+    right: 0;
+    left: 0;
+    z-index: -1;
+    background-color: #00598d;
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(-100%);
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+  }
+  .nav__wrapper.active {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
