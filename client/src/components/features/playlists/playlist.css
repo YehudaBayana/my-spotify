@@ -1,0 +1,120 @@
+.opacity {
+  background-color: rgba(0, 0, 0, 0.8);
+  width: 100%;
+  padding: 0 100px;
+  padding-top: 40px;
+  position: fixed;
+  top: 0px;
+  left: 0;
+  color: white;
+  z-index: 999;
+}
+
+.sticky {
+  width: 100%;
+  height: 100vh;
+  position: sticky;
+  bottom: 0px;
+  overflow: auto;
+}
+
+.sticky::-webkit-scrollbar {
+  width: 15px;
+}
+
+.sticky::-webkit-scrollbar-track {
+  background-color: #e4e4e4;
+  border-radius: 100px;
+}
+
+.sticky::-webkit-scrollbar-thumb {
+  border-radius: 100px;
+  background-image: linear-gradient(180deg, #3652d0 0%, #708ad4 99%);
+  box-shadow: inset 2px 2px 5px 0 rgba(#fff, 0.5);
+}
+
+.playlistWrapper {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  padding: 20px;
+}
+
+.playlistDetails {
+  padding: 20px 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.forImg {
+  width: 74px;
+}
+
+.songsInfo {
+  display: flex;
+  align-items: center;
+  margin: 10px;
+  cursor: context-menu;
+  border-bottom: 1px solid gray;
+  padding-bottom: 15px;
+}
+
+.songTitle {
+  width: 30%;
+  text-align: center;
+}
+
+.songTitle.actual {
+  text-align: start;
+  margin-left: 10px;
+}
+.songAlbum {
+  width: 30%;
+  text-align: center;
+}
+.songDate {
+  width: 20%;
+  text-align: center;
+}
+.songTime {
+  width: 10%;
+  text-align: center;
+}
+
+@media (max-width: 997px) {
+  .opacity {
+    padding: 0;
+  }
+}
+
+@media (max-width: 780px) {
+  .playlistWrapper {
+    flex-direction: column;
+  }
+
+  .songsInfo {
+    margin: 0;
+    cursor: context-menu;
+    border-bottom: 1px solid gray;
+    padding-bottom: 15px;
+  }
+
+  .forImg {
+    display: none;
+  }
+
+  .songTitle {
+    width: calc(99% - 74px);
+    margin: 0;
+  }
+  .songAlbum {
+    display: none;
+  }
+  .songDate {
+    display: none;
+  }
+  .songTime {
+    width: 22%;
+  }
+}

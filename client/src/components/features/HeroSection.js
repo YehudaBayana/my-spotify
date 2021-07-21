@@ -1,6 +1,6 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
-import '../index.css';
+import '../../index.css';
 
 export const Button = styled.button`
   border: none;
@@ -96,14 +96,13 @@ const HeroSection = () => {
           <HeroSectionTag>
             <HeroContent>
               <H1>
-                build the community <br /> your fans will love
+                listening <br /> is everything
               </H1>
               <P>
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eius
-                numquam magnam amet. Dolore consectetur aut totam, unde ipsum
-                optio harum!
+                if you don't have spotify premium account you can't listen to
+                music in this website
               </P>
-              <Button>get started for free</Button>
+              <Button>sign in</Button>
             </HeroContent>
             <Img src='/illustration-mockups.svg' alt='' />
           </HeroSectionTag>

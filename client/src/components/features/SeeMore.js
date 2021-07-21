@@ -10,12 +10,8 @@ const SeeMore = ({ partyPlaylist, setIsClicked, getOne, AlbumImg }) => {
   return (
     <>
       <article className='flow'>
-        <h1>playlists</h1>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur,
-          recusandae nemo earum tempora quos ratione asperiores illo fuga in
-          officiis.
-        </p>
+        <h1>{news[0].name}</h1>
+        <p>{news[0].description}</p>
         <div className='team'>
           <ul className='auto-grid' role='list'>
             {news?.map((item) => {
@@ -28,7 +24,6 @@ const SeeMore = ({ partyPlaylist, setIsClicked, getOne, AlbumImg }) => {
                   }}
                 >
                   <a className='profile'>
-                    {/* <h5 className='profile__name'>{item.description}</h5> */}
                     <p>{item.name}</p>
                     <AlbumImg
                       setIsClicked={setIsClicked}

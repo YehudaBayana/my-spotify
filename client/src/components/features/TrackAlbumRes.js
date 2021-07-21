@@ -21,7 +21,6 @@ const TrackAlbumRes = ({ track, chooseTrack }) => {
 
   return (
     <TrackDiv
-      className='d-flex m-2 align-items-center'
       style={{ display: 'flex', alignItems: 'center', margin: '10px' }}
       onClick={handlePlay}
     >
@@ -30,7 +29,7 @@ const TrackAlbumRes = ({ track, chooseTrack }) => {
         alt=''
         style={{ height: '64px', width: '64px' }}
       />
-      <div className='ml-3' style={{ width: '30%', marginLeft: '10px' }}>
+      <div className='songTitle actual'>
         <div>{track.name}</div>
         <div
           style={{
@@ -43,15 +42,9 @@ const TrackAlbumRes = ({ track, chooseTrack }) => {
           {track.album?.artists[0].name}
         </div>
       </div>
-      <div style={{ width: '30%', textAlign: 'center' }} className='ml-3'>
-        {track.album.name}
-      </div>
-      <div style={{ width: '20%', textAlign: 'center' }} className='ml-3'>
-        {track.album.release_date}
-      </div>
-      <div style={{ width: '10%', textAlign: 'center' }} className='ml-3'>
-        {msToMinutesAndSeconds(track.duration_ms)}
-      </div>
+      <div className='songAlbum'>{track.album.name}</div>
+      <div className='songDate'>{track.album.release_date}</div>
+      <div className='songTime'>{msToMinutesAndSeconds(track.duration_ms)}</div>
     </TrackDiv>
   );
 };

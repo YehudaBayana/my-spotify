@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import '../index.css';
+import '../../index.css';
 
 const Header = styled.header`
   background-color: #00598d;
@@ -85,11 +85,13 @@ const Brand = styled.a`
   font-size: 20px;
 `;
 
-const NavToggle = styled.button`
+const NavToggle = styled.span`
   display: none;
 
   @media (max-width: 864px) {
     display: block;
+    font-size: 20px;
+    cursor: pointer;
     position: absolute;
     right: 1rem;
     top: 1rem;
@@ -179,7 +181,7 @@ const Navbar = ({ search, setSearch }) => {
     >
       <Wrapper className='wrapper site-header__wrapper'>
         <SiteHeaderStart className='site-header__start'>
-          <Brand class='brand'>Yudafy</Brand>
+          <Brand class='brand'>Yuda music</Brand>
           <Search className='search'>
             <SearchToggle className='search_toggle' aria-label='Open search'>
               Search
@@ -204,9 +206,8 @@ const Navbar = ({ search, setSearch }) => {
               onClick={myClick}
               class='nav__toggle'
               aria-expanded='false'
-              type='button'
             >
-              menu
+              &#9776;
             </NavToggle>
             <ul class='nav__wrapper' ref={navWrapper} id='aaa'>
               <NavItem class='nav__item active'>
@@ -223,7 +224,7 @@ const Navbar = ({ search, setSearch }) => {
               </NavItem>
               <NavItem className='nav__item'>
                 <Link to='/discover'>
-                  <i className='fas fa-heart'></i>
+                  <i class='fas fa-hashtag'></i>
                   <span>Discover</span>
                 </Link>
               </NavItem>

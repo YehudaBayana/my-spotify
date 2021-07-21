@@ -1,6 +1,7 @@
 import React from 'react';
+import '../../../index.css';
 
-const Discover = ({ partyPlaylist, setIsClicked, getOne, AlbumImg }) => {
+const Gallery = ({ userPlaylists, setIsClicked, getOne, AlbumImg }) => {
   return (
     <>
       <article className='flow'>
@@ -12,9 +13,10 @@ const Discover = ({ partyPlaylist, setIsClicked, getOne, AlbumImg }) => {
         </p>
         <div className='team'>
           <ul className='auto-grid' role='list'>
-            {partyPlaylist?.map((item) => {
+            {userPlaylists?.map((item) => {
               return (
                 <li
+                  key={item.id}
                   onClick={() => {
                     setIsClicked((oldVal) => !oldVal);
                     return getOne(item.id);
@@ -39,4 +41,4 @@ const Discover = ({ partyPlaylist, setIsClicked, getOne, AlbumImg }) => {
   );
 };
 
-export default Discover;
+export default Gallery;

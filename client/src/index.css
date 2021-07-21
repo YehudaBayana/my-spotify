@@ -6,8 +6,27 @@
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   font-family: 'Rubik', sans-serif;
+  background-color: rgb(226, 226, 226);
+}
+body::-webkit-scrollbar {
+  width: 15px;
+}
+
+body::-webkit-scrollbar-track {
+  background-color: #ffffff;
+  border-radius: 100px;
+}
+
+body::-webkit-scrollbar-thumb {
+  border-radius: 100px;
+  background-image: linear-gradient(180deg, #3652d0 0%, #708ad4 99%);
+  box-shadow: inset 2px 2px 5px 0 rgba(#fff, 0.5);
 }
 
 a {
@@ -32,42 +51,6 @@ li {
   color: black !important;
 }
 
-/* .btn.dropdown-toggle {
-  width: 150px;
-  text-align: left;
-}
-
-span.caret {
-  position: absolute;
-  left: 90%;
-  top: 45%;
-}
-
-label {
-  padding-top: 5px;
-}
-
-.form-label {
-  padding-left: 0px !important;
-}
-
-img {
-  width: 140px;
-  height: 140px;
-}
-
-.btn-success {
-  background-color: #3b7d4a !important;
-}
-
-.btn-success:hover {
-  background-color: #4daf64 !important;
-}
-
-img.track {
-  border: 1px solid #8a8a8a;
-} */
-
 button {
   border: none;
 }
@@ -78,10 +61,6 @@ button:focus {
 a {
   text-decoration: none;
 }
-
-/* gallery */
-
-/* Globals */
 
 a {
   color: currentcolor;
@@ -98,16 +77,18 @@ a {
   padding: 0;
 }
 
+.flow {
+  margin-top: 100px;
+}
+
 .flow > * + * {
   margin-top: var(--flow-space, 1em);
 }
 
-/* Composition */
 .team {
   --flow-space: 2em;
 }
 
-/* Blocks */
 .profile {
   display: flex;
   flex-direction: column;
@@ -157,11 +138,6 @@ a {
 }
 
 .profile::after {
-  /* background: linear-gradient(
-    45deg,
-    hsl(5 97% 63% / 0.7) 0,
-    hsl(5 97% 63% / 0) 100%
-  ); */
   opacity: 0;
   transition: 300ms opacity linear;
 }
@@ -179,7 +155,6 @@ a {
   margin: 0;
   z-index: -1;
   object-fit: cover;
-  /* filter: grayscale(1); */
   transition: filter 200ms ease, transform 250ms linear;
 }
 
@@ -235,9 +210,6 @@ a {
   transform: scale(1.05) rotate(1deg);
 }
 
-/* gallery end  */
-/* ------------------------------ */
-
 @media (min-width: 865px) {
   .nav__wrapper {
     display: flex;
@@ -261,4 +233,48 @@ a {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+.playerBackground {
+  width: 100%;
+  height: 83px;
+  background-color: white;
+  position: fixed;
+  bottom: 0px;
+  left: 0;
+}
+
+.playerSticky {
+  position: fixed;
+  bottom: 0px;
+  width: 71%;
+  left: 14.5%;
+  z-index: 9999;
+}
+
+.searchResultsWrapper {
+  overflow-y: auto;
+  height: fit-content;
+  margin-top: 55px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+@media (max-width: 900px) {
+  .searchResultsWrapper {
+    margin-top: 100px;
+    grid-template-columns: 1fr;
+  }
+}
+
+.signIn {
+  background-color: #00598d;
+  height: fit-content;
+  padding: 10px 34px;
+  border-radius: 5px;
+  box-shadow: 1px 1px 15px black;
+  margin-top: 100px;
+  font-size: 20px;
+  color: white;
+  display: inline-block;
 }
