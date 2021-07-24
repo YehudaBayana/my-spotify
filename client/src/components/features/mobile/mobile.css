@@ -1,0 +1,162 @@
+/* mobile */
+@media (max-width: 500px) {
+  :root {
+    --white-90: rgba(255, 255, 255, 0.87);
+  }
+  * {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+  }
+  body {
+    min-height: 100vh;
+    background: linear-gradient(
+      169deg,
+      rgb(114 51 42) 0%,
+      rgba(14, 14, 15, 1) 46%
+    );
+    overflow-x: hidden;
+  }
+  header {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px;
+    height: fit-content;
+  }
+  header i {
+    color: var(--white-90);
+  }
+  h1 {
+    color: var(--white-90);
+    font-weight: 500;
+    font-size: 1.23;
+  }
+
+  .top-section {
+    padding: 10px;
+  }
+
+  .boxes {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 10px -5px 0 -5px;
+  }
+
+  .box {
+    width: calc(50% - 10px);
+    background-color: rgb(26, 26, 26);
+    display: flex;
+    align-items: center;
+    margin: 5px;
+    border-radius: 8px;
+  }
+
+  .box img {
+    max-width: 60px;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+  }
+
+  .box__title {
+    margin-left: 5px;
+    color: var(--white-90);
+    font-weight: 500;
+    font-size: 0.7rem;
+  }
+
+  .middle-section {
+    padding: 10px 0px 0px 10px;
+  }
+
+  .large-boxes {
+    display: flex;
+    padding-top: 10px;
+    overflow-x: scroll;
+  }
+
+  .large-boxes__box {
+    display: flex;
+    flex-direction: column;
+    color: var(--white-90);
+    width: 100px;
+    font-size: 0.7em;
+    margin-right: 10px;
+  }
+
+  .large-boxes__box--title {
+    padding: 5px 0;
+  }
+
+  .large-boxes__box img {
+    width: 100px;
+    border-radius: 8px;
+  }
+
+  footer {
+    background: rgb(26, 26, 26);
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    z-index: 9999;
+  }
+  .duration {
+    width: 80vw;
+    height: 2px;
+    background: var(--white-90);
+  }
+
+  .song-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex: 2;
+    padding: 0px 10px;
+    color: var(--white-90);
+  }
+
+  .artist {
+    font-weight: 700;
+    display: inline-block;
+    margin-right: 5px;
+  }
+
+  .song-info .title {
+    font-weight: 300;
+    font-size: 0.7rem;
+  }
+
+  .bar {
+    display: flex;
+    align-items: center;
+  }
+
+  .bar img {
+    width: 40px;
+  }
+
+  .menu {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 30px;
+    color: rgba(255, 255, 255, 0.57);
+    font-weight: 300;
+    font-size: 0.8rem;
+  }
+
+  .menu-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .menu-item.active {
+    color: white;
+  }
+
+  .menu-item i {
+    display: inline-block;
+    margin: 5px;
+    font-size: 1rem;
+  }
+}

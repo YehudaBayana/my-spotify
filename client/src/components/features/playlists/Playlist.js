@@ -7,7 +7,10 @@ const Playlist = ({ setIsClicked, chooseTrack, playList, detail }) => {
     <>
       <div className='opacity'>
         <div className='sticky'>
-          <span style={{ cursor: 'pointer' }} onClick={() => setIsClicked()}>
+          <span
+            style={{ cursor: 'pointer', fontSize: '30px' }}
+            onClick={() => setIsClicked()}
+          >
             &#10005;
           </span>
           <div className='playlistWrapper'>

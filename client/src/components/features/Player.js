@@ -10,6 +10,15 @@ export default function Player({ accessToken, trackUri }) {
   return (
     <SpotifyPlayer
       token={accessToken}
+      styles={{
+        activeColor: '#fff',
+        bgColor: '#333',
+        color: '#fff',
+        loaderColor: '#fff',
+        sliderColor: '#1cb954',
+        trackArtistColor: '#ccc',
+        trackNameColor: '#fff',
+      }}
       showSaveIcon
       callback={(state) => {
         if (!state.isPlaying) setPlay(false);

@@ -10,6 +10,9 @@ export const Container = styled.div`
   /* max-width: 2000px; */
   margin: 0 auto;
   padding: 0 22px;
+  @media (max-width: 500px) {
+    padding: 0;
+  }
 `;
 
 function App() {
@@ -24,7 +27,6 @@ function App() {
           </Container>
         ) : (
           <>
-            {' '}
             <Header />
             {/* <Login /> */}
             <HeroSection />

@@ -50,7 +50,7 @@ const fetchCategories = (
             })
             .then(
               function (data) {
-                console.log(`${category.id} `, data.body);
+                // console.log(`${category.id} `, data.body);
                 setPppppDes((old) => [...old, category.name]);
                 setCategoryPlaylist((old) => [
                   ...old,
@@ -69,10 +69,11 @@ const fetchCategories = (
     );
 };
 
-const fetchUserPlaylists = (spotifyApi, setUserPlaylists) => {
+const fetchUserPlaylists = (spotifyApi, setUserPlaylists, setUserName) => {
   spotifyApi.getMe().then(
     function (data) {
-      console.log('Some information about the authenticated user', data.body);
+      // console.log('Some information about the authenticated user', data.body);
+      setUserName(data.body.display_name);
 
       spotifyApi.getUserPlaylists(data.body.id).then(
         function (data) {
@@ -97,6 +98,7 @@ const fetchSavedTracks = (spotifyApi, setSavedTracks) => {
       offset: 0,
     })
     .then((data) => {
+      console.log('last', data.body);
       setSavedTracks({
         items: data.body.items.map((item) => {
           return item.track;

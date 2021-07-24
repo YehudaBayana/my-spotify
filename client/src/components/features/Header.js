@@ -14,7 +14,6 @@ const HeaderTag = styled.div`
   font-size: 30px;
   position: relative;
   height: 80vh;
-  /* margin-top: 50px; */
 
   &:before {
     position: absolute;

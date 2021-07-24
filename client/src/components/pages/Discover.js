@@ -11,7 +11,7 @@ const Discover = ({ partyPlaylist, setIsClicked, getOne, AlbumImg }) => {
           officiis.
         </p>
         <div className='team'>
-          <ul className='auto-grid' role='list'>
+          <div className='auto-grid' role='list'>
             {partyPlaylist?.map((item) => {
               return (
                 <li
@@ -20,19 +20,15 @@ const Discover = ({ partyPlaylist, setIsClicked, getOne, AlbumImg }) => {
                     return getOne(item.id);
                   }}
                 >
-                  <a className='profile'>
+                  <p className='profile'>
                     {/* <h5 className='profile__name'>{item.description}</h5> */}
                     <p>{item.name}</p>
-                    <AlbumImg
-                      setIsClicked={setIsClicked}
-                      imgUrl={item.icons[0].url}
-                      getOne={() => getOne(item.id)}
-                    />
-                  </a>
+                    <AlbumImg imgUrl={item.icons[0].url} />
+                  </p>
                 </li>
               );
             })}
-          </ul>
+          </div>
         </div>
       </article>
     </>

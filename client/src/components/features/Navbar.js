@@ -23,30 +23,6 @@ const Wrapper = styled.div`
   }
 `;
 
-const Ul = styled.ul`
-  @media (min-width: 865px) {
-    display: flex;
-  }
-
-  @media (max-width: 864px) {
-    position: absolute;
-    top: calc(100% + 35px);
-    right: 0;
-    left: 0;
-    z-index: -1;
-    background-color: #d9f0f7;
-    visibility: hidden;
-    opacity: 0;
-    transform: translateY(-100%);
-    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
-    .active {
-      visibility: visible;
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-`;
-
 const NavItem = styled.li`
   a {
     display: block;
@@ -204,13 +180,13 @@ const Navbar = ({ search, setSearch }) => {
           <nav className='nav'>
             <NavToggle
               onClick={myClick}
-              class='nav__toggle'
+              className='nav__toggle'
               aria-expanded='false'
             >
               &#9776;
             </NavToggle>
-            <ul class='nav__wrapper' ref={navWrapper} id='aaa'>
-              <NavItem class='nav__item active'>
+            <ul className='nav__wrapper' ref={navWrapper} id='aaa'>
+              <NavItem className='nav__item active'>
                 <Link to='/'>
                   <i className='fas fa-home'></i>
                   <span>Home</span>
@@ -224,7 +200,7 @@ const Navbar = ({ search, setSearch }) => {
               </NavItem>
               <NavItem className='nav__item'>
                 <Link to='/discover'>
-                  <i class='fas fa-hashtag'></i>
+                  <i className='fas fa-hashtag'></i>
                   <span>Discover</span>
                 </Link>
               </NavItem>

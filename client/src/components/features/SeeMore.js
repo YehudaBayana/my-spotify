@@ -4,7 +4,7 @@ import { useParams } from 'react-router';
 const SeeMore = ({ partyPlaylist, setIsClicked, getOne, AlbumImg }) => {
   const { id } = useParams();
   let news = partyPlaylist.find((allus) => {
-    return allus[0].id == id;
+    return allus[0].id === id;
   });
 
   return (
@@ -13,7 +13,7 @@ const SeeMore = ({ partyPlaylist, setIsClicked, getOne, AlbumImg }) => {
         <h1>{news[0].name}</h1>
         <p>{news[0].description}</p>
         <div className='team'>
-          <ul className='auto-grid' role='list'>
+          <div className='auto-grid' role='list'>
             {news?.map((item) => {
               return (
                 <li
@@ -23,18 +23,18 @@ const SeeMore = ({ partyPlaylist, setIsClicked, getOne, AlbumImg }) => {
                     return getOne(item.id);
                   }}
                 >
-                  <a className='profile'>
+                  <p className='profile'>
                     <p>{item.name}</p>
                     <AlbumImg
                       setIsClicked={setIsClicked}
                       imgUrl={item.images[0].url}
                       getOne={() => getOne(item.id)}
                     />
-                  </a>
+                  </p>
                 </li>
               );
             })}
-          </ul>
+          </div>
         </div>
       </article>
     </>

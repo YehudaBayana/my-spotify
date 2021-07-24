@@ -1,17 +1,9 @@
 import React from 'react';
 
-const AlbumImg = ({ imgUrl, setIsClicked, getOne }) => {
+const AlbumImg = ({ imgUrl }) => {
   return (
     <>
-      <img
-        onClick={() => {
-          getOne();
-          setIsClicked((oldValue) => !oldValue);
-        }}
-        src={imgUrl}
-        alt=''
-        width='100%'
-      />
+      <img src={imgUrl} alt='' width='100%' />
     </>
   );
 };

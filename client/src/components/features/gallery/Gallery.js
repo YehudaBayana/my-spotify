@@ -12,29 +12,25 @@ const Gallery = ({ userPlaylists, setIsClicked, getOne, AlbumImg }) => {
           officiis.
         </p>
         <div className='team'>
-          <ul className='auto-grid' role='list'>
+          <div className='auto-grid' role='list'>
             {userPlaylists?.map((item) => {
               return (
                 <li
                   key={item.id}
                   onClick={() => {
+                    console.log('dsdfsdfssdf: ', item);
                     setIsClicked((oldVal) => !oldVal);
                     return getOne(item.id);
                   }}
                 >
-                  <a className='profile'>
-                    {/* <h5 className='profile__name'>{item.description}</h5> */}
+                  <p className='profile'>
                     <p>{item.name}</p>
-                    <AlbumImg
-                      setIsClicked={setIsClicked}
-                      imgUrl={item.images[0].url}
-                      getOne={() => getOne(item.id)}
-                    />
-                  </a>
+                    <AlbumImg imgUrl={item.images[0].url} />
+                  </p>
                 </li>
               );
             })}
-          </ul>
+          </div>
         </div>
       </article>
     </>

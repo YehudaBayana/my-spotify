@@ -18,8 +18,8 @@ const EachSlider = ({ allUs, AlbumImg, getOne, setIsClicked, des }) => {
     arrows: true,
     infinite: false,
     speed: 500,
-    slidesToShow: Math.floor(windowWith / 236),
-    slidesToScroll: Math.floor(windowWith / 236),
+    slidesToShow: Math.ceil((windowWith - 222) / 236),
+    slidesToScroll: Math.ceil((windowWith - 222) / 236),
   };
   return (
     <>
@@ -30,7 +30,6 @@ const EachSlider = ({ allUs, AlbumImg, getOne, setIsClicked, des }) => {
             display: 'flex',
             justifyContent: 'space-between',
             margin: '10px auto',
-            // padding: '0 20px',
           }}
         >
           <p>
@@ -38,24 +37,30 @@ const EachSlider = ({ allUs, AlbumImg, getOne, setIsClicked, des }) => {
             quasi!
           </p>
           <Link
-            // to='/'
             to={allUs ? `/${allUs[0].id}` : '/'}
             style={{
-              backgroundColor: '#6fc1ff',
+              backgroundColor: 'rgb(0 179 54)',
               height: 'fit-content',
               padding: ' 6px 24px',
               borderRadius: '5px',
-              boxShadow: '1px 1px 15px lightgrey',
+              boxShadow: '1px 1px 15px black',
             }}
           >
             see all
           </Link>
         </div>
         <Slider {...settings}>
-          {allUs?.map(function (item) {
+          {allUs?.map((item) => {
             return (
               <>
-                <Link to='/' key={item.id}>
+                <Link
+                  onClick={() => {
+                    setIsClicked((old) => !old);
+                    getOne(item.id);
+                  }}
+                  to='/'
+                  key={item.id}
+                >
                   <Col>
                     <Card
                       style={{
@@ -63,18 +68,45 @@ const EachSlider = ({ allUs, AlbumImg, getOne, setIsClicked, des }) => {
                         justifyContent: 'center',
                         alignItems: 'center',
                         flexDirection: 'column',
+                        borderRadius: '5px',
+                        padding: '10px',
+                        margin: '0 10px ',
+                        backgroundColor: '#4e4d4d',
                       }}
                     >
-                      <div style={{ width: '200px' }}>
-                        <AlbumImg
-                          key={item.id}
-                          setIsClicked={setIsClicked}
-                          imgUrl={item.images[0].url}
-                          getOne={() => getOne(item.id)}
-                        />
+                      <div style={{ maxWidth: '200px', borderRadius: '10px' }}>
+                        <AlbumImg key={item.id} imgUrl={item.images[0].url} />
                       </div>
                       <Card.Body>
-                        <span>{item.name}</span>
+                        <h4
+                          style={{
+                            color: 'white',
+                            margin: '10px 0',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            display: '-webkit-box',
+                            webkitLineClamp: '1',
+                            webkitBoxOrient: 'vertical',
+                            cursor: 'pointer',
+                          }}
+                        >
+                          {item.name}
+                        </h4>
+                        <p
+                          style={{
+                            fontWeight: '200',
+                            fontSize: '15px',
+                            marginBottom: '10px',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            display: '-webkit-box',
+                            webkitLineClamp: '2',
+                            webkitBoxOrient: 'vertical',
+                            cursor: 'pointer',
+                          }}
+                        >
+                          {item.description}
+                        </p>
                       </Card.Body>
                     </Card>
                   </Col>
@@ -84,7 +116,7 @@ const EachSlider = ({ allUs, AlbumImg, getOne, setIsClicked, des }) => {
           })}
         </Slider>
       </Container>
-      <hr />
+      {/* <hr /> */}
     </>
   );
 };

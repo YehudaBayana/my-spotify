@@ -25,7 +25,7 @@ const TrackAlbumRes = ({ track, chooseTrack }) => {
       onClick={handlePlay}
     >
       <img
-        src={track.album.images[0].url}
+        src={track.album?.images[0].url}
         alt=''
         style={{ height: '64px', width: '64px' }}
       />
