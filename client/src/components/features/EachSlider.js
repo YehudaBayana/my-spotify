@@ -39,11 +39,12 @@ const EachSlider = ({ allUs, AlbumImg, getOne, setIsClicked, des }) => {
           <Link
             to={allUs ? `/${allUs[0].id}` : '/'}
             style={{
-              backgroundColor: 'rgb(0 179 54)',
+              backgroundColor: 'rgb(30,215,96)',
               height: 'fit-content',
               padding: ' 6px 24px',
               borderRadius: '5px',
               boxShadow: '1px 1px 15px black',
+              color: 'black',
             }}
           >
             see all

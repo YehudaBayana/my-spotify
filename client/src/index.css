@@ -12,11 +12,7 @@ html {
 
 body {
   font-family: 'Rubik', sans-serif;
-  background-image: linear-gradient(
-    to bottom,
-    rgb(29, 29, 29),
-    rgb(70, 70, 70)
-  );
+  background: rgb(37, 37, 37);
   color: white;
 }
 body::-webkit-scrollbar {
@@ -30,16 +26,34 @@ body::-webkit-scrollbar-track {
 
 body::-webkit-scrollbar-thumb {
   border-radius: 100px;
-  background-image: linear-gradient(180deg, #3652d0 0%, #708ad4 99%);
+  background: rgb(30, 215, 96);
   box-shadow: inset 2px 2px 5px 0 rgba(#fff, 0.5);
 }
 
 a {
   text-decoration: none !important;
+  font-size: 1.7rem;
 }
 
 li {
   list-style: none;
+}
+
+h2 {
+  font-size: 3rem;
+}
+h4 {
+  font-size: 1.8rem;
+}
+h5 {
+  font-size: 1.4rem;
+}
+p {
+  font-size: 1.6rem;
+}
+
+div {
+  font-size: 1.5rem;
 }
 
 .container {
@@ -76,7 +90,7 @@ a {
   display: grid;
   grid-template-columns: repeat(
     auto-fill,
-    minmax(var(--auto-grid-min-size, 12rem), 1fr)
+    minmax(var(--auto-grid-min-size, 18rem), 1fr)
   );
   grid-gap: var(--auto-grid-gap, 0);
   padding: 0;
@@ -97,7 +111,7 @@ a {
 .profile {
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: center;
   aspect-ratio: 1/1;
   position: relative;
   padding: 1.5rem;
@@ -106,6 +120,7 @@ a {
   text-decoration: none;
   overflow: hidden;
   margin: 5px;
+  border-radius: 50%;
 }
 
 .profile::before,
@@ -177,7 +192,7 @@ a {
 }
 
 .profile p {
-  font-size: 1.2rem;
+  font-size: 2.2rem;
   font-weight: 500;
 }
 
@@ -520,19 +535,19 @@ a:focus {
 }
 
 .nav-search {
-  height: 1.25rem;
+  height: 3.25rem;
   border-radius: 30px;
   border: none;
   padding: 1.125rem;
   font-size: 17px;
-  width: 13vmax;
+  width: 16vmax;
   color: #222;
   margin: 0px 11px 0px 22px;
 }
 ::placeholder {
   color: #222;
   opacity: 1;
-  font-size: 0.8rem;
+  font-size: 1.6rem;
   letter-spacing: 0.0125em;
 }
 .nav-button {
@@ -569,7 +584,7 @@ a:focus {
   border-bottom: 1px solid #151515;
   margin: 0px 25px 0px 8px;
   cursor: default !important;
-  font-size: 0.8rem;
+  font-size: 1.7rem;
   font-weight: 600;
   position: relative;
   padding-bottom: 1px;

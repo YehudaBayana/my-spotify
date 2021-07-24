@@ -34,7 +34,7 @@ const TrackAlbumRes = ({ track, chooseTrack }) => {
         <div
           style={{
             color: 'lightgray',
-            fontSize: '0.9rem',
+            fontSize: '1.4rem',
             opacity: '0.7',
             marginTop: '8px',
           }}

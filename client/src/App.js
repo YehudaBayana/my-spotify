@@ -1,7 +1,6 @@
 import Dashboard from './components/pages/Dashboard';
 import styled from 'styled-components';
-import Header from './components/features/Header';
-import HeroSection from './components/features/HeroSection';
+import LandingPage from './components/pages/landingPage';
 import { HashRouter as Router } from 'react-router-dom';
 import ScrollToTop from './ScrollToTop';
 export const code = new URLSearchParams(window.location.search).get('code');
@@ -27,9 +26,7 @@ function App() {
           </Container>
         ) : (
           <>
-            <Header />
-            {/* <Login /> */}
-            <HeroSection />
+            <LandingPage />
           </>
         )}
       </Router>
