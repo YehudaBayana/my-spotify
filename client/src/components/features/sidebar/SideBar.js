@@ -16,19 +16,21 @@ const SideBar = ({ myFocus, userPlaylists, setIsClicked, getOne }) => {
               </p>
             </div>
             <div className='mainNavPanel'>
-              <div className='navLeft_item'>
-                <p>
-                  <span
-                    style={{ fontSize: '25px' }}
-                    className='material-icons hover-white'
-                  >
-                    home
-                  </span>
-                </p>
-                <p className='navLeft_text hover-white'>
-                  <h5>Home</h5>
-                </p>
-              </div>
+              <Link to='/'>
+                <div className='navLeft_item'>
+                  <p>
+                    <span
+                      style={{ fontSize: '25px' }}
+                      className='material-icons hover-white'
+                    >
+                      home
+                    </span>
+                  </p>
+                  <p className='navLeft_text hover-white'>
+                    <h5>Home</h5>
+                  </p>
+                </div>
+              </Link>
               <div onClick={myFocus} className='navLeft_item'>
                 <p>
                   <span
@@ -70,19 +72,19 @@ const SideBar = ({ myFocus, userPlaylists, setIsClicked, getOne }) => {
                   <h5>Create Playlist</h5>
                 </p>
               </div>
-              <div className='navLeft_item'>
-                <p>
-                  <span
-                    style={{ fontSize: '25px' }}
-                    className='material-icons hover-white'
-                  >
-                    favorite
-                  </span>
-                </p>
-                <Link to='/savedTracks' className='navLeft_text hover-white'>
+              <Link to='/savedTracks' className='navLeft_text hover-white'>
+                <div className='navLeft_item'>
+                  <p>
+                    <span
+                      style={{ fontSize: '25px' }}
+                      className='material-icons hover-white'
+                    >
+                      favorite
+                    </span>
+                  </p>
                   <h5>Liked Songs</h5>
-                </Link>
-              </div>
+                </div>
+              </Link>
             </div>
           </div>
 

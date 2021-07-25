@@ -23,11 +23,6 @@
   padding: 0;
 }
 
-html,
-body {
-  height: 100%;
-}
-
 html {
   font-size: 62.5%;
 }

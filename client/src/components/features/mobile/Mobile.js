@@ -85,8 +85,8 @@ const Mobile = (props) => {
           )}
         </>
       )}
-      <footer>
-        <div className='menu'>
+      <footer className='footerM'>
+        <div className='menuM'>
           <div className='menu-item active'>
             <i className='fas fa-home'></i>
             Home

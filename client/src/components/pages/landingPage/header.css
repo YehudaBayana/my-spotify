@@ -1,7 +1,3 @@
-/**********
- * HEADER *
- **********/
-
 .headerL {
   height: 5.5rem;
   background: var(--black);
@@ -24,13 +20,13 @@
   align-items: center;
   height: 100%;
   cursor: pointer;
+  margin-right: 15px;
 }
 
 .header-logo img {
   width: 9rem;
 }
 
-/* Menu on mobile devices */
 .nav-mobile {
   display: flex;
   align-items: center;
@@ -62,7 +58,6 @@
   fill: var(--green1);
 }
 
-/* Menu */
 .toggler {
   width: 2rem;
   height: 3rem;
@@ -86,7 +81,6 @@
   transition: all 0.4s ease;
 }
 
-/* Hamburger menu lines */
 .hamburger-menu div,
 .hamburger-menu div::before,
 .hamburger-menu div::after {
@@ -97,31 +91,26 @@
   border-radius: 1rem;
 }
 
-/* Top hamburger menu line */
 .hamburger-menu div::before {
   position: absolute;
   top: -0.7rem;
 }
 
-/* Bottom hamburger menu line */
 .hamburger-menu div::after {
   position: absolute;
   top: 0.7rem;
 }
 
-/* Rotate the hamburger menu when it is clicked */
 .toggler:checked + .hamburger-menu > div {
   transform: rotate(135deg);
 }
 
-/* Rotate the top and bottom lines in the hamburger menu when it is clicked */
 .toggler:checked + .hamburger-menu > div::before,
 .toggler:checked + .hamburger-menu > div::after {
   top: 0;
   transform: rotate(90deg);
 }
 
-/* Menu overlay */
 .menu-overlay {
   display: flex;
   flex-direction: column;
@@ -162,12 +151,10 @@
   opacity: 1;
 }
 
-/* This will put the toggler on top of the hamburger menu */
 .toggler:checked {
   z-index: 1001;
 }
 
-/* This line puts the hamburger menu on top of the overlay menu */
 .toggler:checked + .hamburger-menu {
   z-index: 1000;
 }
@@ -192,7 +179,6 @@
   opacity: 1;
 }
 
-/* This will make the li items to slide from right to left */
 .menu-overlay li:nth-child(1) {
   transition: transform 0.1s ease;
 }
@@ -221,12 +207,10 @@
   transition: transform 0.6s ease;
 }
 
-/* Change links color on hover */
 .menu-overlay li a:hover {
   color: var(--blue);
 }
 
-/* Separator */
 .menu-overlay li:nth-child(4) {
   width: 2rem;
   height: 0.15rem;
@@ -234,7 +218,6 @@
   background: var(--white);
 }
 
-/* Selects last two li elements */
 .menu-overlay li:nth-last-child(-n + 2) {
   font-size: 2.8rem;
   font-weight: 400;
@@ -249,7 +232,6 @@
   cursor: pointer;
 }
 
-/* Menu on Desktop */
 .nav-desktop {
   display: none;
 }
@@ -283,50 +265,19 @@
   position: relative;
 }
 
-/* These lines will change the profile container elements color on hover and on checked */
-.profileL-container:hover .profileL,
-.dropdown-menu-toggler:checked + .dropdown-menu + .profileL {
-  border-color: var(--blue);
-}
-
-.profileL-container:hover .profileL svg,
-.profileL-container:hover ul li:last-child svg,
-.dropdown-menu-toggler:checked + .dropdown-menu + .profileL svg,
-.dropdown-menu-toggler:checked
-  + .dropdown-menu
-  + .profileL
-  + ul
-  li:last-child
-  svg {
-  fill: var(--blue);
-}
-
-.profileL-container:hover > ul li:first-child,
-.dropdown-menu-toggler:checked
-  + .dropdown-menu
-  + .profileL
-  + ul
-  li:first-child {
-  color: var(--blue);
-}
-
-/* Selects the li with text 'Profile' */
 .profileL-container ul li:first-child {
   margin-right: 1rem;
 }
 
-/* Selects the li that contains the arrow */
 .profileL-container ul li:last-child {
   margin-right: 0;
 }
 
-/* Selects the arrow */
 .profileL-arrow {
   width: 1.2rem;
   fill: var(--white);
 }
 
-/* Dropdown menu */
 .dropdown-menu {
   width: 16rem;
   height: 8rem;
@@ -338,7 +289,6 @@
   visibility: hidden;
 }
 
-/* Input of type check that will be used to open and close the dropdown menu */
 .dropdown-menu-toggler {
   position: absolute;
   width: 100%;
@@ -347,7 +297,6 @@
   cursor: pointer;
 }
 
-/* This code will create the triangle that is on top of the dropdown menu */
 .dropdown-menu::before {
   content: '';
   display: block;
@@ -369,24 +318,20 @@
   padding: 1.5rem;
 }
 
-/* Dropdown menu 'Account' link */
 .dropdown-menu ul li:first-child {
   margin-bottom: 1rem;
   color: var(--black);
 }
 
-/* Dropdown menu 'Log out' link */
 .dropdown-menu ul li:last-child {
   margin-bottom: 1rem;
   color: var(--gray2);
 }
 
-/* This line will show the dropdown menu when the user clicks on 'Profile' */
 .dropdown-menu-toggler:checked + .dropdown-menu {
   visibility: visible;
 }
 
-/* This line will change the rotation of the arrow when the dropdown menu is opened */
 .dropdown-menu-toggler:checked
   + .dropdown-menu
   + .profileL

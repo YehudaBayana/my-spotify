@@ -61,7 +61,7 @@
     margin-left: 5px;
     color: var(--white-90);
     font-weight: 500;
-    font-size: 0.7rem;
+    font-size: 1.2rem;
   }
 
   .middle-section {
@@ -92,7 +92,7 @@
     border-radius: 8px;
   }
 
-  footer {
+  .footerM {
     background: rgb(26, 26, 26);
     position: fixed;
     bottom: 0;
@@ -134,7 +134,7 @@
     width: 40px;
   }
 
-  .menu {
+  .menuM {
     display: flex;
     justify-content: space-between;
     padding: 10px 30px;
@@ -157,6 +157,6 @@
   .menu-item i {
     display: inline-block;
     margin: 5px;
-    font-size: 1rem;
+    font-size: 2rem;
   }
 }
