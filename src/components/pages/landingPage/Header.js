@@ -131,12 +131,12 @@ const Header = () => {
                 </ul>
               </div>
               <div className='profileL'>
-                <i class='fas fa-user'></i>
+                <i className='fas fa-user'></i>
               </div>
               <ul>
                 <li>ProfileL</li>
                 <li>
-                  <i class='fas fa-chevron-down'></i>
+                  <i className='fas fa-chevron-down'></i>
                 </li>
               </ul>
             </div>
