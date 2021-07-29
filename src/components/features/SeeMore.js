@@ -1,10 +1,10 @@
 import React from 'react';
 import { useParams } from 'react-router';
 
-const SeeMore = ({ partyPlaylist, setIsClicked, getOne, AlbumImg }) => {
+const SeeMore = ({ categoryPlaylist, setIsClicked, getOne, AlbumImg }) => {
   const { id } = useParams();
-  let news = partyPlaylist.find((allus) => {
-    return allus[0].id === id;
+  let news = categoryPlaylist.find((playlists) => {
+    return playlists[0].id === id;
   });
 
   return (

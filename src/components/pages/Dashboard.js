@@ -8,7 +8,7 @@ import '../../index.css';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import SavedTracks from './SavedTracks';
 import Discover from './Discover';
-import EachSlider from '../features/EachSlider';
+import EachSlider from '../features/eachSlider/EachSlider';
 import SeeMore from '../features/SeeMore';
 import Gallery from '../features/gallery/Gallery';
 import {
@@ -90,7 +90,7 @@ export default function Dashboard({ code }) {
     fetchSavedTracks(spotifyApi, setSavedTracks, setIsLoading);
   }, [accessToken]);
 
-  function myFocus() {
+  function searchFocus() {
     searchRef.current.focus();
   }
   const [windowWith, setWindowWith] = useState(window.innerWidth);
@@ -104,7 +104,7 @@ export default function Dashboard({ code }) {
       {windowWith > 500 ? (
         <div className='siteWrapper'>
           <SideBar
-            myFocus={myFocus}
+            myFocus={searchFocus}
             userPlaylists={userPlaylists}
             setIsClicked={setIsClicked}
             getOne={getOne}
@@ -199,7 +199,7 @@ export default function Dashboard({ code }) {
               </Route>
               <Route path='/:id'>
                 <SeeMore
-                  partyPlaylist={categoryPlaylist}
+                  categoryPlaylist={categoryPlaylist}
                   setIsClicked={setIsClicked}
                   getOne={getOne}
                   AlbumImg={AlbumImg}
@@ -233,7 +233,7 @@ export default function Dashboard({ code }) {
             chooseTrack={chooseTrack}
             playList={playList}
             detail={detail}
-            myFocus={myFocus}
+            myFocus={searchFocus}
           />
           <div className='searchResultsWrapper'>
             {searchResults.map((track) => (
