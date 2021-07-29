@@ -1,27 +1,32 @@
-const fetchSearch = (spotifyApi, search, setSearchResults) => {
+const fetchSearch = (spotifyApi, search, setSearchResults, setIsLoading) => {
   let cancel = false;
 
-  spotifyApi.searchTracks(search).then((res) => {
-    if (cancel) return;
-    setSearchResults(
-      res.body.tracks.items.map((track) => {
-        const smallestAlbumImage = track.album.images.reduce(
-          (smallest, image) => {
-            if (image.height < smallest.height) return image;
-            return smallest;
-          },
-          track.album.images[0]
-        );
+  spotifyApi
+    .searchTracks(search)
+    .then((res) => {
+      if (cancel) return;
+      setSearchResults(
+        res.body.tracks.items.map((track) => {
+          const smallestAlbumImage = track.album.images.reduce(
+            (smallest, image) => {
+              if (image.height < smallest.height) return image;
+              return smallest;
+            },
+            track.album.images[0]
+          );
 
-        return {
-          artist: track.artists[0].name,
-          title: track.name,
-          uri: track.uri,
-          albumUrl: smallestAlbumImage.url,
-        };
-      })
-    );
-  });
+          return {
+            artist: track.artists[0].name,
+            title: track.name,
+            uri: track.uri,
+            albumUrl: smallestAlbumImage.url,
+          };
+        })
+      );
+    })
+    .then(() => {
+      setIsLoading(false);
+    });
   return () => (cancel = true);
 };
 
@@ -29,7 +34,8 @@ const fetchCategories = (
   spotifyApi,
   setCategories,
   setPppppDes,
-  setCategoryPlaylist
+  setCategoryPlaylist,
+  setIsLoading
 ) => {
   spotifyApi
     .getCategories({
@@ -60,7 +66,10 @@ const fetchCategories = (
               function (err) {
                 console.log('Something went wrong!', err);
               }
-            );
+            )
+            .then(() => {
+              setIsLoading(false);
+            });
         });
       },
       function (err) {
@@ -69,28 +78,38 @@ const fetchCategories = (
     );
 };
 
-const fetchUserPlaylists = (spotifyApi, setUserPlaylists, setUserName) => {
-  spotifyApi.getMe().then(
-    function (data) {
-      // console.log('Some information about the authenticated user', data.body);
-      setUserName(data.body.display_name);
+const fetchUserPlaylists = (
+  spotifyApi,
+  setUserPlaylists,
+  setUserName,
+  setIsLoading
+) => {
+  spotifyApi
+    .getMe()
+    .then(
+      function (data) {
+        // console.log('Some information about the authenticated user', data.body);
+        setUserName(data.body.display_name);
 
-      spotifyApi.getUserPlaylists(data.body.id).then(
-        function (data) {
-          setUserPlaylists(data.body.items);
-        },
-        function (err) {
-          console.log('Something went wrong!', err);
-        }
-      );
-    },
-    function (err) {
-      console.log('Something went wrong!', err);
-    }
-  );
+        spotifyApi.getUserPlaylists(data.body.id).then(
+          function (data) {
+            setUserPlaylists(data.body.items);
+          },
+          function (err) {
+            console.log('Something went wrong!', err);
+          }
+        );
+      },
+      function (err) {
+        console.log('Something went wrong!', err);
+      }
+    )
+    .then(() => {
+      setIsLoading(false);
+    });
 };
 
-const fetchSavedTracks = (spotifyApi, setSavedTracks) => {
+const fetchSavedTracks = (spotifyApi, setSavedTracks, setIsLoading) => {
   spotifyApi
     .getMySavedTracks({
       market: 'ES',
@@ -104,6 +123,9 @@ const fetchSavedTracks = (spotifyApi, setSavedTracks) => {
           return item.track;
         }),
       });
+    })
+    .then(() => {
+      setIsLoading(false);
     });
 };
 

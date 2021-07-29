@@ -8,9 +8,9 @@ const HeroSection = () => {
       <section className='hero'>
         <div className='hero-container'>
           <div className='hero-content'>
-            <h1 className='hero-title'>Go Premium. Be happy.</h1>
+            <h1 className='hero-title'>only premium users can login.</h1>
             <a className='hero-button' href={AUTH_URL}>
-              GET SPOTIFY PREMIUM
+              LOGIN WITH SPOTIFY
             </a>
             <div className='terms'>
               <span>*</span>
@@ -32,7 +32,9 @@ const HeroSection = () => {
           <div className='albums-content'>
             <h2>Looking for music?</h2>
             <p>Start listening to the best new releases.</p>
-            <button>LAUNCH WEB PLAYER</button>
+            <a href={AUTH_URL}>
+              <button>LAUNCH WEB PLAYER</button>
+            </a>
           </div>
           <div className='albums-cards-container'>
             <div className='album'>
@@ -40,13 +42,7 @@ const HeroSection = () => {
               <div className='album-info'>
                 <h2>FRANCHISE (feat. Young Thug & M.I.A.)</h2>
                 <h4>Travis Scott</h4>
-                <a
-                  href='https://www.spotify.com/us/'
-                  target='_blank'
-                  rel='noreferrer'
-                >
-                  PLAY NOW
-                </a>
+                <a href={AUTH_URL}>PLAY NOW</a>
               </div>
             </div>
             <div className='album'>
@@ -54,13 +50,7 @@ const HeroSection = () => {
               <div className='album-info'>
                 <h2>Better</h2>
                 <h4>ZAYN</h4>
-                <a
-                  href='https://www.spotify.com/us/'
-                  target='_blank'
-                  rel='noreferrer'
-                >
-                  PLAY NOW
-                </a>
+                <a href={AUTH_URL}>PLAY NOW</a>
               </div>
             </div>
             <div className='album'>
@@ -68,13 +58,7 @@ const HeroSection = () => {
               <div className='album-info'>
                 <h2>Nectar</h2>
                 <h4>Joji</h4>
-                <a
-                  href='https://www.spotify.com/us/'
-                  target='_blank'
-                  rel='noreferrer'
-                >
-                  PLAY NOW
-                </a>
+                <a href={AUTH_URL}>PLAY NOW</a>
               </div>
             </div>
             <div className='album'>
@@ -82,13 +66,7 @@ const HeroSection = () => {
               <div className='album-info'>
                 <h2>Pa Ti + Lonely</h2>
                 <h4>Jennifer Lopez</h4>
-                <a
-                  href='https://www.spotify.com/us/'
-                  target='_blank'
-                  rel='noreferrer'
-                >
-                  PLAY NOW
-                </a>
+                <a href={AUTH_URL}>PLAY NOW</a>
               </div>
             </div>
             <div className='album'>
@@ -96,13 +74,7 @@ const HeroSection = () => {
               <div className='album-info'>
                 <h2>Tickets To My Downfall</h2>
                 <h4>Machine Gun Kelly</h4>
-                <a
-                  href='https://www.spotify.com/us/'
-                  target='_blank'
-                  rel='noreferrer'
-                >
-                  PLAY NOW
-                </a>
+                <a href={AUTH_URL}>PLAY NOW</a>
               </div>
             </div>
             <div className='album'>
@@ -110,13 +82,7 @@ const HeroSection = () => {
               <div className='album-info'>
                 <h2>Cold</h2>
                 <h4>Chris Stapleton</h4>
-                <a
-                  href='https://www.spotify.com/us/'
-                  target='_blank'
-                  rel='noreferrer'
-                >
-                  PLAY NOW
-                </a>
+                <a href={AUTH_URL}>PLAY NOW</a>
               </div>
             </div>
           </div>

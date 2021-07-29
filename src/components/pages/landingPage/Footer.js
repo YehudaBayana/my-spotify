@@ -131,35 +131,29 @@ const Footer = () => {
             </div>
           </div>
           <div className='social-icons'>
-            <ul>
-              <li>
-                <a
-                  href='https://www.spotify.com/us/'
-                  target='_blank'
-                  rel='noreferrer'
-                >
-                  <img alt='' src='images/instagram-icon.svg' />
-                </a>
-              </li>
-              <li>
-                <a
-                  href='https://www.spotify.com/us/'
-                  target='_blank'
-                  rel='noreferrer'
-                >
-                  <img alt='' src='images/twitter-icon.svg' />
-                </a>
-              </li>
-              <li>
-                <a
-                  href='https://www.spotify.com/us/'
-                  target='_blank'
-                  rel='noreferrer'
-                >
-                  <img alt='' src='images/facebook-icon.svg' />
-                </a>
-              </li>
-            </ul>
+            <div className='icons-wrapper'>
+              <a
+                href='https://www.spotify.com/us/'
+                target='_blank'
+                rel='noreferrer'
+              >
+                <i class='fab fa-instagram'></i>
+              </a>
+              <a
+                href='https://www.spotify.com/us/'
+                target='_blank'
+                rel='noreferrer'
+              >
+                <i class='fab fa-twitter'></i>
+              </a>
+              <a
+                href='https://www.spotify.com/us/'
+                target='_blank'
+                rel='noreferrer'
+              >
+                <i class='fab fa-facebook'></i>
+              </a>
+            </div>
           </div>
           <div className='country'>
             <a
@@ -228,7 +222,7 @@ const Footer = () => {
                 </a>
               </li>
             </ul>
-            <span>&copy; 2020 Spotify AB</span>
+            <span>&copy; 2021 Spotify Yuda</span>
           </div>
         </nav>
       </footer>

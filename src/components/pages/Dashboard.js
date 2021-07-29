@@ -5,7 +5,7 @@ import TrackSearchResult from '../features/TrackSearchResult';
 import SpotifyWebApi from 'spotify-web-api-node';
 import Playlist from '../features/playlists/Playlist';
 import '../../index.css';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import SavedTracks from './SavedTracks';
 import Discover from './Discover';
 import EachSlider from '../features/EachSlider';
@@ -40,10 +40,12 @@ export default function Dashboard({ code }) {
   const [categoryPlaylist, setCategoryPlaylist] = useState([]);
   const [categories, setCategories] = useState();
   const [userName, setUserName] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
 
   function chooseTrack(track) {
     setPlayingTrack(track);
     setSearch('');
+    searchRef.current.value = '';
   }
 
   useEffect(() => {
@@ -54,7 +56,7 @@ export default function Dashboard({ code }) {
   useEffect(() => {
     if (!search) return setSearchResults([]);
     if (!accessToken) return;
-    fetchSearch(spotifyApi, search, setSearchResults);
+    fetchSearch(spotifyApi, search, setSearchResults, setIsLoading);
   }, [search, accessToken]);
 
   const [playlistDes, setPlaylistDes] = useState([]);
@@ -77,14 +79,15 @@ export default function Dashboard({ code }) {
   useEffect(() => {
     if (!accessToken) return;
 
-    fetchUserPlaylists(spotifyApi, setUserPlaylists, setUserName);
+    fetchUserPlaylists(spotifyApi, setUserPlaylists, setUserName, setIsLoading);
     fetchCategories(
       spotifyApi,
       setCategories,
       setPlaylistDes,
-      setCategoryPlaylist
+      setCategoryPlaylist,
+      setIsLoading
     );
-    fetchSavedTracks(spotifyApi, setSavedTracks);
+    fetchSavedTracks(spotifyApi, setSavedTracks, setIsLoading);
   }, [accessToken]);
 
   function myFocus() {
@@ -128,53 +131,53 @@ export default function Dashboard({ code }) {
             </header>
             <Switch>
               <Route exact path='/'>
-                <div className='searchResultsWrapper'>
-                  {searchResults.map((track) => (
-                    <TrackSearchResult
-                      track={track}
-                      key={track.uri}
-                      chooseTrack={chooseTrack}
-                    />
-                  ))}
-                </div>
-                <hr />
-                {categoryPlaylist.map((item, i) => {
-                  return (
-                    <EachSlider
-                      key={i}
-                      allUs={item}
-                      AlbumImg={AlbumImg}
-                      getOne={getOne}
-                      setIsClicked={setIsClicked}
-                      des={playlistDes[i]}
-                    />
-                  );
-                })}
-                <Gallery
-                  userPlaylists={userPlaylists}
-                  setIsClicked={setIsClicked}
-                  getOne={getOne}
-                  AlbumImg={AlbumImg}
-                />
-                {isClicked && (
-                  <Playlist
-                    setIsClicked={setIsClicked}
-                    chooseTrack={chooseTrack}
-                    playList={playList}
-                    detail={detail}
+                {isLoading ? (
+                  <img
+                    src='https://upload.wikimedia.org/wikipedia/commons/b/b9/Youtube_loading_symbol_1_(wobbly).gif'
+                    alt=''
                   />
+                ) : (
+                  <>
+                    <div className='searchResultsWrapper'>
+                      {searchResults.map((track) => (
+                        <TrackSearchResult
+                          track={track}
+                          key={track.uri}
+                          chooseTrack={chooseTrack}
+                        />
+                      ))}
+                    </div>
+                    <hr />
+                    {categoryPlaylist.map((item, i) => {
+                      return (
+                        <EachSlider
+                          key={i}
+                          allUs={item}
+                          AlbumImg={AlbumImg}
+                          getOne={getOne}
+                          setIsClicked={setIsClicked}
+                          des={playlistDes[i]}
+                        />
+                      );
+                    })}
+                    <Gallery
+                      userPlaylists={userPlaylists}
+                      setIsClicked={setIsClicked}
+                      getOne={getOne}
+                      AlbumImg={AlbumImg}
+                    />
+                    {isClicked && (
+                      <Playlist
+                        setIsClicked={setIsClicked}
+                        chooseTrack={chooseTrack}
+                        playList={playList}
+                        detail={detail}
+                      />
+                    )}
+                  </>
                 )}
               </Route>
               <Route path='/savedTracks'>
-                <div style={{ maxWidth: '1125px', margin: '0 auto' }}>
-                  <div style={{ maxWidth: '400px' }}>
-                    <img
-                      src='https://images.unsplash.com/photo-1612820885398-03b96dab50a8?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTA0fHxoZWFydHxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60'
-                      alt=''
-                      width='100%'
-                    />
-                  </div>
-                </div>
                 <SavedTracks chooseTrack={chooseTrack} playList={savedTracks} />
               </Route>
               <Route path='/discover'>
@@ -210,6 +213,7 @@ export default function Dashboard({ code }) {
                   />
                 )}
               </Route>
+              <Redirect to='/' />
             </Switch>
             <div style={{ height: '30px', marginBottom: '70px' }}></div>
           </div>

@@ -36,7 +36,13 @@ const Mobile = (props) => {
             <div className='boxes'>
               {userPlaylists?.map((item) => {
                 return (
-                  <div className='box'>
+                  <div
+                    className='box'
+                    onClick={() => {
+                      setIsClicked((oldVal) => !oldVal);
+                      return getOne(item.id);
+                    }}
+                  >
                     <div className='box__image'>
                       <img src={item.images[0].url} alt='' />
                     </div>

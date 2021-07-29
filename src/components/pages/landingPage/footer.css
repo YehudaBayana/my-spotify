@@ -60,27 +60,6 @@
   padding-bottom: 1rem;
 }
 
-.social-icons ul {
-  display: flex;
-}
-
-.social-icons ul li {
-  margin-right: 1.5rem;
-  padding: 1rem;
-  background: #222326;
-  border-radius: 50%;
-}
-
-.social-icons img {
-  width: 2.3rem;
-  background: var(--white);
-  display: block;
-}
-
-.social-icons img:hover {
-  background: var(--green1);
-}
-
 .country {
   text-align: right;
   margin-bottom: 1rem;
@@ -130,5 +109,18 @@
 }
 
 .bottom-links a:hover {
+  color: var(--green1);
+}
+
+.icons-wrapper {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.icons-wrapper i {
+  margin: 0 10px;
+  font-size: 3rem;
+}
+.icons-wrapper i:hover {
   color: var(--green1);
 }
