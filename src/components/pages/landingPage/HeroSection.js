@@ -31,7 +31,7 @@ const HeroSection = () => {
         <div className='albums-container'>
           <div className='albums-content'>
             <h2>Looking for music?</h2>
-            <p>Start listening to the best new releases.</p>
+            <p>you have to have premium account to continue to my project</p>
             <a href={AUTH_URL}>
               <button>login with spotify</button>
             </a>
