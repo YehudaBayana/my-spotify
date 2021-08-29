@@ -33,7 +33,7 @@ const HeroSection = () => {
             <h2>Looking for music?</h2>
             <p>Start listening to the best new releases.</p>
             <a href={AUTH_URL}>
-              <button>LAUNCH WEB PLAYER</button>
+              <button>login with spotify</button>
             </a>
           </div>
           <div className='albums-cards-container'>
