@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import '../features/playlists/playlist.css';
 import styled from 'styled-components';
+import { StoreContext } from '../context/ContextProvider';
 
 const TrackDiv = styled.div`
   cursor: pointer;
@@ -11,10 +12,14 @@ const TrackDiv = styled.div`
   }
 `;
 
-const SavedTracks = ({ playList, chooseTrack }) => {
+const SavedTracks = ({ chooseTrack }) => {
+  const { state } = useContext(StoreContext);
+  let playList = state.savedTracks;
+
   function handleClick(track) {
     chooseTrack(track);
   }
+
   function msToMinutesAndSeconds(ms) {
     var minutes = Math.floor(ms / 60000);
     var seconds = ((ms % 60000) / 1000).toFixed(0);
@@ -34,7 +39,7 @@ const SavedTracks = ({ playList, chooseTrack }) => {
           playList.items?.map((track, i) => {
             return (
               <>
-                <TrackDiv>
+                <TrackDiv key={i}>
                   <div
                     onClick={() => handleClick(track)}
                     style={{

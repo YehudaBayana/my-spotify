@@ -1,28 +1,20 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { StoreContext } from '../../context/ContextProvider';
+import Playlist from '../playlists/Playlist';
 import './mobile.css';
 
 const Mobile = (props) => {
-  const {
-    searchRef,
-    setSearch,
-    userPlaylists,
-    categoryPlaylist,
-    playlistDes,
-    setIsClicked,
-    isClicked,
-    Playlist,
-    getOne,
-    chooseTrack,
-    playList,
-    detail,
-    myFocus,
-  } = props;
+  const { searchRef, chooseTrack, myFocus } = props;
+  const { state, getOne, dispatch } = useContext(StoreContext);
+
   return (
     <>
       <header>
         <input
           ref={searchRef}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) =>
+            dispatch({ type: 'setSearch', payload: e.target.value })
+          }
           class='nav-search'
           type='text'
           placeholder=' Search'
@@ -34,12 +26,13 @@ const Mobile = (props) => {
           <section className='top-section'>
             <h1>good afternoon</h1>
             <div className='boxes'>
-              {userPlaylists?.map((item) => {
+              {state.userPlaylists?.map((item) => {
                 return (
                   <div
+                    key={item.id}
                     className='box'
                     onClick={() => {
-                      setIsClicked((oldVal) => !oldVal);
+                      dispatch({ type: 'setIsClicked' });
                       return getOne(item.id);
                     }}
                   >
@@ -53,10 +46,10 @@ const Mobile = (props) => {
             </div>
           </section>
           <div className='middle-section'>
-            {categoryPlaylist?.map((item, i) => {
+            {state.categoryPlaylist?.map((item, i) => {
               return (
                 <>
-                  <h1 key={item.id}>{playlistDes[i]}</h1>
+                  <h1 key={item.id}>{state.playlistDes[i]}</h1>
                   <div key={item.id} className='large-boxes'>
                     {item?.map((item) => {
                       return (
@@ -64,7 +57,7 @@ const Mobile = (props) => {
                           key={item.id}
                           className='large-boxes__box'
                           onClick={() => {
-                            setIsClicked((oldVal) => !oldVal);
+                            dispatch({ type: 'setIsClicked' });
                             return getOne(item.id);
                           }}
                         >
@@ -81,12 +74,11 @@ const Mobile = (props) => {
             })}
           </div>
 
-          {isClicked && (
+          {state.isClicked && (
             <Playlist
-              setIsClicked={setIsClicked}
               chooseTrack={chooseTrack}
-              playList={playList}
-              detail={detail}
+              playList={state.playList}
+              detail={state.detail}
             />
           )}
         </>

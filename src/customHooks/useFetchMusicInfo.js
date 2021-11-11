@@ -1,42 +1,44 @@
-const fetchSearch = (spotifyApi, search, setSearchResults, setIsLoading) => {
-  let cancel = false;
+import { useContext, useEffect } from 'react';
+import { StoreContext } from '../components/context/ContextProvider';
 
-  spotifyApi
-    .searchTracks(search)
-    .then((res) => {
-      if (cancel) return;
-      setSearchResults(
-        res.body.tracks.items.map((track) => {
-          const smallestAlbumImage = track.album.images.reduce(
-            (smallest, image) => {
-              if (image.height < smallest.height) return image;
-              return smallest;
-            },
-            track.album.images[0]
-          );
+const useFetchSearch = (spotifyApi, search, accessToken) => {
+  const { dispatch } = useContext(StoreContext);
+  useEffect(() => {
+    if (!search) return dispatch({ type: 'setSearchResults', payload: [] });
+    if (!accessToken) return;
+    let cancel = false;
+    spotifyApi
+      .searchTracks(search)
+      .then((res) => {
+        if (cancel) return;
+        dispatch({
+          type: 'setSearchResults',
+          payload: res.body.tracks.items.map((track) => {
+            const smallestAlbumImage = track.album.images.reduce(
+              (smallest, image) => {
+                if (image.height < smallest.height) return image;
+                return smallest;
+              },
+              track.album.images[0]
+            );
 
-          return {
-            artist: track.artists[0].name,
-            title: track.name,
-            uri: track.uri,
-            albumUrl: smallestAlbumImage.url,
-          };
-        })
-      );
-    })
-    .then(() => {
-      setIsLoading(false);
-    });
-  return () => (cancel = true);
+            return {
+              artist: track.artists[0].name,
+              title: track.name,
+              uri: track.uri,
+              albumUrl: smallestAlbumImage.url,
+            };
+          }),
+        });
+      })
+      .then(() => {
+        dispatch({ type: 'setIsLoading', payload: false });
+      });
+    return () => (cancel = true);
+  }, [search, accessToken, dispatch, spotifyApi]);
 };
 
-const fetchCategories = (
-  spotifyApi,
-  setCategories,
-  setPppppDes,
-  setCategoryPlaylist,
-  setIsLoading
-) => {
+const fetchAllTracks = (spotifyApi, dispatch) => {
   spotifyApi
     .getCategories({
       limit: 10,
@@ -46,7 +48,10 @@ const fetchCategories = (
     .then(
       function (data) {
         console.log('chec', data.body);
-        setCategories(data.body.categories.items);
+        dispatch({
+          type: 'setCategories',
+          payload: data.body.categories.items,
+        });
         data.body.categories.items.forEach((category) => {
           spotifyApi
             .getPlaylistsForCategory(category.id, {
@@ -56,19 +61,18 @@ const fetchCategories = (
             })
             .then(
               function (data) {
-                // console.log(`${category.id} `, data.body);
-                setPppppDes((old) => [...old, category.name]);
-                setCategoryPlaylist((old) => [
-                  ...old,
-                  data.body.playlists.items,
-                ]);
+                dispatch({ type: 'setPlaylistDes', payload: category.name });
+                dispatch({
+                  type: 'setCategoryPlaylist',
+                  payload: data.body.playlists.items,
+                });
               },
               function (err) {
                 console.log('Something went wrong!', err);
               }
             )
             .then(() => {
-              setIsLoading(false);
+              dispatch({ type: 'setIsLoading', payload: false });
             });
         });
       },
@@ -76,40 +80,30 @@ const fetchCategories = (
         console.log('Something went wrong!', err);
       }
     );
-};
 
-const fetchUserPlaylists = (
-  spotifyApi,
-  setUserPlaylists,
-  setUserName,
-  setIsLoading
-) => {
   spotifyApi
     .getMe()
     .then(
-      function (data) {
-        // console.log('Some information about the authenticated user', data.body);
-        setUserName(data.body.display_name);
+      (data) => {
+        dispatch({ type: 'setUserName', payload: data.body.display_name });
 
         spotifyApi.getUserPlaylists(data.body.id).then(
-          function (data) {
-            setUserPlaylists(data.body.items);
+          (data) => {
+            dispatch({ type: 'setUserPlaylists', payload: data.body.items });
           },
-          function (err) {
+          (err) => {
             console.log('Something went wrong!', err);
           }
         );
       },
-      function (err) {
+      (err) => {
         console.log('Something went wrong!', err);
       }
     )
     .then(() => {
-      setIsLoading(false);
+      dispatch({ type: 'setIsLoading', payload: false });
     });
-};
 
-const fetchSavedTracks = (spotifyApi, setSavedTracks, setIsLoading) => {
   spotifyApi
     .getMySavedTracks({
       market: 'ES',
@@ -117,43 +111,42 @@ const fetchSavedTracks = (spotifyApi, setSavedTracks, setIsLoading) => {
       offset: 0,
     })
     .then((data) => {
-      console.log('last', data.body);
-      setSavedTracks({
-        items: data.body.items.map((item) => {
-          return item.track;
-        }),
+      dispatch({
+        type: 'setSavedTracks',
+        payload: {
+          items: data.body.items.map((item) => {
+            return item.track;
+          }),
+        },
       });
     })
     .then(() => {
-      setIsLoading(false);
+      dispatch({ type: 'setIsLoading', payload: false });
     });
 };
 
-const fetchPlaylistTracks = (spotifyApi, one, setPlayList) => {
+const fetchPlaylistTracks = (spotifyApi, playlist, dispatch) => {
   spotifyApi
-    .getPlaylistTracks(one.id, {
+    .getPlaylistTracks(playlist?.id, {
       offset: 1,
       limit: 100,
       fields: 'items',
     })
     .then(
-      function (data) {
-        setPlayList({
-          items: data.body.items.map((item) => {
-            return item.track;
-          }),
+      (data) => {
+        dispatch({
+          type: 'setPlayList',
+          payload: {
+            items: data.body.items.map((item) => {
+              return item.track;
+            }),
+          },
         });
       },
-      function (err) {
+      (err) => {
         console.log('Something went wrong!', err);
       }
     );
 };
 
-export {
-  fetchSearch,
-  fetchCategories,
-  fetchUserPlaylists,
-  fetchSavedTracks,
-  fetchPlaylistTracks,
-};
+export { useFetchSearch, fetchAllTracks, fetchPlaylistTracks };

@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import './sideBar.css';
 import { Link } from 'react-router-dom';
+import { StoreContext } from '../../context/ContextProvider';
 
-const SideBar = ({ myFocus, userPlaylists, setIsClicked, getOne }) => {
+const SideBar = ({ myFocus }) => {
+  const { state, dispatch, getOne } = useContext(StoreContext);
   return (
     <>
       <div className='sideBar'>
@@ -90,13 +92,14 @@ const SideBar = ({ myFocus, userPlaylists, setIsClicked, getOne }) => {
 
           <div className='navLeft_bottom'>
             <div className='playlistList'>
-              {userPlaylists?.map((item) => {
+              {state.userPlaylists?.map((item) => {
                 return (
                   <p
                     style={{ cursor: 'pointer' }}
                     key={item.id}
                     onClick={() => {
-                      setIsClicked((oldVal) => !oldVal);
+                      dispatch({ type: 'setIsClicked' });
+                      // setIsClicked((oldVal) => !oldVal);
                       return getOne(item.id);
                     }}
                     className='playlistName'

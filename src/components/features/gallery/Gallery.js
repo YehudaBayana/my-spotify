@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import '../../../index.css';
+import { StoreContext } from '../../context/ContextProvider';
+import AlbumImg from '../AlbumImg';
 
-const Gallery = ({ userPlaylists, setIsClicked, getOne, AlbumImg }) => {
+const Gallery = () => {
+  const { state, getOne, dispatch } = useContext(StoreContext);
   return (
     <>
       <article className='flow'>
@@ -13,13 +16,13 @@ const Gallery = ({ userPlaylists, setIsClicked, getOne, AlbumImg }) => {
         </p>
         <div className='team'>
           <div className='auto-grid' role='list'>
-            {userPlaylists?.map((item) => {
+            {state.userPlaylists?.map((item) => {
               return (
                 <li
                   key={item.id}
                   onClick={() => {
                     console.log('dsdfsdfssdf: ', item);
-                    setIsClicked((oldVal) => !oldVal);
+                    dispatch({ type: 'setIsClicked' });
                     return getOne(item.id);
                   }}
                 >

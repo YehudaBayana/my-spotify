@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useParams } from 'react-router';
+import { StoreContext } from '../context/ContextProvider';
+import AlbumImg from './AlbumImg';
 
-const SeeMore = ({ categoryPlaylist, setIsClicked, getOne, AlbumImg }) => {
+const SeeMore = () => {
+  const { state, dispatch, getOne } = useContext(StoreContext);
   const { id } = useParams();
-  let news = categoryPlaylist.find((playlists) => {
+  let news = state.categoryPlaylist.find((playlists) => {
     return playlists[0].id === id;
   });
 
@@ -19,14 +22,13 @@ const SeeMore = ({ categoryPlaylist, setIsClicked, getOne, AlbumImg }) => {
                 <li
                   key={item.id}
                   onClick={() => {
-                    setIsClicked((oldVal) => !oldVal);
+                    dispatch({ type: 'setIsClicked' });
                     return getOne(item.id);
                   }}
                 >
                   <p className='profile'>
                     <p>{item.name}</p>
                     <AlbumImg
-                      setIsClicked={setIsClicked}
                       imgUrl={item.images[0].url}
                       getOne={() => getOne(item.id)}
                     />

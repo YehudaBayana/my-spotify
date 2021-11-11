@@ -1,4 +1,4 @@
-import Dashboard from './components/pages/Dashboard';
+import Home from './components/pages/Home';
 import styled from 'styled-components';
 import LandingPage from './components/pages/landingPage';
 import { HashRouter as Router } from 'react-router-dom';
@@ -19,10 +19,9 @@ function App() {
     <>
       <Router>
         <ScrollToTop />
-        {/* <Navbar /> */}
         {code ? (
           <Container>
-            <Dashboard code={code} />
+            <Home code={code} />
           </Container>
         ) : (
           <>

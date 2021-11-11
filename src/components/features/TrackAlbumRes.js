@@ -25,12 +25,12 @@ const TrackAlbumRes = ({ track, chooseTrack }) => {
       onClick={handlePlay}
     >
       <img
-        src={track.album?.images[0].url}
+        src={track && track?.album?.images[0]?.url}
         alt=''
         style={{ height: '64px', width: '64px' }}
       />
       <div className='songTitle actual'>
-        <div>{track.name}</div>
+        <div>{track && track.name}</div>
         <div
           style={{
             color: 'lightgray',
@@ -39,12 +39,14 @@ const TrackAlbumRes = ({ track, chooseTrack }) => {
             marginTop: '8px',
           }}
         >
-          {track.album?.artists[0].name}
+          {track && track?.album?.artists[0].name}
         </div>
       </div>
-      <div className='songAlbum'>{track.album.name}</div>
-      <div className='songDate'>{track.album.release_date}</div>
-      <div className='songTime'>{msToMinutesAndSeconds(track.duration_ms)}</div>
+      <div className='songAlbum'>{track && track?.album.name}</div>
+      <div className='songDate'>{track && track?.album.release_date}</div>
+      <div className='songTime'>
+        {msToMinutesAndSeconds(track && track?.duration_ms)}
+      </div>
     </TrackDiv>
   );
 };

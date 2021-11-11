@@ -15,6 +15,7 @@ const Discover = ({ partyPlaylist, setIsClicked, getOne, AlbumImg }) => {
             {partyPlaylist?.map((item) => {
               return (
                 <li
+                  key={item.id}
                   onClick={() => {
                     setIsClicked((oldVal) => !oldVal);
                     return getOne(item.id);

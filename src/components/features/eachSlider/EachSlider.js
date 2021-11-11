@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import './eachSlider.css';
 import { Card, Col } from 'react-bootstrap';
 import { Container } from '../../../App';
@@ -6,8 +6,11 @@ import { Link } from 'react-router-dom';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import AlbumImg from '../AlbumImg';
+import { StoreContext } from '../../context/ContextProvider';
 
-const EachSlider = ({ allUs, AlbumImg, getOne, setIsClicked, des }) => {
+const EachSlider = ({ playlists, des }) => {
+  const { dispatch, getOne } = useContext(StoreContext);
   const [windowWith, setWindowWith] = useState(window.innerWidth);
   useEffect(() => {
     window.addEventListener('resize', () => {
@@ -27,21 +30,21 @@ const EachSlider = ({ allUs, AlbumImg, getOne, setIsClicked, des }) => {
       <Container style={{ margin: '40px 0' }}>
         <h2>{des}</h2>
         <div className='flex-between'>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptate,
-            quasi!
-          </p>
-          <Link to={allUs ? `/${allUs[0].id}` : '/'} className='see-all'>
+          <p>---------------</p>
+          <Link
+            to={playlists ? `/${playlists[0]?.id}` : '/'}
+            className='see-all'
+          >
             see all
           </Link>
         </div>
         <Slider {...settings}>
-          {allUs?.map((item) => {
+          {playlists?.map((item) => {
             return (
               <>
                 <Link
                   onClick={() => {
-                    setIsClicked((old) => !old);
+                    dispatch({ type: 'setIsClicked' });
                     getOne(item.id);
                   }}
                   to='/'
