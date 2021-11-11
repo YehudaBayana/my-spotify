@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/my-spotify/static/css/main.42ed064f.chunk.css",
-    "main.js": "/my-spotify/static/js/main.4f7acf09.chunk.js",
-    "main.js.map": "/my-spotify/static/js/main.4f7acf09.chunk.js.map",
+    "main.js": "/my-spotify/static/js/main.1468551e.chunk.js",
+    "main.js.map": "/my-spotify/static/js/main.1468551e.chunk.js.map",
     "runtime-main.js": "/my-spotify/static/js/runtime-main.1b6940fe.js",
     "runtime-main.js.map": "/my-spotify/static/js/runtime-main.1b6940fe.js.map",
     "static/css/2.70c91a6b.chunk.css": "/my-spotify/static/css/2.70c91a6b.chunk.css",
@@ -19,6 +19,6 @@
     "static/css/2.70c91a6b.chunk.css",
     "static/js/2.4699ebfa.chunk.js",
     "static/css/main.42ed064f.chunk.css",
-    "static/js/main.4f7acf09.chunk.js"
+    "static/js/main.1468551e.chunk.js"
   ]
 }
