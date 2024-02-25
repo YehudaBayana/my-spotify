@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
+const SERVER_DOMAIN = "http://localhost:5001/"
+
 export default function useAuth(code) {
   const [accessToken, setAccessToken] = useState();
   const [refreshToken, setRefreshToken] = useState();
@@ -8,7 +10,7 @@ export default function useAuth(code) {
 
   useEffect(() => {
     axios
-      .post('https://myspoty.herokuapp.com/login', {
+      .post(SERVER_DOMAIN + 'login', {
         code,
       })
       .then((res) => {
@@ -26,7 +28,7 @@ export default function useAuth(code) {
     if (!refreshToken || !expiresIn) return;
     const interval = setInterval(() => {
       axios
-        .post('https://myspoty.herokuapp.com/refresh', {
+        .post(SERVER_DOMAIN + 'refresh', {
           refreshToken,
         })
         .then((res) => {
