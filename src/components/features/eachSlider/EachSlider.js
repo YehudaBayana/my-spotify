@@ -45,19 +45,19 @@ const EachSlider = ({ playlists, des }) => {
                 <Link
                   onClick={() => {
                     dispatch({ type: 'setIsClicked' });
-                    getOne(item.id);
+                    getOne(item?.id);
                   }}
                   to='/'
-                  key={item.id}
+                  key={item?.id}
                 >
                   <Col>
                     <Card className='slider-card'>
                       <div style={{ maxWidth: '200px', borderRadius: '10px' }}>
-                        <AlbumImg key={item.id} imgUrl={item.images[0].url} />
+                        <AlbumImg key={item?.id} imgUrl={item?.images[0].url || ""} />
                       </div>
                       <Card.Body>
-                        <h4 className='slider-card-h4'>{item.name}</h4>
-                        <p className='slider-card-p'>{item.description}</p>
+                        <h4 className='slider-card-h4'>{item?.name}</h4>
+                        <p className='slider-card-p'>{item?.description}</p>
                       </Card.Body>
                     </Card>
                   </Col>

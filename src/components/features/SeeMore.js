@@ -29,7 +29,7 @@ const SeeMore = () => {
                   <p className='profile'>
                     <p>{item.name}</p>
                     <AlbumImg
-                      imgUrl={item.images[0].url}
+                      imgUrl={item?.images[0].url || ""}
                       getOne={() => getOne(item.id)}
                     />
                   </p>

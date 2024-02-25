@@ -19,7 +19,7 @@ const useFetchSearch = (spotifyApi, search, accessToken) => {
                 if (image.height < smallest.height) return image;
                 return smallest;
               },
-              track.album.images[0]
+              track.album?.images[0] || ""
             );
 
             return {

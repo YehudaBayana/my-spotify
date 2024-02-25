@@ -65,17 +65,17 @@ const ContextProvider = ({ children }) => {
 
   function getOne(id) {
     let playlist;
-    state.categoryPlaylist.forEach((play) => {
-      if (play.find((item) => item.id === id)) {
-        playlist = play.find((item) => item.id === id);
+    state?.categoryPlaylist?.forEach((play) => {
+      if (play?.find((item) => item?.id === id)) {
+        playlist = play?.find((item) => item?.id === id);
       }
     });
-    if (state.userPlaylists.find((item) => item.id === id)) {
-      playlist = state.userPlaylists.find((item) => item.id === id);
+    if (state?.userPlaylists?.find((item) => item?.id === id)) {
+      playlist = state?.userPlaylists?.find((item) => item?.id === id);
     }
 
     dispatch({ type: 'setDetail', payload: playlist });
-    fetchPlaylistTracks(state.spotifyApi, playlist, dispatch);
+    fetchPlaylistTracks(state?.spotifyApi, playlist, dispatch);
   }
 
   return (

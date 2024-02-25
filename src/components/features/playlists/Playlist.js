@@ -19,7 +19,7 @@ const Playlist = ({ chooseTrack }) => {
           </span>
           <div className='playlistWrapper'>
             <div className='playlistDetails'>
-              <img src={state.detail?.images[0].url} alt='' width='250px' />
+              <img src={state?.detail?.images[0].url || ""} alt='' width='250px' />
 
               <div style={{ marginLeft: '30px' }}>
                 <p>playlist</p>

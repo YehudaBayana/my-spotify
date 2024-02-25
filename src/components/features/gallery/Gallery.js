@@ -28,7 +28,7 @@ const Gallery = () => {
                 >
                   <p className='profile'>
                     <p>{item.name}</p>
-                    <AlbumImg imgUrl={item.images[0].url} />
+                    <AlbumImg imgUrl={item?.images[0].url || ""} />
                   </p>
                 </li>
               );

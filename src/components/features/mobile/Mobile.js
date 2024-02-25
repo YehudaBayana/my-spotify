@@ -37,7 +37,7 @@ const Mobile = (props) => {
                     }}
                   >
                     <div className='box__image'>
-                      <img src={item.images[0].url} alt='' />
+                      <img src={item?.images[0].url || ""} alt='' />
                     </div>
                     <div className='box__title'>{item.name}</div>
                   </div>
@@ -61,7 +61,7 @@ const Mobile = (props) => {
                             return getOne(item.id);
                           }}
                         >
-                          <img src={item.images[0].url} alt='' />
+                          <img src={item?.images[0].url || ""} alt='' />
                           <div className='large-boxes__box--title'>
                             {item.name}
                           </div>
