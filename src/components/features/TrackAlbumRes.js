@@ -5,7 +5,7 @@ const TrackDiv = styled.div`
   cursor: pointer;
   transition: background-color 0.2s;
   &:hover {
-    background-color: rgb(30, 215, 96);
+    background-color: #127475;
   }
 `;
 

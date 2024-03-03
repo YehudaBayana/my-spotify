@@ -17,6 +17,7 @@ const EachSlider = ({ playlists, des }) => {
       setWindowWith(window.innerWidth);
     });
   }, [windowWith]);
+
   let settings = {
     dots: false,
     arrows: true,
@@ -25,12 +26,14 @@ const EachSlider = ({ playlists, des }) => {
     slidesToShow: Math.ceil((windowWith - 222) / 236),
     slidesToScroll: Math.ceil((windowWith - 222) / 236),
   };
+  
   return (
     <>
       <Container style={{ margin: '40px 0' }}>
-        <h2>{des}</h2>
+        <h2 className='genre-title'>{des}</h2>
         <div className='flex-between'>
-          <p>---------------</p>
+          {/* <p>---------------</p> */}
+          <hr />
           <Link
             to={playlists ? `/${playlists[0]?.id}` : '/'}
             className='see-all'

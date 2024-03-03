@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;600;700&display=swap');
+@import "./variables.css";
 
 * {
   padding: 0;
@@ -12,19 +13,21 @@ html {
 
 body {
   font-family: 'Rubik', sans-serif;
-  background: rgb(37, 37, 37);
-  color: white;
+  background: var(--body);
+  /* background: rgb(202, 202, 202); */
+  color: rgb(0, 0, 0);
 }
 body::-webkit-scrollbar {
   width: 15px;
 }
 
 body::-webkit-scrollbar-track {
-  background-color: #1f1f1f;
+  background-color: var(--card);
 }
 
 body::-webkit-scrollbar-thumb {
-  background: rgb(30, 215, 96);
+  background: var(--button);
+  /* background: rgb(30, 178, 215); */
   box-shadow: inset 2px 2px 5px 0 rgba(#fff, 0.5);
 }
 
@@ -257,7 +260,7 @@ a {
 .playerBackground {
   width: 100%;
   height: 83px;
-  background-color: #333;
+  background-color: var(--button);
   position: fixed;
   bottom: 0px;
   left: 0;
@@ -270,6 +273,10 @@ a {
   width: 71%;
   left: 14.5%;
   z-index: 999;
+}
+
+.PlayerRSWP{
+  background-color: var(--button) !important;
 }
 
 @media (max-width: 500px) {
@@ -575,9 +582,9 @@ a:focus {
   height: 24px;
 }
 .username {
-  color: white;
+  color: rgb(255, 255, 255);
   text-decoration: none;
-  border-bottom: 1px solid #151515;
+  border-bottom: 1px solid #ffffff;
   margin: 0px 25px 0px 8px;
   cursor: default !important;
   font-size: 1.7rem;
