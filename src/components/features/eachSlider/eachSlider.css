@@ -1,3 +1,5 @@
+@import "../../../variables.css";
+
 .flex-between {
   display: flex;
   justify-content: space-between;
@@ -5,12 +7,12 @@
 }
 
 .see-all {
-  background-color: rgb(30, 215, 96);
+  background-color: var(--button);
   height: fit-content;
   padding: 6px 24px;
   border-radius: 5px;
   box-shadow: 1px 1px 15px black;
-  color: black;
+  color: white;
 }
 
 .slider-card {
@@ -21,7 +23,7 @@
   border-radius: 5px;
   padding: 10px;
   margin: 0 10px;
-  background-color: #4e4d4d;
+  background-color: var(--card);
 }
 
 .slider-card-h4 {
@@ -45,4 +47,8 @@
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   cursor: pointer;
+}
+
+.genre-title{
+  color: white;
 }
