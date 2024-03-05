@@ -24,7 +24,8 @@ const Discover = ({ partyPlaylist, setIsClicked, getOne, AlbumImg }) => {
                   <p className='profile'>
                     {/* <h5 className='profile__name'>{item.description}</h5> */}
                     <p>{item.name}</p>
-                    <AlbumImg imgUrl={item.icons[0].url} />
+                    <img src={item.images[0].url} alt='' width='100%' />
+                    {/* <AlbumImg imgUrl={item.icons[0].url} /> */}
                   </p>
                 </li>
               );

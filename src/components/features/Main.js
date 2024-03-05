@@ -30,7 +30,7 @@ const Main = ({ chooseTrack }) => {
           <hr />
           {state.categoryPlaylist.map((item, i) => {
             return (
-              <EachSlider key={i} playlists={item} des={state.playlistDes[i]} />
+              state.playlistDes[i] !== "New Releases" ? <EachSlider key={i} playlists={item} des={state.playlistDes[i]} /> : null
             );
           })}
           <Gallery />

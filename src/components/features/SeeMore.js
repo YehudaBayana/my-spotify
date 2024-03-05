@@ -28,10 +28,11 @@ const SeeMore = () => {
                 >
                   <p className='profile'>
                     <p>{item.name}</p>
-                    <AlbumImg
+                    <img src={item.images[0].url} alt='' width='100%' />
+                    {/* <AlbumImg
                       imgUrl={item.images[0].url}
                       getOne={() => getOne(item.id)}
-                    />
+                    /> */}
                   </p>
                 </li>
               );

@@ -3,7 +3,7 @@
   height: 100vh;
   position: fixed;
   background-color: var(--sidebar);
-  color: rgb(0, 0, 0);
+  color: rgb(255, 255, 255);
   left: 0;
   top: 0;
 }
@@ -49,7 +49,7 @@
 }
 
 .playlistName {
-  color: rgb(167, 167, 167);
+  color: rgb(206, 206, 206);
   display: block;
   margin-bottom: 10px;
   font-weight: 400;
