@@ -56,7 +56,8 @@ const EachSlider = ({ playlists, des }) => {
                   <Col>
                     <Card className='slider-card'>
                       <div style={{ maxWidth: '200px', borderRadius: '10px' }}>
-                        <AlbumImg key={item.id} imgUrl={item.images[0].url} />
+                      <img src={item.images[0].url} alt='' width='100%' />
+                        {/* <AlbumImg key={item.id} imgUrl={item.images[0].url} /> */}
                       </div>
                       <Card.Body>
                         <h4 className='slider-card-h4'>{item.name}</h4>

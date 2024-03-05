@@ -580,11 +580,13 @@ a:focus {
 .nav-image {
   width: 24px;
   height: 24px;
+  background-color: #000000;
+  border-radius: 50%;
 }
 .username {
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
   text-decoration: none;
-  border-bottom: 1px solid #ffffff;
+  border-bottom: 1px solid #000000;
   margin: 0px 25px 0px 8px;
   cursor: default !important;
   font-size: 1.7rem;
@@ -600,4 +602,9 @@ a:focus {
 }
 .username:focus {
   outline: 0;
+}
+
+.logoWrapper{
+  color: #000000;
+  margin: auto;
 }

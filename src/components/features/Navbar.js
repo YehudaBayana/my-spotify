@@ -17,6 +17,9 @@ const Navbar = ({ searchRef }) => {
           placeholder=' Search'
         />
       </div>
+      <div className="logoWrapper">
+        <h1 className='logo'>yuda music</h1>
+      </div>
       <div className='nav-right'>
         <img
           className='nav-image'
