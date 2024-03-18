@@ -1,10 +1,10 @@
-import React, { useContext } from 'react';
-
-import { StoreContext } from '../context/ContextProvider';
-import EachSlider from './eachSlider/EachSlider';
-import Gallery from './gallery/Gallery';
-import Playlist from './playlists/Playlist';
-import TrackSearchResult from './TrackSearchResult';
+import React, { useContext } from "react";
+import SongList from "../features/songsList/SongList";
+import { StoreContext } from "../context/ContextProvider";
+import EachSlider from "./eachSlider/EachSlider";
+import Gallery from "./gallery/Gallery";
+import Playlist from "./playlists/Playlist";
+import TrackSearchResult from "./TrackSearchResult";
 
 const Main = ({ chooseTrack }) => {
   const { state } = useContext(StoreContext);
@@ -13,12 +13,12 @@ const Main = ({ chooseTrack }) => {
     <>
       {state.isLoading ? (
         <img
-          src='https://upload.wikimedia.org/wikipedia/commons/b/b9/Youtube_loading_symbol_1_(wobbly).gif'
-          alt=''
+          src="https://upload.wikimedia.org/wikipedia/commons/b/b9/Youtube_loading_symbol_1_(wobbly).gif"
+          alt=""
         />
       ) : (
         <>
-          <div className='searchResultsWrapper'>
+          {/* <div className='searchResultsWrapper'>
             {state.searchResults.map((track) => (
               <TrackSearchResult
                 track={track}
@@ -26,15 +26,15 @@ const Main = ({ chooseTrack }) => {
                 chooseTrack={chooseTrack}
               />
             ))}
-          </div>
-          <hr />
+          </div> */}
+          {/* <hr /> */}
           {state.categoryPlaylist.map((item, i) => {
-            return (
-              state.playlistDes[i] !== "New Releases" ? <EachSlider key={i} playlists={item} des={state.playlistDes[i]} /> : null
-            );
+            return state.playlistDes[i] !== "New Releases" ? (
+              <EachSlider key={i} playlists={item} des={state.playlistDes[i]} />
+            ) : null;
           })}
           <Gallery />
-          {state.isClicked && <Playlist chooseTrack={chooseTrack} />}
+          {state.isClicked && <SongList chooseTrack={chooseTrack} />}
         </>
       )}
     </>

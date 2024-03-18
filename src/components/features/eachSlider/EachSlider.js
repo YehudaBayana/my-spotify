@@ -1,19 +1,19 @@
-import React, { useState, useEffect, useContext } from 'react';
-import './eachSlider.css';
-import { Card, Col } from 'react-bootstrap';
-import { Container } from '../../../App';
-import { Link } from 'react-router-dom';
-import Slider from 'react-slick';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
-import AlbumImg from '../AlbumImg';
-import { StoreContext } from '../../context/ContextProvider';
+import React, { useState, useEffect, useContext } from "react";
+import "./eachSlider.css";
+import { Card, Col } from "react-bootstrap";
+import { Container } from "../../../App";
+import { Link } from "react-router-dom";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import AlbumImg from "../AlbumImg";
+import { StoreContext } from "../../context/ContextProvider";
 
 const EachSlider = ({ playlists, des }) => {
   const { dispatch, getOne } = useContext(StoreContext);
   const [windowWith, setWindowWith] = useState(window.innerWidth);
   useEffect(() => {
-    window.addEventListener('resize', () => {
+    window.addEventListener("resize", () => {
       setWindowWith(window.innerWidth);
     });
   }, [windowWith]);
@@ -26,17 +26,17 @@ const EachSlider = ({ playlists, des }) => {
     slidesToShow: Math.ceil((windowWith - 222) / 236),
     slidesToScroll: Math.ceil((windowWith - 222) / 236),
   };
-  
+
   return (
     <>
-      <Container style={{ margin: '40px 0' }}>
-        <h2 className='genre-title'>{des}</h2>
-        <div className='flex-between'>
+      <Container style={{ margin: "40px 0" }}>
+        <h2 className="genre-title">{des}</h2>
+        <div className="flex-between">
           {/* <p>---------------</p> */}
           <hr />
           <Link
-            to={playlists ? `/${playlists[0]?.id}` : '/'}
-            className='see-all'
+            to={playlists ? `/${playlists[0]?.id}` : "/"}
+            className="see-all"
           >
             see all
           </Link>
@@ -47,23 +47,23 @@ const EachSlider = ({ playlists, des }) => {
               <>
                 <Link
                   onClick={() => {
-                    dispatch({ type: 'setIsClicked' });
+                    dispatch({ type: "setIsClicked" });
                     getOne(item.id);
                   }}
-                  to='/'
+                  to="/"
                   key={item.id}
                 >
                   <Col>
-                    <Card className='slider-card'>
-                      <div style={{ maxWidth: '200px', borderRadius: '10px' }}>
-                      <img src={item.images[0].url} alt='' width='100%' />
+                    <div className="slider-card">
+                      <div style={{ maxWidth: "200px", borderRadius: "10px" }}>
+                        <img src={item.images[0].url} alt="" width="100%" />
                         {/* <AlbumImg key={item.id} imgUrl={item.images[0].url} /> */}
                       </div>
-                      <Card.Body>
-                        <h4 className='slider-card-h4'>{item.name}</h4>
-                        <p className='slider-card-p'>{item.description}</p>
-                      </Card.Body>
-                    </Card>
+                      <div>
+                        <h4 className="slider-card-h4">{item.name}</h4>
+                        <p className="slider-card-p">{item.description}</p>
+                      </div>
+                    </div>
                   </Col>
                 </Link>
               </>

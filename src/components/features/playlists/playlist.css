@@ -1,4 +1,4 @@
-.opacity {
+/* .opacity {
   background-color: rgba(0, 0, 0, 0.8);
   width: 100%;
   padding: 0 100px;
@@ -28,7 +28,6 @@
 
 .sticky::-webkit-scrollbar-thumb {
   background: var(--button);
-  /* background: rgb(30, 178, 215); */
   box-shadow: inset 2px 2px 5px 0 rgba(#fff, 0.5);
 }
 
@@ -116,4 +115,4 @@
   .songTime {
     width: 22%;
   }
-}
+} */
