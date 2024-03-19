@@ -47,10 +47,10 @@ const EachSlider = ({ playlists, des }) => {
               <>
                 <Link
                   onClick={() => {
-                    dispatch({ type: "setIsClicked" });
-                    getOne(item.id);
+                    // dispatch({ type: "setIsClicked" });
+                    // getOne(item.id);
                   }}
-                  to="/"
+                  to={`/tracks/${item.id}`}
                   key={item.id}
                 >
                   <Col>

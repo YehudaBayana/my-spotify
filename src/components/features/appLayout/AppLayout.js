@@ -242,8 +242,8 @@ const AppLayout = ({ chooseTrack, classes }) => {
           component="main"
           sx={{
             marginTop: DRAWERHEIGHT + "px",
-            marginLeft: "-19px",
-            marginRight: "-19px",
+            marginLeft: "-22px",
+            marginRight: "-22px",
             flexGrow: 1,
             width: open ? `calc(100% - ${drawerWidth}px)` : "90%",
           }}

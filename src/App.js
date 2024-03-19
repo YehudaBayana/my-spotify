@@ -1,7 +1,7 @@
 import Home from './components/pages/Home';
 import styled from 'styled-components';
 import LandingPage from './components/pages/landingPage';
-import { HashRouter as Router } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import ScrollToTop from './ScrollToTop';
 export const code = new URLSearchParams(window.location.search).get('code');
 

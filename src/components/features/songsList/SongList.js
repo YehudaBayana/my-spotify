@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, {useContext, useEffect} from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -7,6 +7,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { Container } from "@mui/material";
+import { StoreContext } from "../../context/ContextProvider";
 
 function createData(name, calories, fat, carbs, protein) {
   return { name, calories, fat, carbs, protein };
@@ -18,36 +19,50 @@ const rows = [
   createData("Eclair", 262, 16.0, 24, 6.0),
 ];
 
-export default function AccessibleTable() {
+export default function SongList({chooseTrack}) {
+  function handlePlay(track) {
+    chooseTrack(track);
+  }
+  const { getOne, state } = useContext(StoreContext);
+  const playListId = window.location.pathname.split('/').filter(item=>item)[1];
+  useEffect(() => {
+    getOne(playListId);
+  }, [])
+  console.log("state ,", state);
   return (
-    <Container fixed>
+    // <Container fixed>
       <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="caption table">
-          <caption>A basic table example with a caption</caption>
+        <Table sx={{ minWidth: 450 }} aria-label="caption table">
           <TableHead>
-            <TableRow>
-              <TableCell>Dessert (100g serving)</TableCell>
-              <TableCell align="right">Calories</TableCell>
-              <TableCell align="right">Fat&nbsp;(g)</TableCell>
-              <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-              <TableCell align="right">Protein&nbsp;(g)</TableCell>
+            <TableRow sx={{backgroundColor:"lightGrey"}}>
+              <TableCell>Title</TableCell>
+              <TableCell align="left">Album</TableCell>
+              <TableCell align="left">Date added</TableCell>
+              <TableCell align="left">time</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => (
-              <TableRow key={row.name}>
+            {state.playList.items?.map((track) => (
+              <>
+              <TableRow onClick={()=>handlePlay(track)} key={track.id}>
                 <TableCell component="th" scope="row">
-                  {row.name}
+                  {track.name}
                 </TableCell>
-                <TableCell align="right">{row.calories}</TableCell>
-                <TableCell align="right">{row.fat}</TableCell>
-                <TableCell align="right">{row.carbs}</TableCell>
-                <TableCell align="right">{row.protein}</TableCell>
+                <TableCell align="left">{track?.album.name}</TableCell>
+                <TableCell align="left">{track?.album.release_date}</TableCell>
+                <TableCell align="left">{msToMinutesAndSeconds(track && track?.duration_ms)}</TableCell>
               </TableRow>
+              </>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
-    </Container>
+    // </Container>
   );
+}
+
+function msToMinutesAndSeconds(ms) {
+  var minutes = Math.floor(ms / 60000);
+  var seconds = ((ms % 60000) / 1000).toFixed(0);
+  return minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
 }

@@ -5,6 +5,7 @@ import Main from './components/features/Main';
 import Playlist from './components/features/playlists/Playlist';
 import SeeMore from './components/features/SeeMore';
 import SavedTracks from './components/pages/SavedTracks';
+import SongList from './components/features/songsList/SongList'
 
 const AppRouter = ({ chooseTrack }) => {
   const { state } = useContext(StoreContext);
@@ -16,6 +17,9 @@ const AppRouter = ({ chooseTrack }) => {
         </Route>
         <Route path='/savedTracks'>
           <SavedTracks chooseTrack={chooseTrack} playList={state.savedTracks} />
+        </Route>
+        <Route path='/tracks/:id'>
+          <SongList chooseTrack={chooseTrack} />
         </Route>
         <Route path='/:id'>
           <SeeMore />
