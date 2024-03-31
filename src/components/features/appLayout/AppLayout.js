@@ -18,12 +18,13 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
-import { Grid, Input, TextField } from "@mui/material";
-import { withStyles } from "@mui/styles";
+import { Grid, Input, Link, TextField } from "@mui/material";
+import { withStyles, makeStyles } from "@mui/styles";
 import PropTypes from "prop-types";
 import "./appLayout.css";
 import classNames from "classnames";
 import AccountMenu from "../accountMenu/AccountMenu";
+import Player from "../Player";
 
 const drawerWidth = 240;
 const DRAWERHEIGHT = 65;
@@ -115,8 +116,15 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 //-------------------------------
+const useStyles = makeStyles((theme) => ({
+  root: {
+    // Reset all default CSS styles
+    all: "unset",
+  },
+}));
 
-const AppLayout = ({ chooseTrack, classes }) => {
+const AppLayout = ({ chooseTrack, accessToken, playingTrack }) => {
+  const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
 
@@ -182,26 +190,31 @@ const AppLayout = ({ chooseTrack, classes }) => {
           <Divider />
           <List>
             {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-              <ListItem key={text} disablePadding sx={{ display: "block" }}>
-                <ListItemButton
-                  sx={{
-                    minHeight: 48,
-                    justifyContent: open ? "initial" : "center",
-                    px: 2.5,
-                  }}
-                >
-                  <ListItemIcon
+              <Link color={"primary"} href="/">
+                <ListItem key={text} disablePadding sx={{ display: "block" }}>
+                  <ListItemButton
                     sx={{
-                      minWidth: 0,
-                      mr: open ? 3 : "auto",
-                      justifyContent: "center",
+                      minHeight: 48,
+                      justifyContent: open ? "initial" : "center",
+                      px: 2.5,
                     }}
                   >
-                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                  </ListItemIcon>
-                  <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
-                </ListItemButton>
-              </ListItem>
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : "auto",
+                        justifyContent: "center",
+                      }}
+                    >
+                      {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={text}
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              </Link>
             ))}
           </List>
           <Divider />
@@ -242,14 +255,37 @@ const AppLayout = ({ chooseTrack, classes }) => {
           component="main"
           sx={{
             marginTop: DRAWERHEIGHT + "px",
-            marginLeft: "-22px",
-            marginRight: "-22px",
+            marginLeft: "-23px",
+            marginRight: "-23px",
             flexGrow: 1,
             width: open ? `calc(100% - ${drawerWidth}px)` : "90%",
+            position: "relative",
           }}
         >
           <Grid>
             <AppRouter chooseTrack={chooseTrack} />
+          </Grid>
+          <Grid
+            position={"fixed"}
+            width={`calc(100% - ${open ? drawerWidth : 64}px)`}
+            sx={{
+              top: `calc(100vh - 52px)`,
+              left: (open ? drawerWidth : 64) + "px",
+              zIndex: 9999,
+              transition: "0.27s",
+              transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
+            }}
+          >
+            <div className="playerBackground">
+              <div className="playerSticky">
+                <div>
+                  <Player
+                    accessToken={accessToken}
+                    trackUri={playingTrack?.uri}
+                  />
+                </div>
+              </div>
+            </div>
           </Grid>
         </Box>
       </Box>
