@@ -21,10 +21,11 @@ export default function SongList({ chooseTrack }) {
   useEffect(() => {
     getOne(playListId);
   }, []);
+  // console.log("state ",state);
 
   return (
-    <Container sx={{ marginBottom: 8 }}>
-      <PlaylistHeader />
+    <Paper sx={{ marginBottom: 8 , width:"100%"}}>
+      <PlaylistHeader details={state.detail} />
       <TableContainer sx={{ borderRadius: 0 }} component={Paper}>
         <Table
           // style={{ tableLayout: "fixed" }}
@@ -34,7 +35,7 @@ export default function SongList({ chooseTrack }) {
           <TableHead>
             <TableRow sx={{ backgroundColor: "lightGrey" }}>
               <TableCell width="10%" align="left">
-                #
+               image
               </TableCell>
               <TableCell width="30%" align="left">
                 Title
@@ -56,7 +57,7 @@ export default function SongList({ chooseTrack }) {
                 <TableRow onClick={() => handlePlay(track)} key={track.id}>
                   <TableCell align="left" component="th" scope="row">
                     <img
-                      src={`https://plus.unsplash.com/premium_photo-1710548651496-59502bba8e80?w=700&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyfHx8ZW58MHx8fHx8`}
+                      src={track?.album?.images[2].url}
                       loading="lazy"
                       alt="mashu"
                       width={60}
@@ -100,7 +101,7 @@ export default function SongList({ chooseTrack }) {
           </TableBody>
         </Table>
       </TableContainer>
-    </Container>
+    </Paper>
   );
 }
 
