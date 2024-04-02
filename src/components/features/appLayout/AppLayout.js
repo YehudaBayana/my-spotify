@@ -18,13 +18,16 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
-import { Grid, Input, Link, TextField } from "@mui/material";
+import { Grid, Input, TextField } from "@mui/material";
 import { withStyles, makeStyles } from "@mui/styles";
 import PropTypes from "prop-types";
 import "./appLayout.css";
 import classNames from "classnames";
 import AccountMenu from "../accountMenu/AccountMenu";
 import Player from "../Player";
+import { links } from '../../../constants';
+import { Link } from 'react-router-dom/cjs/react-router-dom';
+import SearchInput from '../searchInput/SearchInput';
 
 const drawerWidth = 240;
 const DRAWERHEIGHT = 65;
@@ -161,18 +164,7 @@ const AppLayout = ({ chooseTrack, accessToken, playingTrack }) => {
               gap={4}
               width="100%"
             >
-              <TextField
-                size="small"
-                id="filled-search"
-                placeholder="Search field"
-                type="search"
-                variant="outlined"
-                fullWidth
-                sx={{
-                  backgroundColor: "lightgray",
-                  borderRadius: "4px",
-                }}
-              />
+              <SearchInput />
               <AccountMenu />
             </Box>
           </Toolbar>
@@ -189,9 +181,9 @@ const AppLayout = ({ chooseTrack, accessToken, playingTrack }) => {
           </DrawerHeader>
           <Divider />
           <List>
-            {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-              <Link color={"primary"} href="/">
-                <ListItem key={text} disablePadding sx={{ display: "block" }}>
+            {links.map((obj, index) => (
+              <Link style={{textDecoration:"none", color:"black"}} to={obj.path}>
+                <ListItem key={obj.text} disablePadding sx={{ display: "block" }}>
                   <ListItemButton
                     sx={{
                       minHeight: 48,
@@ -206,10 +198,10 @@ const AppLayout = ({ chooseTrack, accessToken, playingTrack }) => {
                         justifyContent: "center",
                       }}
                     >
-                      {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                      {obj.icon}
                     </ListItemIcon>
                     <ListItemText
-                      primary={text}
+                      primary={obj.text}
                       sx={{ opacity: open ? 1 : 0 }}
                     />
                   </ListItemButton>

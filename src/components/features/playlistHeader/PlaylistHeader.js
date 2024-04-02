@@ -12,7 +12,8 @@ const Img = styled("img")({
   maxHeight: "100%",
 });
 
-const PlaylistHeader = () => {
+const PlaylistHeader = ({details}) => {
+  console.log("details: ",details);
   return (
     <Paper
       sx={{
@@ -26,15 +27,15 @@ const PlaylistHeader = () => {
       }}
     >
       <Grid container spacing={2}>
-        <Grid item xs={5}>
+        <Grid item xs={3}>
           <ButtonBase sx={{ width: "100%" }}>
-            <Img
+            {details ? <Img
               alt="complex"
-              src="https://plus.unsplash.com/premium_photo-1710548651496-59502bba8e80?w=700&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyfHx8ZW58MHx8fHx8"
-            />
+              src={details?.images[0]?.url}
+            />: null}
           </ButtonBase>
         </Grid>
-        <Grid item xs={6} sm container>
+        <Grid item xs={8} sm container>
           <Grid
             item
             xs
@@ -45,14 +46,14 @@ const PlaylistHeader = () => {
           >
             {/* <Grid item xs></Grid> */}
             <Grid item>
-              <Typography gutterBottom variant="subtitle1" component="div">
-                Standard license
+              <Typography gutterBottom variant="h4" component="div">
+                {details.name}
               </Typography>
-              <Typography variant="body2" gutterBottom>
-                Full resolution 1920x1080 • JPEG
+              <Typography variant="h5" gutterBottom>
+              {details.description}
               </Typography>
-              <Typography variant="body2" color="text.secondary">
-                ID: 1030114
+              <Typography variant="h6" color="text.secondary">
+              {details?.tracks?.total} songs
               </Typography>
             </Grid>
           </Grid>
