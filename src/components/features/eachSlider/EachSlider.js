@@ -11,23 +11,52 @@ import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 import { StoreContext } from '../../context/ContextProvider';
 import Card from '../card/Card';
 import { useRef } from 'react';
-import { Box, Grid, Paper } from '@mui/material';
-
+import { Box, Button, Grid, Paper } from '@mui/material';
 
 const EachSlider = ({ playlists, des }) => {
   let sliderRef = useRef(null);
+  const [windowWith, setWindowWith] = useState(window.innerWidth);
+  const [click, setClick] = useState(1);
+  const [greyOutLeft, setGreyOutLeft] = useState(true);
+  const [greyOutRight, setGreyOutRight] = useState(false);
+  const [isClickedDisabled, setIsClickedDisabled] = useState(false);
+  const cardsAmountDisplayed = Math.ceil((windowWith - 222) / 236);
+  const handleNavigation = (direction) => {
+    setClick((oldClick) => {
+      const newClick = direction === 'next' ? oldClick + 1 : oldClick - 1;
+
+      // Slide to next or previous
+      if (direction === 'next') {
+        sliderRef.slickNext();
+      } else {
+        sliderRef.slickPrev();
+      }
+
+      // Disable click temporarily
+      setIsClickedDisabled(true);
+      setTimeout(() => {
+        setIsClickedDisabled(false);
+      }, 550);
+
+      // Update grey out states
+      setGreyOutLeft(newClick <= 1);
+      setGreyOutRight(newClick >= playlists.length / cardsAmountDisplayed);
+
+      return newClick;
+    });
+  };
 
   const next = () => {
-    sliderRef.slickNext();
-
+    if (click < playlists.length / cardsAmountDisplayed) {
+      handleNavigation('next');
+    }
   };
+
   const previous = () => {
-    sliderRef.slickPrev();
-
+    if (click > 1) {
+      handleNavigation('previous');
+    }
   };
-
-  const [windowWith, setWindowWith] = useState(window.innerWidth);
-  const [playlistAmount, setPlaylistAmount] = useState();
 
   useEffect(() => {
     window.addEventListener('resize', () => {
@@ -40,8 +69,8 @@ const EachSlider = ({ playlists, des }) => {
     arrows: false,
     infinite: false,
     speed: 500,
-    slidesToShow: Math.ceil((windowWith - 222) / 236),
-    slidesToScroll: Math.ceil((windowWith - 222) / 236),
+    slidesToShow: cardsAmountDisplayed,
+    slidesToScroll: cardsAmountDisplayed,
   };
 
   return (
@@ -49,18 +78,19 @@ const EachSlider = ({ playlists, des }) => {
       <Container style={{ margin: '40px 0' }}>
         <h2 className="genre-title">{des}</h2>
         <div className="flex-between">
-          <Box sx={{margin:"0 10px"}}>
-            <ArrowCircleLeftIcon color='secondary' sx={{cursor:"pointer"}} fontSize="large" onClick={previous} />
-            <ArrowCircleRightIcon sx={{cursor:"pointer"}} fontSize="large" onClick={next} />
+          <Box sx={{ margin: '0 10px' }}>
+            <ArrowCircleLeftIcon color={greyOutLeft ? 'secondary' : 'info'} sx={{ cursor: 'pointer' }} fontSize="large" onClick={isClickedDisabled ? undefined : previous} />
+            <ArrowCircleRightIcon color={greyOutRight ? 'secondary' : 'info'} sx={{ cursor: 'pointer' }} fontSize="large" onClick={isClickedDisabled ? undefined : next} />
           </Box>
-          <Link to={playlists ? `/${playlists[0]?.id}` : '/'} className="see-all">
-            see all
+
+          <Link to={playlists ? `/${playlists[0]?.id}` : '/'}>
+            {/* className="see-all" */}
+            <Button variant="contained">see all</Button>
           </Link>
         </div>
         <Slider
-        centerPadding='10px'
+          centerPadding="10px"
           ref={(slider) => {
-            console.log("slider ",slider);
             sliderRef = slider;
           }}
           swipe={false}
@@ -68,13 +98,7 @@ const EachSlider = ({ playlists, des }) => {
           {playlists?.map((item) => {
             return (
               <>
-                {/* <Link
-                  style={{ textDecoration: 'none', color: 'inherit' }}
-                  to={`/tracks/${item.id}`}
-                  key={item.id}
-                > */}
                 <Card playlistDetails={item} />
-                {/* </Link> */}
               </>
             );
           })}

@@ -6,14 +6,18 @@ import Playlist from './components/features/playlists/Playlist';
 import SeeMore from './components/features/SeeMore';
 import SavedTracks from './components/pages/SavedTracks';
 import SongList from './components/features/songsList/SongList'
+import SearchPage from './components/pages/search/SearchPage';
 
-const AppRouter = ({ chooseTrack }) => {
+const AppRouter = ({ chooseTrack, accessToken }) => {
   const { state } = useContext(StoreContext);
   return (
     <>
       <Switch>
         <Route exact path='/'>
           <Main chooseTrack={chooseTrack} />
+        </Route>
+        <Route exact path='/search'>
+          <SearchPage accessToken={accessToken}/>
         </Route>
         <Route path='/savedTracks'>
           <SavedTracks chooseTrack={chooseTrack} playList={state.savedTracks} />
@@ -22,10 +26,10 @@ const AppRouter = ({ chooseTrack }) => {
           <SongList chooseTrack={chooseTrack} />
         </Route>
         <Route path='/:id'>
-          <SeeMore />
+          <SeeMore accessToken={accessToken} />
           {state.isClicked && <Playlist chooseTrack={chooseTrack} />}
         </Route>
-        <Redirect to='/' />
+        {/* <Redirect to='/' /> */}
       </Switch>
     </>
   );

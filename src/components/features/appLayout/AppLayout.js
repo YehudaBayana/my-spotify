@@ -164,7 +164,7 @@ const AppLayout = ({ chooseTrack, accessToken, playingTrack }) => {
               gap={4}
               width="100%"
             >
-              <SearchInput />
+              {/* <SearchInput /> */}
               <AccountMenu />
             </Box>
           </Toolbar>
@@ -213,6 +213,8 @@ const AppLayout = ({ chooseTrack, accessToken, playingTrack }) => {
           <List>
             {["All mail", "Trash", "Spam"].map((text, index) => (
               <ListItem key={text} disablePadding sx={{ display: "block" }}>
+                <Link to="/search">
+                
                 <ListItemButton
                   sx={{
                     minHeight: 48,
@@ -238,6 +240,7 @@ const AppLayout = ({ chooseTrack, accessToken, playingTrack }) => {
                     sx={{ opacity: open ? 1 : 0 }}
                   />
                 </ListItemButton>
+                </Link>
               </ListItem>
             ))}
           </List>
@@ -255,7 +258,7 @@ const AppLayout = ({ chooseTrack, accessToken, playingTrack }) => {
           }}
         >
           <Grid>
-            <AppRouter chooseTrack={chooseTrack} />
+            <AppRouter chooseTrack={chooseTrack} accessToken={accessToken} />
           </Grid>
           <Grid
             position={"fixed"}

@@ -1,22 +1,23 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useParams } from 'react-router';
 import { StoreContext } from '../context/ContextProvider';
 import AlbumImg from './AlbumImg';
 
-const SeeMore = () => {
-  const { state, dispatch, getOne } = useContext(StoreContext);
+const SeeMore = ({ accessToken }) => {
+  const { state, dispatch, getOne, spotifyApi } = useContext(StoreContext);
   const { id } = useParams();
   let news = state.categoryPlaylist.find((playlists) => {
     return playlists[0].id === id;
   });
 
+
   return (
     <>
-      <article className='flow'>
+      <article className="flow">
         <h1>{news[0].name}</h1>
         <p>{news[0].description}</p>
-        <div className='team'>
-          <div className='auto-grid' role='list'>
+        <div className="team">
+          <div className="auto-grid" role="list">
             {news?.map((item) => {
               return (
                 <li
@@ -24,11 +25,10 @@ const SeeMore = () => {
                   onClick={() => {
                     dispatch({ type: 'setIsClicked' });
                     return getOne(item.id);
-                  }}
-                >
-                  <p className='profile'>
+                  }}>
+                  <p className="profile">
                     <p>{item.name}</p>
-                    <img src={item.images[0].url} alt='' width='100%' />
+                    <img src={item.images[0].url} alt="" width="100%" />
                     {/* <AlbumImg
                       imgUrl={item.images[0].url}
                       getOne={() => getOne(item.id)}

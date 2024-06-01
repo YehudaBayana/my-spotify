@@ -34,7 +34,7 @@ const Main = ({ chooseTrack }) => {
             ) : null;
           })}
           <Gallery />
-          {state.isClicked && <SongList chooseTrack={chooseTrack} />}
+          {/* {state.isClicked && <SongList chooseTrack={chooseTrack} />} */}
         </>
       )}
     </>
