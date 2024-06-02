@@ -1,15 +1,14 @@
-import React, { useContext, useEffect } from 'react';
-import { useParams } from 'react-router';
-import { StoreContext } from '../context/ContextProvider';
-import AlbumImg from './AlbumImg';
+import React, { useContext, useEffect } from "react";
+import { useParams } from "react-router";
+import { StoreContext } from "../context/ContextProvider";
+import AlbumImg from "./AlbumImg";
 
 const SeeMore = ({ accessToken }) => {
   const { state, dispatch, getOne, spotifyApi } = useContext(StoreContext);
   const { id } = useParams();
-  let news = state.categoryPlaylist.find((playlists) => {
+  let news = state.playlists.find((playlists) => {
     return playlists[0].id === id;
   });
-
 
   return (
     <>
@@ -23,9 +22,10 @@ const SeeMore = ({ accessToken }) => {
                 <li
                   key={item.id}
                   onClick={() => {
-                    dispatch({ type: 'setIsClicked' });
+                    dispatch({ type: "setIsClicked" });
                     return getOne(item.id);
-                  }}>
+                  }}
+                >
                   <p className="profile">
                     <p>{item.name}</p>
                     <img src={item.images[0].url} alt="" width="100%" />

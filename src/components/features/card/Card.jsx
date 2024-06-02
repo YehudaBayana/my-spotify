@@ -11,7 +11,7 @@ export default function Card({ playlistDetails }) {// background:"lightGrey"
   return (
     <MuiCard sx={{ maxWidth: 345, margin:"0px 10px", boxShadow:"none", background:"inherit"}}>
       <CardActionArea>
-        <Link style={{ textDecoration: 'none', color: 'inherit' }} to={`/tracks/${playlistDetails.id}`} key={playlistDetails.id}>
+        <Link style={{ textDecoration: 'none', color: 'inherit' }} to={`/playlist/${playlistDetails.id}`} key={playlistDetails.id}>
         <CardMedia component="img" height="100%" image={playlistDetails.images[0].url} alt="green iguana" />
           <CardContent sx={{padding:"10px 0"}}>
             <Typography noWrap gutterBottom variant="subtitle1" component="div">

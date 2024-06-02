@@ -1,10 +1,10 @@
-import { useContext, useEffect } from 'react';
-import { StoreContext } from '../components/context/ContextProvider';
+import { useContext, useEffect } from "react";
+import { StoreContext } from "../components/context/ContextProvider";
 
 const useFetchSearch = (spotifyApi, search, accessToken) => {
   const { dispatch } = useContext(StoreContext);
   useEffect(() => {
-    if (!search) return dispatch({ type: 'setSearchResults', payload: [] });
+    if (!search) return dispatch({ type: "setSearchResults", payload: [] });
     if (!accessToken) return;
     let cancel = false;
     spotifyApi
@@ -12,7 +12,7 @@ const useFetchSearch = (spotifyApi, search, accessToken) => {
       .then((res) => {
         if (cancel) return;
         dispatch({
-          type: 'setSearchResults',
+          type: "setSearchResults",
           payload: res.body.tracks.items.map((track) => {
             const smallestAlbumImage = track.album.images.reduce(
               (smallest, image) => {
@@ -32,7 +32,7 @@ const useFetchSearch = (spotifyApi, search, accessToken) => {
         });
       })
       .then(() => {
-        dispatch({ type: 'setIsLoading', payload: false });
+        dispatch({ type: "setIsLoading", payload: false });
       });
     return () => (cancel = true);
   }, [search, accessToken, dispatch, spotifyApi]);
@@ -43,41 +43,41 @@ const fetchAllTracks = (spotifyApi, dispatch) => {
     .getCategories({
       limit: 10,
       offset: 0,
-      country: 'US',
+      country: "US",
     })
     .then(
       function (data) {
-        console.log('chec', data.body);
+        console.log("chec", data.body);
         dispatch({
-          type: 'setCategories',
+          type: "setCategories",
           payload: data.body.categories.items,
         });
         data.body.categories.items.forEach((category) => {
           spotifyApi
             .getPlaylistsForCategory(category.id, {
-              country: 'US',
+              country: "US",
               limit: 30,
               offset: 0,
             })
             .then(
               function (data) {
-                dispatch({ type: 'setPlaylistDes', payload: category.name });
+                dispatch({ type: "setPlaylistDes", payload: category.name });
                 dispatch({
-                  type: 'setCategoryPlaylist',
+                  type: "setPlaylists",
                   payload: data.body.playlists.items,
                 });
               },
               function (err) {
-                console.log('Something went wrong!', err);
+                console.log("Something went wrong!", err);
               }
             )
             .then(() => {
-              dispatch({ type: 'setIsLoading', payload: false });
+              dispatch({ type: "setIsLoading", payload: false });
             });
         });
       },
       function (err) {
-        console.log('Something went wrong!', err);
+        console.log("Something went wrong!", err);
       }
     );
 
@@ -85,34 +85,34 @@ const fetchAllTracks = (spotifyApi, dispatch) => {
     .getMe()
     .then(
       (data) => {
-        dispatch({ type: 'setUserName', payload: data.body.display_name });
+        dispatch({ type: "setUserName", payload: data.body.display_name });
 
         spotifyApi.getUserPlaylists(data.body.id).then(
           (data) => {
-            dispatch({ type: 'setUserPlaylists', payload: data.body.items });
+            dispatch({ type: "setUserPlaylists", payload: data.body.items });
           },
           (err) => {
-            console.log('Something went wrong!', err);
+            console.log("Something went wrong!", err);
           }
         );
       },
       (err) => {
-        console.log('Something went wrong!', err);
+        console.log("Something went wrong!", err);
       }
     )
     .then(() => {
-      dispatch({ type: 'setIsLoading', payload: false });
+      dispatch({ type: "setIsLoading", payload: false });
     });
 
   spotifyApi
     .getMySavedTracks({
-      market: 'ES',
+      market: "ES",
       limit: 50,
       offset: 0,
     })
     .then((data) => {
       dispatch({
-        type: 'setSavedTracks',
+        type: "setSavedTracks",
         payload: {
           items: data.body.items.map((item) => {
             return item.track;
@@ -121,7 +121,7 @@ const fetchAllTracks = (spotifyApi, dispatch) => {
       });
     })
     .then(() => {
-      dispatch({ type: 'setIsLoading', payload: false });
+      dispatch({ type: "setIsLoading", payload: false });
     });
 };
 
@@ -130,12 +130,12 @@ const fetchPlaylistTracks = (spotifyApi, playlist, dispatch) => {
     .getPlaylistTracks(playlist?.id, {
       offset: 1,
       limit: 100,
-      fields: 'items',
+      fields: "items",
     })
     .then(
       (data) => {
         dispatch({
-          type: 'setPlayList',
+          type: "setPlaylist",
           payload: {
             items: data.body.items.map((item) => {
               return item.track;
@@ -144,7 +144,7 @@ const fetchPlaylistTracks = (spotifyApi, playlist, dispatch) => {
         });
       },
       (err) => {
-        console.log('Something went wrong!', err);
+        console.log("Something went wrong!", err);
       }
     );
 };

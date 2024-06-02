@@ -1,31 +1,31 @@
-import React, { useContext } from 'react';
-import { Redirect, Route, Switch } from 'react-router';
-import { StoreContext } from './components/context/ContextProvider';
-import Main from './components/features/Main';
-import Playlist from './components/features/playlists/Playlist';
-import SeeMore from './components/features/SeeMore';
-import SavedTracks from './components/pages/SavedTracks';
-import SongList from './components/features/songsList/SongList'
-import SearchPage from './components/pages/search/SearchPage';
+import React, { useContext } from "react";
+import { Redirect, Route, Switch } from "react-router";
+import { StoreContext } from "./components/context/ContextProvider";
+import Main from "./components/features/Main";
+import Playlist from "./components/features/playlists/Playlist";
+import SeeMore from "./components/features/SeeMore";
+import SavedTracks from "./components/pages/SavedTracks";
+import SongList from "./components/features/songsList/SongList";
+import SearchPage from "./components/pages/search/SearchPage";
 
 const AppRouter = ({ chooseTrack, accessToken }) => {
   const { state } = useContext(StoreContext);
   return (
     <>
       <Switch>
-        <Route exact path='/'>
+        <Route exact path="/">
           <Main chooseTrack={chooseTrack} />
         </Route>
-        <Route exact path='/search'>
-          <SearchPage accessToken={accessToken}/>
+        <Route exact path="/search">
+          <SearchPage accessToken={accessToken} chooseTrack={chooseTrack} />
         </Route>
-        <Route path='/savedTracks'>
-          <SavedTracks chooseTrack={chooseTrack} playList={state.savedTracks} />
+        <Route path="/savedTracks">
+          <SavedTracks chooseTrack={chooseTrack} />
         </Route>
-        <Route path='/tracks/:id'>
+        <Route path="/playlist/:id">
           <SongList chooseTrack={chooseTrack} />
         </Route>
-        <Route path='/:id'>
+        <Route path="/:id">
           <SeeMore accessToken={accessToken} />
           {state.isClicked && <Playlist chooseTrack={chooseTrack} />}
         </Route>
