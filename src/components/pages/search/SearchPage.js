@@ -139,34 +139,6 @@ export default function SearchPage({ accessToken, chooseTrack }) {
                     <Divider />
                   </>
                 ))}
-                {/* <ListItemButton
-                  selected={selectedIndex === 1}
-                  onClick={(event) => handleListItemClick(event, 1)}
-                >
-                  <ListItemText primary="artists" />
-                </ListItemButton>
-                <Divider />
-                <ListItemButton
-                  selected={selectedIndex === 2}
-                  onClick={(event) => handleListItemClick(event, 2)}
-                >
-                  <ListItemText primary="album" />
-                </ListItemButton>
-                <Divider />
-                <ListItemButton
-                  selected={selectedIndex === 3}
-                  onClick={(event) => handleListItemClick(event, 3)}
-                >
-                  <ListItemText primary="podcasts" />
-                </ListItemButton>
-                <Divider />
-                <ListItemButton
-                  selected={selectedIndex === 4}
-                  onClick={(event) => handleListItemClick(event, 4)}
-                >
-                  <ListItemText primary="shows" />
-                </ListItemButton>
-                <Divider /> */}
               </List>
             </Grid>
             <Grid container xs={6} md={9}>
