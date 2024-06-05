@@ -33,7 +33,7 @@ const Main = ({ chooseTrack }) => {
               <EachSlider key={i} playlists={item} des={state.playlistDes[i]} />
             ) : null;
           })}
-          <Gallery />
+          {/* <Gallery /> */}
           {/* {state.isClicked && <SongList chooseTrack={chooseTrack} />} */}
         </>
       )}

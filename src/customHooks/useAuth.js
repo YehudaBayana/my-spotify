@@ -9,13 +9,9 @@ const getSessionItem = (key) => {
 };
 
 export default function useAuth(code) {
-  const [accessToken, setAccessToken] = useState(getSessionItem("accessToken"));
-  const [refreshToken, setRefreshToken] = useState(
-    getSessionItem("refreshToken")
-  );
-  const [expiresIn, setExpiresIn] = useState(
-    Number(getSessionItem("expiresIn"))
-  );
+  const [accessToken, setAccessToken] = useState();
+  const [refreshToken, setRefreshToken] = useState();
+  const [expiresIn, setExpiresIn] = useState();
 
   const login = useCallback(async () => {
     try {
@@ -26,9 +22,9 @@ export default function useAuth(code) {
       setRefreshToken(refreshToken);
       setExpiresIn(expiresIn);
 
-      window.sessionStorage.setItem("accessToken", accessToken);
-      window.sessionStorage.setItem("refreshToken", refreshToken);
-      window.sessionStorage.setItem("expiresIn", expiresIn);
+      // window.sessionStorage.setItem("accessToken", accessToken);
+      // window.sessionStorage.setItem("refreshToken", refreshToken);
+      // window.sessionStorage.setItem("expiresIn", expiresIn);
 
       window.history.pushState({}, null, "/");
     } catch (error) {
@@ -47,8 +43,8 @@ export default function useAuth(code) {
       setAccessToken(accessToken);
       setExpiresIn(expiresIn);
 
-      window.sessionStorage.setItem("accessToken", accessToken);
-      window.sessionStorage.setItem("expiresIn", expiresIn);
+      // window.sessionStorage.setItem("accessToken", accessToken);
+      // window.sessionStorage.setItem("expiresIn", expiresIn);
     } catch (error) {
       console.error("Refresh token error:", error);
       window.location = "/";
@@ -61,7 +57,7 @@ export default function useAuth(code) {
 
   useEffect(() => {
     if (!expiresIn) return;
-
+    console.log("expiresIn ",expiresIn);
     const refreshInterval = (expiresIn - 60) * 1000;
     const interval = setInterval(() => {
       refreshAccessToken();

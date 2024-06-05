@@ -1,152 +1,143 @@
-import { useContext, useEffect } from "react";
-import { StoreContext } from "../components/context/ContextProvider";
+import { useContext, useEffect } from 'react';
+import { StoreContext } from '../components/context/ContextProvider';
+import { reducerActionTypes } from '../constants';
 
-const useFetchSearch = (spotifyApi, search, accessToken) => {
+const useFetchSearch = (searchValue, setSearchRes, accessToken, type, setSelectedRes, bool) => {
   const { dispatch } = useContext(StoreContext);
-  useEffect(() => {
-    if (!search) return dispatch({ type: "setSearchResults", payload: [] });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(async () => {
+    if (!searchValue) return dispatch({ type: 'setSearchResults', payload: [] });
+    console.log('accessToken ', accessToken);
     if (!accessToken) return;
-    let cancel = false;
-    spotifyApi
-      .searchTracks(search)
-      .then((res) => {
-        if (cancel) return;
-        dispatch({
-          type: "setSearchResults",
-          payload: res.body.tracks.items.map((track) => {
-            const smallestAlbumImage = track.album.images.reduce(
-              (smallest, image) => {
-                if (image.height < smallest.height) return image;
-                return smallest;
-              },
-              track.album.images[0]
-            );
+    const url = `https://api.spotify.com/v1/search?q=${searchValue}&type=artist%2Ctrack%2Cepisode%2Cshow%2Cplaylist`;
+    const data = await customDynamicFetch(url, accessToken);
+    setSearchRes(data);
+    setSelectedRes(data[type].items.map((item) => {
+      return item;
+    }));
+  }, [bool]);
+};
 
-            return {
-              artist: track.artists[0].name,
-              title: track.name,
-              uri: track.uri,
-              albumUrl: smallestAlbumImage.url,
-            };
-          }),
-        });
-      })
-      .then(() => {
-        dispatch({ type: "setIsLoading", payload: false });
+export const useGetHomePagePlaylists = async (dispatch, accessToken) => {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(async () => {
+    if (!accessToken) return;
+    const categories = await getCategories(accessToken, dispatch);
+    let messages = [];
+    let playlistsArr = [];
+    categories.categories.items.forEach((category) => {
+      getCategoryPlaylists(accessToken, category.id).then((data) => {
+        console.log('data ', data);
+        messages.push(data.message);
+        playlistsArr.push(data.playlists.items);
       });
-    return () => (cancel = true);
-  }, [search, accessToken, dispatch, spotifyApi]);
-};
-
-const fetchAllTracks = (spotifyApi, dispatch) => {
-  spotifyApi
-    .getCategories({
-      limit: 10,
-      offset: 0,
-      country: "US",
-    })
-    .then(
-      function (data) {
-        console.log("chec", data.body);
-        dispatch({
-          type: "setCategories",
-          payload: data.body.categories.items,
-        });
-        data.body.categories.items.forEach((category) => {
-          spotifyApi
-            .getPlaylistsForCategory(category.id, {
-              country: "US",
-              limit: 30,
-              offset: 0,
-            })
-            .then(
-              function (data) {
-                dispatch({ type: "setPlaylistDes", payload: category.name });
-                dispatch({
-                  type: "setPlaylists",
-                  payload: data.body.playlists.items,
-                });
-              },
-              function (err) {
-                console.log("Something went wrong!", err);
-              }
-            )
-            .then(() => {
-              dispatch({ type: "setIsLoading", payload: false });
-            });
-        });
-      },
-      function (err) {
-        console.log("Something went wrong!", err);
-      }
-    );
-
-  spotifyApi
-    .getMe()
-    .then(
-      (data) => {
-        dispatch({ type: "setUserName", payload: data.body.display_name });
-
-        spotifyApi.getUserPlaylists(data.body.id).then(
-          (data) => {
-            dispatch({ type: "setUserPlaylists", payload: data.body.items });
-          },
-          (err) => {
-            console.log("Something went wrong!", err);
-          }
-        );
-      },
-      (err) => {
-        console.log("Something went wrong!", err);
-      }
-    )
-    .then(() => {
-      dispatch({ type: "setIsLoading", payload: false });
     });
-
-  spotifyApi
-    .getMySavedTracks({
-      market: "ES",
-      limit: 50,
-      offset: 0,
-    })
-    .then((data) => {
-      dispatch({
-        type: "setSavedTracks",
-        payload: {
-          items: data.body.items.map((item) => {
-            return item.track;
-          }),
-        },
-      });
-    })
-    .then(() => {
-      dispatch({ type: "setIsLoading", payload: false });
+    dispatch({ type: 'setPlaylistDes', payload: messages });
+    dispatch({
+      type: reducerActionTypes.SET_PLAYLISTS,
+      payload: playlistsArr,
     });
+  }, []);
 };
 
-const fetchPlaylistTracks = (spotifyApi, playlist, dispatch) => {
-  spotifyApi
-    .getPlaylistTracks(playlist?.id, {
-      offset: 1,
-      limit: 100,
-      fields: "items",
-    })
-    .then(
-      (data) => {
-        dispatch({
-          type: "setPlaylist",
-          payload: {
-            items: data.body.items.map((item) => {
-              return item.track;
-            }),
-          },
-        });
-      },
-      (err) => {
-        console.log("Something went wrong!", err);
-      }
-    );
+async function getCategories(accessToken, dispatch) {
+  const url = 'https://api.spotify.com/v1/browse/categories?locale=US&offset=0&limit=1';
+  const data = await customDynamicFetch(url, accessToken);
+  dispatch({
+    type: 'setCategories',
+    payload: data.categories.items,
+  });
+  return data;
+}
+async function getCategoryPlaylists(accessToken, categoryId) {
+  const url = `https://api.spotify.com/v1/browse/categories/${categoryId}/playlists`;
+  return customDynamicFetch(url, accessToken);
+}
+
+const fetchInitialData = async (spotifyApi, dispatch, accessToken) => {
+  const user = await getUser(accessToken);
+  const userPlaylist = await getUserPlaylists(accessToken, user.id);
+  dispatch({ type: reducerActionTypes.SET_USER_PLAYLISTS, payload: userPlaylist.items });
+  dispatch({ type: reducerActionTypes.SET_USER_DETAILS, payload: user });
+  const userSavedData = await getUserSavedTracks(accessToken);
+  dispatch({
+    type: reducerActionTypes.SET_SAVED_TRACKS,
+    payload: {
+      items: userSavedData.items.map((item) => {
+        return item.track;
+      }),
+    },
+  });
 };
 
-export { useFetchSearch, fetchAllTracks, fetchPlaylistTracks };
+const fetchPlaylistTracks = async (accessToken, playlistId, dispatch) => {
+  const tracksRes = await getPlaylistTracks(accessToken, playlistId);
+  console.log("tracksRes ,", tracksRes);
+  dispatch({
+    type: reducerActionTypes.SET_PLAYLIST,
+    payload: {
+      items: tracksRes.items.map((item) => {
+        return item.track;
+      }),
+    },
+  });
+};
+
+const fetchAlbumTracks = async (accessToken, AlbumId, dispatch) => {
+  const tracksRes = await getAlbumTracks(accessToken, AlbumId);
+  console.log("tracksRes ,", tracksRes);
+  dispatch({
+    type: reducerActionTypes.SET_ALBUM,
+    payload: {
+      items: tracksRes.items.map((item) => {
+        return item;
+      }),
+    },
+  });
+};
+
+function getUser(accessToken) {
+  const url = 'https://api.spotify.com/v1/me';
+  return customDynamicFetch(url, accessToken);
+}
+
+function getUserSavedTracks(accessToken) {
+  const url = 'https://api.spotify.com/v1/me/tracks';
+  return customDynamicFetch(url, accessToken);
+}
+
+function getUserPlaylists(accessToken, userId) {
+  const url = `https://api.spotify.com/v1/users/${userId}/playlists`;
+  return customDynamicFetch(url, accessToken);
+}
+
+function getPlaylistTracks(accessToken, playlistId) {
+  const url = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`;
+  return customDynamicFetch(url, accessToken);
+}
+
+function getAlbumTracks(accessToken, albumId) {
+  const url = `https://api.spotify.com/v1/albums/{id}/tracks`;
+  return customDynamicFetch(url, accessToken);
+}
+
+async function customDynamicFetch(url, accessToken) {
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${accessToken}`,
+  };
+
+  try {
+    const response = await fetch(url, {
+      method: 'GET',
+      headers,
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('There has been a problem with your fetch operation:', error);
+    return null;
+  }
+}
+
+export { useFetchSearch, fetchInitialData as fetchAllTracks, fetchPlaylistTracks };

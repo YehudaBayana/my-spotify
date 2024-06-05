@@ -122,7 +122,7 @@ export default EachSlider;
 // import { StoreContext } from "../../context/ContextProvider";
 
 // const EachSlider = ({ playlists, des }) => {
-//   const { dispatch, getOne } = useContext(StoreContext);
+//   const { dispatch, updatePlaylist } = useContext(StoreContext);
 //   const [windowWith, setWindowWith] = useState(window.innerWidth);
 //   useEffect(() => {
 //     window.addEventListener("resize", () => {
@@ -160,7 +160,7 @@ export default EachSlider;
 //                 <Link
 //                   onClick={() => {
 //                     // dispatch({ type: "setIsClicked" });
-//                     // getOne(item.id);
+//                     // updatePlaylist(item.id);
 //                   }}
 //                   to={`/tracks/${item.id}`}
 //                   key={item.id}

@@ -9,24 +9,28 @@ const spotifyApi = new SpotifyWebApi({
 
 const initialState = {
   spotifyApi: spotifyApi,
+  accessToken:"",
   search: "",
   searchResults: [],
   playingTrack: null,
   isClicked: false,
   userPlaylists: [],
+  userAlbums: [],
   playlists: [],
-  playlist: "",
+  playlist: {},
   savedTracks: "",
   detail: "",
   categories: "",
   userName: "",
-  isLoading: true,
+  isLoading: false,
   playlistDes: [],
 };
 
 const reducer = (state, action) => {
-  console.log("action.type ", action.type);
+  // console.log("state ", state);
   switch (action.type) {
+    case reducerActionTypes.SET_ACCESS_TOKEN:
+      return { ...state, accessToken: action.payload };
     case reducerActionTypes.SET_SEARCH:
       return { ...state, search: action.payload };
     case reducerActionTypes.SET_SEARCH_RESULTS:
@@ -41,20 +45,25 @@ const reducer = (state, action) => {
       return { ...state, savedTracks: action.payload };
     case reducerActionTypes.SET_DETAIL:
       return { ...state, detail: action.payload };
-    case reducerActionTypes.SET_USER_PLAYLIST:
+    case reducerActionTypes.SET_USER_PLAYLISTS:
       return { ...state, userPlaylists: action.payload };
+    case reducerActionTypes.SET_USER_Albums:
+      return { ...state, userAlbums: action.payload };
     case reducerActionTypes.SET_PLAYLISTS:
       return {
         ...state,
-        playlists: [...state.playlists, action.payload],
+        playlists: action.payload,
       };
     case reducerActionTypes.SET_CATEGORIES:
       return { ...state, categories: action.payload };
-    case reducerActionTypes.SET_USERNAME:
+    case reducerActionTypes.SET_USER_DETAILS:
       return { ...state, userName: action.payload };
     case reducerActionTypes.SET_IS_LOADING:
       return { ...state, isLoading: action.payload };
     case reducerActionTypes.SET_PLAYLIST_DES:
+      if (typeof action.payload === "object") {
+        return { ...state, playlistDes: [...state.playlistDes, ...action.payload] }
+      }
       return { ...state, playlistDes: [...state.playlistDes, action.payload] };
     default:
       throw new Error();
@@ -66,7 +75,7 @@ export const StoreContext = createContext();
 const ContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  function getOne(id) {
+  function updatePlaylist(id) {
     let playlist;
     state.playlists.forEach((play) => {
       if (play.find((item) => item.id === id)) {
@@ -78,11 +87,11 @@ const ContextProvider = ({ children }) => {
     }
 
     dispatch({ type: "setDetail", payload: playlist });
-    fetchPlaylistTracks(state.spotifyApi, playlist, dispatch);
+    fetchPlaylistTracks(state.accessToken, playlist.id, dispatch);
   }
 
   return (
-    <StoreContext.Provider value={{ state, dispatch, getOne }}>
+    <StoreContext.Provider value={{ state, dispatch, updatePlaylist }}>
       {children}
     </StoreContext.Provider>
   );

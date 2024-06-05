@@ -9,12 +9,10 @@ const useFetchAllMusic = (accessToken) => {
     state.spotifyApi.setAccessToken(accessToken);
   }, [accessToken, state.spotifyApi]);
 
-  useFetchSearch(state.spotifyApi, state.search, accessToken);
-
   useEffect(() => {
     if (!accessToken) return;
 
-    fetchAllTracks(state.spotifyApi, dispatch);
+    fetchAllTracks(state.spotifyApi, dispatch, accessToken);
   }, [accessToken, dispatch, state.spotifyApi]);
 };
 

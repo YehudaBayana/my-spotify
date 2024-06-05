@@ -1,73 +1,70 @@
-import React, { useState, useEffect, useRef, useContext } from "react";
-import useAuth from "../../customHooks/useAuth";
-import Player from "../features/Player";
-import TrackSearchResult from "../features/TrackSearchResult";
-import "../../index.css";
-import Mobile from "../features/mobile/Mobile";
-import { StoreContext } from "../context/ContextProvider";
-import useFetchAllMusic from "../../customHooks/useFetchAllMusic";
-import AppLayout from "../features/appLayout/AppLayout";
+import React, { useState, useEffect, useRef, useContext } from 'react';
+import '../../index.css';
+import { StoreContext } from '../context/ContextProvider';
+import useFetchAllMusic from '../../customHooks/useFetchAllMusic';
+import AppLayout from '../features/appLayout/AppLayout';
+import { useGetHomePagePlaylists } from '../../customHooks/useFetchMusicInfo';
+import { reducerActionTypes } from '../../constants';
 
 export default function Home({ accessToken }) {
-  const { state, dispatch } = useContext(StoreContext);
-
-  const searchRef = useRef("");
+  const { dispatch } = useContext(StoreContext);
   const [playingTrack, setPlayingTrack] = useState();
+  const [embedControllerState, setEmbedControllerState] = useState();
   const [windowWith, setWindowWith] = useState(window.innerWidth);
+  useEffect(()=>{
+    dispatch({
+      type: reducerActionTypes.SET_ACCESS_TOKEN,
+      payload: accessToken
+    });
+  },[accessToken])
+  const iframeRef = useRef(null);
+
+  // useEffect(() => {
+  //   const windowOnSpotifyIframeApiReady = (IFrameAPI) => {
+  //     const element = iframeRef.current;
+  //     const options = {
+  //       width: '100%',
+  //       height: '500px',
+  //       uri: 'spotify:episode:7makk4oTQel546B0PZlDM5', // Set default episode here (or null)
+  //     };
+
+  //     const callback = (EmbedController) => {
+  //       setEmbedControllerState(EmbedController);
+  //     };
+
+  //     IFrameAPI.createController(element, options, callback);
+  //   };
+
+  //   window.onSpotifyIframeApiReady = windowOnSpotifyIframeApiReady;
+
+  //   return () => {
+  //     window.onSpotifyIframeApiReady = null;
+  //   };
+  // }, []);
 
   function chooseTrack(track) {
+    console.log("track ",track);
     setPlayingTrack(track);
-    dispatch({ type: "setSearch", payload: "" });
-    if (searchRef.current) {
-      searchRef.current.value = "";
-    }
+    // embedControllerState.loadUri(track.uri);
+    // embedControllerState.play();
+    // setTimeout(() => {
+    //   const spotifyEmbedWindow = document.querySelector('iframe[src*="spotify.com/embed"]').contentWindow;
+    //   spotifyEmbedWindow.postMessage({ command: 'toggle' }, '*');
+    // }, 1000);
   }
 
   useFetchAllMusic(accessToken);
+  useGetHomePagePlaylists(dispatch, accessToken);
 
-  function searchFocus() {
-    searchRef.current.focus();
-  }
   useEffect(() => {
-    window.addEventListener("resize", () => {
+    window.addEventListener('resize', () => {
       setWindowWith(window.innerWidth);
     });
   }, [windowWith]);
 
   return (
     <>
-      {windowWith > 500 ? (
-        <AppLayout
-          accessToken={accessToken}
-          playingTrack={playingTrack}
-          chooseTrack={chooseTrack}
-        />
-      ) : (
-        <>
-          <Mobile
-            searchRef={searchRef}
-            chooseTrack={chooseTrack}
-            myFocus={searchFocus}
-          />
-          <div className="searchResultsWrapper">
-            {state.searchResults.map((track) => (
-              <TrackSearchResult
-                track={track}
-                key={track.uri}
-                chooseTrack={chooseTrack}
-              />
-            ))}
-          </div>
-        </>
-      )}
-      {/* 
-      <div className="playerBackground">
-        <div className="playerSticky">
-          <div>
-            <Player accessToken={accessToken} trackUri={playingTrack?.uri} />
-          </div>
-        </div>
-      </div> */}
+      <AppLayout divRef={iframeRef} accessToken={accessToken} playingTrack={playingTrack} chooseTrack={chooseTrack} />
     </>
   );
 }

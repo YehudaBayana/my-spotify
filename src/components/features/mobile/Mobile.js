@@ -5,7 +5,7 @@ import "./mobile.css";
 
 const Mobile = (props) => {
   const { searchRef, chooseTrack, myFocus } = props;
-  const { state, getOne, dispatch } = useContext(StoreContext);
+  const { state, updatePlaylist, dispatch } = useContext(StoreContext);
 
   return (
     <>
@@ -33,7 +33,7 @@ const Mobile = (props) => {
                     className="box"
                     onClick={() => {
                       dispatch({ type: "setIsClicked" });
-                      return getOne(item.id);
+                      return updatePlaylist(item.id);
                     }}
                   >
                     <div className="box__image">
@@ -58,7 +58,7 @@ const Mobile = (props) => {
                           className="large-boxes__box"
                           onClick={() => {
                             dispatch({ type: "setIsClicked" });
-                            return getOne(item.id);
+                            return updatePlaylist(item.id);
                           }}
                         >
                           <img src={item.images[0].url} alt="" />

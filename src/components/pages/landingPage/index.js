@@ -11,7 +11,7 @@ const index = () => {
   return (
     <>
       <HeroSection />
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 };

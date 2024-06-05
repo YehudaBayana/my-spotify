@@ -1,6 +1,8 @@
 import HomeIcon from "@mui/icons-material/Home";
+import SearchIcon from '@mui/icons-material/Search';
 
 export const reducerActionTypes = {
+  SET_ACCESS_TOKEN: "setAccessToken",
   SET_SEARCH: "setSearch",
   SET_SEARCH_RESULTS: "setSearchResults",
   SET_PLAYING_TRACK: "setPlayingTrack",
@@ -8,12 +10,14 @@ export const reducerActionTypes = {
   SET_PLAYLIST: "setPlaylist",
   SET_SAVED_TRACKS: "setSavedTracks",
   SET_DETAIL: "setDetail",
-  SET_USER_PLAYLIST: "setUserPlaylists",
+  SET_USER_PLAYLISTS: "setUserPlaylists",
+  SET_USER_ALBUMS: "setUserAlbums",
   SET_PLAYLISTS: "setPlaylists",
   SET_CATEGORIES: "setCategories",
-  SET_USERNAME: "setUserName",
+  SET_USER_DETAILS: "setUserDetails",
   SET_IS_LOADING: "setIsLoading",
   SET_PLAYLIST_DES: "setPlaylistDes",
+  SET_ALBUM: "setAlbum",
 };
 
 export const searchMenu = [
@@ -29,5 +33,10 @@ export const links = [
     text: "home",
     path: "/",
     icon: <HomeIcon />,
+  },
+  {
+    text: "search",
+    path: "/",
+    icon: <SearchIcon />,
   },
 ];

@@ -27,7 +27,7 @@ const HeroSection = () => {
           </div>
         </div>
       </section>
-      <section className='albums'>
+      {/* <section className='albums'>
         <div className='albums-container'>
           <div className='albums-content'>
             <h2>Looking for music?</h2>
@@ -87,7 +87,7 @@ const HeroSection = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
     </>
   );
 };

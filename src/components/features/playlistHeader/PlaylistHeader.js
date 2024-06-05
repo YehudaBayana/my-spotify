@@ -25,17 +25,18 @@ const PlaylistHeader = ({ details }) => {
       }}>
       <Grid container spacing={2}>
         <Grid item xs={3}>
-          <ButtonBase sx={{ width: '100%' }}>{details ? <Img alt="complex" src={details?.images[0]?.url} /> : null}</ButtonBase>
+          <ButtonBase id="playlistImage" sx={{ width: '100%' }}>{details ? <Img alt="complex" src={details?.images[0]?.url} /> : null}
+          </ButtonBase>
         </Grid>
         <Grid item xs={8} sm container>
           <Grid item xs container alignSelf={'flex-end'} direction="column" spacing={2}>
             {/* <Grid item xs></Grid> */}
             <Grid item>
               <Typography gutterBottom variant="h4" component="div">
-                {details.name}
+                {details?.name}
               </Typography>
               <Typography variant="h5" gutterBottom>
-                {details.description}
+                {details?.description}
               </Typography>
               {details?.tracks?.total && (
                 <Typography variant="h6" color="text.secondary">

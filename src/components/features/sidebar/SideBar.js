@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { StoreContext } from '../../context/ContextProvider';
 
 const SideBar = ({ myFocus }) => {
-  const { state, dispatch, getOne } = useContext(StoreContext);
+  const { state, dispatch, updatePlaylist } = useContext(StoreContext);
   return (
     <>
       <div className='sideBar'>
@@ -100,7 +100,7 @@ const SideBar = ({ myFocus }) => {
                     onClick={() => {
                       dispatch({ type: 'setIsClicked' });
                       // setIsClicked((oldVal) => !oldVal);
-                      return getOne(item.id);
+                      return updatePlaylist(item.id);
                     }}
                     className='playlistName'
                   >

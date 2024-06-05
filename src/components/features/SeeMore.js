@@ -4,7 +4,7 @@ import { StoreContext } from "../context/ContextProvider";
 import AlbumImg from "./AlbumImg";
 
 const SeeMore = ({ accessToken }) => {
-  const { state, dispatch, getOne, spotifyApi } = useContext(StoreContext);
+  const { state, dispatch, updatePlaylist, spotifyApi } = useContext(StoreContext);
   const { id } = useParams();
   let news = state.playlists.find((playlists) => {
     return playlists[0].id === id;
@@ -23,7 +23,7 @@ const SeeMore = ({ accessToken }) => {
                   key={item.id}
                   onClick={() => {
                     dispatch({ type: "setIsClicked" });
-                    return getOne(item.id);
+                    return updatePlaylist(item.id);
                   }}
                 >
                   <p className="profile">
@@ -31,7 +31,7 @@ const SeeMore = ({ accessToken }) => {
                     <img src={item.images[0].url} alt="" width="100%" />
                     {/* <AlbumImg
                       imgUrl={item.images[0].url}
-                      getOne={() => getOne(item.id)}
+                      updatePlaylist={() => updatePlaylist(item.id)}
                     /> */}
                   </p>
                 </li>

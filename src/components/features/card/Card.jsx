@@ -8,11 +8,12 @@ import { Link } from 'react-router-dom/cjs/react-router-dom';
 
 
 export default function Card({ playlistDetails }) {// background:"lightGrey"
+  // console.log("playlistDetails ",playlistDetails);
   return (
     <MuiCard sx={{ maxWidth: 345, margin:"0px 10px", boxShadow:"none", background:"inherit"}}>
       <CardActionArea>
         <Link style={{ textDecoration: 'none', color: 'inherit' }} to={`/playlist/${playlistDetails.id}`} key={playlistDetails.id}>
-        <CardMedia component="img" height="100%" image={playlistDetails.images[0].url} alt="green iguana" />
+        <CardMedia component="img" height="100%" image={playlistDetails?.images[0]?.url} alt="green iguana" />
           <CardContent sx={{padding:"10px 0"}}>
             <Typography noWrap gutterBottom variant="subtitle1" component="div">
               {playlistDetails.name}

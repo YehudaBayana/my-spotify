@@ -4,7 +4,7 @@ import { StoreContext } from '../../context/ContextProvider';
 import AlbumImg from '../AlbumImg';
 
 const Gallery = () => {
-  const { state, getOne, dispatch } = useContext(StoreContext);
+  const { state, updatePlaylist, dispatch } = useContext(StoreContext);
   return (
     <>
       <article className='flow'>
@@ -23,7 +23,7 @@ const Gallery = () => {
                   onClick={() => {
                     console.log('dsdfsdfssdf: ', item);
                     dispatch({ type: 'setIsClicked' });
-                    return getOne(item.id);
+                    return updatePlaylist(item.id);
                   }}
                 >
                   <p className='profile'>
