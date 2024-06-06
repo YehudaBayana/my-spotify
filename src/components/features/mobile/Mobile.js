@@ -46,7 +46,7 @@ const Mobile = (props) => {
             </div>
           </section>
           <div className="middle-section">
-            {state.playlists?.map((item, i) => {
+            {state.genres?.map((item, i) => {
               return (
                 <>
                   <h1 key={item.id}>{state.playlistDes[i]}</h1>

@@ -1,5 +1,5 @@
 import HomeIcon from "@mui/icons-material/Home";
-import SearchIcon from '@mui/icons-material/Search';
+import SearchIcon from "@mui/icons-material/Search";
 
 export const reducerActionTypes = {
   SET_ACCESS_TOKEN: "setAccessToken",
@@ -12,7 +12,7 @@ export const reducerActionTypes = {
   SET_DETAIL: "setDetail",
   SET_USER_PLAYLISTS: "setUserPlaylists",
   SET_USER_ALBUMS: "setUserAlbums",
-  SET_PLAYLISTS: "setPlaylists",
+  SET_GENRES: "setGenres",
   SET_CATEGORIES: "setCategories",
   SET_USER_DETAILS: "setUserDetails",
   SET_IS_LOADING: "setIsLoading",
@@ -36,7 +36,7 @@ export const links = [
   },
   {
     text: "search",
-    path: "/",
+    path: "/search",
     icon: <SearchIcon />,
   },
 ];

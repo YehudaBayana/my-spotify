@@ -28,7 +28,7 @@ const Main = ({ chooseTrack }) => {
             ))}
           </div> */}
           {/* <hr /> */}
-          {state.playlists.map((item, i) => {
+          {state.genres.map((item, i) => {
             return state.playlistDes[i] !== "New Releases" ? (
               <EachSlider key={i} playlists={item} des={state.playlistDes[i]} />
             ) : null;

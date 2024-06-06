@@ -4,9 +4,10 @@ import { StoreContext } from "../context/ContextProvider";
 import AlbumImg from "./AlbumImg";
 
 const SeeMore = ({ accessToken }) => {
-  const { state, dispatch, updatePlaylist, spotifyApi } = useContext(StoreContext);
+  const { state, dispatch, updatePlaylist, spotifyApi } =
+    useContext(StoreContext);
   const { id } = useParams();
-  let news = state.playlists.find((playlists) => {
+  let news = state.genres.find((playlists) => {
     return playlists[0].id === id;
   });
 

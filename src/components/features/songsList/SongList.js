@@ -1,38 +1,58 @@
-import React, { useContext, useEffect } from 'react';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import { StoreContext } from '../../context/ContextProvider';
-import PlaylistHeader from '../playlistHeader/PlaylistHeader';
-import { msToMinutesAndSeconds } from '../../../utils';
+import React, { useContext, useEffect } from "react";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import { StoreContext } from "../../context/ContextProvider";
+import PlaylistHeader from "../playlistHeader/PlaylistHeader";
+import { msToMinutesAndSeconds } from "../../../utils";
+// import { useLocation } from "react-router-dom/cjs/react-router-dom";
+import { useLocation } from "react-router-dom";
 
 export default function SongList({ chooseTrack }) {
+  const location = useLocation();
+  const { updatePlaylist, state } = useContext(StoreContext);
+
+  // Access the current path (pathname) from location.pathname
+  const [type, playlistId] = location.pathname
+    .split("/")
+    .filter((item) => item);
+
+  // Perform actions or update state based on path changes
+  useEffect(() => {
+    // Handle path changes here
+    if (playlistId) {
+      updatePlaylist(playlistId, type);
+    }
+    // console.log('Path changed:', currentPath);
+  }, [playlistId]);
   function handlePlay(track) {
     chooseTrack(track);
   }
-  const { updatePlaylist, state } = useContext(StoreContext);
-  const playlistId = window.location.pathname.split('/').filter((item) => item)[1];
-  useEffect(() => {
-    if (playlistId) {
-      updatePlaylist(playlistId);
-    }
-  }, []);
-  console.log("state ",state);
+  // const [type, playlistId] = window.location.pathname
+  // .split("/")
+  // .filter((item) => item);
+  // useEffect(() => {
+  //   if (playlistId) {
+  //     updatePlaylist(playlistId, type);
+  //   }
+  // }, []);
+  console.log("state ", state);
 
   return (
-    <Paper sx={{ marginBottom: 8, width: '100%' }}>
+    <Paper sx={{ marginBottom: 8, width: "100%" }}>
       <PlaylistHeader details={state?.detail} />
       <TableContainer sx={{ borderRadius: 0 }} component={Paper}>
         <Table
           // style={{ tableLayout: "fixed" }}
           sx={{ minWidth: 450 }}
-          aria-label="caption table">
+          aria-label="caption table"
+        >
           <TableHead>
-            <TableRow sx={{ backgroundColor: 'lightGrey' }}>
+            <TableRow sx={{ backgroundColor: "lightGrey" }}>
               <TableCell width="10%" align="left">
                 image
               </TableCell>
@@ -51,38 +71,50 @@ export default function SongList({ chooseTrack }) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {console.log('state ', state)}
+            {console.log("state ", state)}
             {state.playlist.items?.map((track) => (
               <>
                 <TableRow onClick={() => handlePlay(track)} key={track?.id}>
                   <TableCell align="left" component="th" scope="row">
-                    <img src={track?.album?.images[2].url} loading="lazy" alt="mashu" width={60} height={50} />
+                    <img
+                      src={track?.album?.images[2].url}
+                      loading="lazy"
+                      alt="mashu"
+                      width={60}
+                      height={50}
+                    />
                   </TableCell>
                   <TableCell
                     sx={{
-                      whiteSpace: 'nowrap',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
                       maxWidth: 0,
                       //padding: "8px", // Adjust padding as per your requirement
                     }}
                     align="left"
-                    scope="row">
+                    scope="row"
+                  >
                     {track?.name}
                   </TableCell>
                   <TableCell
                     sx={{
-                      whiteSpace: 'nowrap',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
                       maxWidth: 0,
                       //padding: "8px", // Adjust padding as per your requirement
                     }}
-                    align="left">
-                    {track?.album.name}
+                    align="left"
+                  >
+                    {track?.album?.name}
                   </TableCell>
-                  <TableCell align="left">{track?.album.release_date}</TableCell>
-                  <TableCell align="left">{msToMinutesAndSeconds(track && track?.duration_ms)}</TableCell>
+                  <TableCell align="left">
+                    {track?.album?.release_date}
+                  </TableCell>
+                  <TableCell align="left">
+                    {msToMinutesAndSeconds(track && track?.duration_ms)}
+                  </TableCell>
                 </TableRow>
               </>
             ))}
