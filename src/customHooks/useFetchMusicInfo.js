@@ -1,5 +1,5 @@
 import { useContext, useEffect } from "react";
-import { StoreContext } from "../components/context/ContextProvider";
+import { StoreContext } from "../context/ContextProvider";
 import { reducerActionTypes } from "../constants";
 
 const useFetchSearch = (
@@ -116,7 +116,7 @@ export const fetchAlbumTracks = async (accessToken, AlbumId, dispatch) => {
   });
 };
 
-function getUser(accessToken) {
+export function getUser(accessToken) {
   const url = "https://api.spotify.com/v1/me";
   return customDynamicFetch(url, accessToken);
 }

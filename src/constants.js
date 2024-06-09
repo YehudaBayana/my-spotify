@@ -1,6 +1,9 @@
 import HomeIcon from "@mui/icons-material/Home";
 import SearchIcon from "@mui/icons-material/Search";
 
+export const clientId = "057cdd5b992444f2858403e816dcae20";
+export const SERVER_DOMAIN = "http://localhost:5001/";
+
 export const reducerActionTypes = {
   SET_ACCESS_TOKEN: "setAccessToken",
   SET_SEARCH: "setSearch",
@@ -40,3 +43,6 @@ export const links = [
     icon: <SearchIcon />,
   },
 ];
+
+export const drawerWidth = 240;
+export const DRAWERHEIGHT = 65;

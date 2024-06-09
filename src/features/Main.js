@@ -1,10 +1,6 @@
 import React, { useContext } from "react";
-import SongList from "../features/songsList/SongList";
 import { StoreContext } from "../context/ContextProvider";
 import EachSlider from "./eachSlider/EachSlider";
-import Gallery from "./gallery/Gallery";
-import Playlist from "./playlists/Playlist";
-import TrackSearchResult from "./TrackSearchResult";
 
 const Main = ({ chooseTrack }) => {
   const { state } = useContext(StoreContext);
@@ -18,23 +14,11 @@ const Main = ({ chooseTrack }) => {
         />
       ) : (
         <>
-          {/* <div className='searchResultsWrapper'>
-            {state.searchResults.map((track) => (
-              <TrackSearchResult
-                track={track}
-                key={track.uri}
-                chooseTrack={chooseTrack}
-              />
-            ))}
-          </div> */}
-          {/* <hr /> */}
           {state.genres.map((item, i) => {
             return state.playlistDes[i] !== "New Releases" ? (
               <EachSlider key={i} playlists={item} des={state.playlistDes[i]} />
             ) : null;
           })}
-          {/* <Gallery /> */}
-          {/* {state.isClicked && <SongList chooseTrack={chooseTrack} />} */}
         </>
       )}
     </>

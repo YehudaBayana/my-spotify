@@ -7,40 +7,26 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { StoreContext } from "../../context/ContextProvider";
-import PlaylistHeader from "../playlistHeader/PlaylistHeader";
-import { msToMinutesAndSeconds } from "../../../utils";
-// import { useLocation } from "react-router-dom/cjs/react-router-dom";
+import PlaylistHeader from "../../components/playlistHeader/PlaylistHeader";
+import { msToMinutesAndSeconds } from "../../utils";
 import { useLocation } from "react-router-dom";
 
 export default function SongList({ chooseTrack }) {
   const location = useLocation();
   const { updatePlaylist, state } = useContext(StoreContext);
 
-  // Access the current path (pathname) from location.pathname
   const [type, playlistId] = location.pathname
     .split("/")
     .filter((item) => item);
 
-  // Perform actions or update state based on path changes
   useEffect(() => {
-    // Handle path changes here
     if (playlistId) {
       updatePlaylist(playlistId, type);
     }
-    // console.log('Path changed:', currentPath);
   }, [playlistId]);
   function handlePlay(track) {
     chooseTrack(track);
   }
-  // const [type, playlistId] = window.location.pathname
-  // .split("/")
-  // .filter((item) => item);
-  // useEffect(() => {
-  //   if (playlistId) {
-  //     updatePlaylist(playlistId, type);
-  //   }
-  // }, []);
-  console.log("state ", state);
 
   return (
     <Paper sx={{ marginBottom: 8, width: "100%" }}>

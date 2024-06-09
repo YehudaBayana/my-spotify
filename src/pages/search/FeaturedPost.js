@@ -8,7 +8,7 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import { useState } from "react";
 import { useEffect } from "react";
-import { formatNumberShortcut } from "../../../utils";
+import { formatNumberShortcut } from "../../utils";
 
 function FeaturedPost(props) {
   const { artist } = props;

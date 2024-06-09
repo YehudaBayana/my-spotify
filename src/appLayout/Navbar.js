@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import "../../index.css";
 import { StoreContext } from "../context/ContextProvider";
-import { reducerActionTypes } from "../../constants";
+import { reducerActionTypes } from "../constants";
 
 const Navbar = ({ searchRef }) => {
   const { state, dispatch } = useContext(StoreContext);

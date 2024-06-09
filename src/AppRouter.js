@@ -1,19 +1,12 @@
 import React, { useContext, useRef } from "react";
-import { Redirect, Route, Switch } from "react-router";
-import { StoreContext } from "./components/context/ContextProvider";
-import Main from "./components/features/Main";
-import Playlist from "./components/features/playlists/Playlist";
-import SeeMore from "./components/features/SeeMore";
-import SavedTracks from "./components/pages/SavedTracks";
-import SongList from "./components/features/songsList/SongList";
-import SearchPage from "./components/pages/search/SearchPage";
+import { Route, Switch } from "react-router";
+import { StoreContext } from "./context/ContextProvider";
+import SearchPage from "./pages/search/SearchPage";
 // import React from 'react';
 import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemButton from "@mui/material/ListItemButton";
-import FolderIcon from "@mui/icons-material/Folder";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import Collapse from "@mui/material/Collapse";
@@ -26,6 +19,8 @@ import IconButton from "@mui/material/IconButton";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { useState } from "react";
+import SongList from "./features/songsList/SongList";
+import Main from "./features/Main";
 
 const ResizableDrawer = ({ children, open, handleDrawerClose }) => {
   const [drawerWidth, setDrawerWidth] = useState(250);
@@ -156,7 +151,8 @@ const AppRouter = ({ chooseTrack, accessToken }) => {
           <SearchPage accessToken={accessToken} chooseTrack={chooseTrack} />
         </Route>
         <Route path="/savedTracks">
-          <SavedTracks chooseTrack={chooseTrack} />
+          <h1>saved tracks</h1>
+          {/* <SavedTracks chooseTrack={chooseTrack} /> */}
         </Route>
         <Route path="/playlist/:id">
           <SongList chooseTrack={chooseTrack} />

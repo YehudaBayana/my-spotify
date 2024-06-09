@@ -3,11 +3,11 @@ import SpotifyWebApi from "spotify-web-api-node";
 import {
   fetchAlbumTracks,
   fetchPlaylistTracks,
-} from "../../customHooks/useFetchMusicInfo";
-import { reducerActionTypes } from "../../constants";
+} from "../customHooks/useFetchMusicInfo";
+import { reducerActionTypes, clientId } from "../constants";
 
 const spotifyApi = new SpotifyWebApi({
-  clientId: "057cdd5b992444f2858403e816dcae20",
+  clientId,
 });
 
 const initialState = {

@@ -1,17 +1,15 @@
-import React, { useState, useEffect, useContext } from 'react';
-import './eachSlider.css';
-import { Container } from '../../../App';
-import { Link } from 'react-router-dom';
-import Slider from 'react-slick';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
-import AlbumImg from '../AlbumImg';
-import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
-import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
-import { StoreContext } from '../../context/ContextProvider';
-import Card from '../card/Card';
-import { useRef } from 'react';
-import { Box, Button, Grid, Paper } from '@mui/material';
+import React, { useState, useEffect, useContext } from "react";
+import "./eachSlider.css";
+import { Container } from "../../App";
+import { Link } from "react-router-dom";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
+import ArrowCircleLeftIcon from "@mui/icons-material/ArrowCircleLeft";
+import Card from "../../components/card/Card";
+import { useRef } from "react";
+import { Box, Button, Grid, Paper } from "@mui/material";
 
 const EachSlider = ({ playlists, des }) => {
   let sliderRef = useRef(null);
@@ -23,10 +21,10 @@ const EachSlider = ({ playlists, des }) => {
   const cardsAmountDisplayed = Math.ceil((windowWith - 222) / 236);
   const handleNavigation = (direction) => {
     setClick((oldClick) => {
-      const newClick = direction === 'next' ? oldClick + 1 : oldClick - 1;
+      const newClick = direction === "next" ? oldClick + 1 : oldClick - 1;
 
       // Slide to next or previous
-      if (direction === 'next') {
+      if (direction === "next") {
         sliderRef.slickNext();
       } else {
         sliderRef.slickPrev();
@@ -48,18 +46,18 @@ const EachSlider = ({ playlists, des }) => {
 
   const next = () => {
     if (click < playlists.length / cardsAmountDisplayed) {
-      handleNavigation('next');
+      handleNavigation("next");
     }
   };
 
   const previous = () => {
     if (click > 1) {
-      handleNavigation('previous');
+      handleNavigation("previous");
     }
   };
 
   useEffect(() => {
-    window.addEventListener('resize', () => {
+    window.addEventListener("resize", () => {
       setWindowWith(window.innerWidth);
     });
   }, [windowWith]);
@@ -75,15 +73,25 @@ const EachSlider = ({ playlists, des }) => {
 
   return (
     <>
-      <Container style={{ margin: '40px 0' }}>
+      <Container style={{ margin: "40px 0" }}>
         <h2 className="genre-title">{des}</h2>
         <div className="flex-between">
-          <Box sx={{ margin: '0 10px' }}>
-            <ArrowCircleLeftIcon color={greyOutLeft ? 'secondary' : 'info'} sx={{ cursor: 'pointer' }} fontSize="large" onClick={isClickedDisabled ? undefined : previous} />
-            <ArrowCircleRightIcon color={greyOutRight ? 'secondary' : 'info'} sx={{ cursor: 'pointer' }} fontSize="large" onClick={isClickedDisabled ? undefined : next} />
+          <Box sx={{ margin: "0 10px" }}>
+            <ArrowCircleLeftIcon
+              color={greyOutLeft ? "secondary" : "info"}
+              sx={{ cursor: "pointer" }}
+              fontSize="large"
+              onClick={isClickedDisabled ? undefined : previous}
+            />
+            <ArrowCircleRightIcon
+              color={greyOutRight ? "secondary" : "info"}
+              sx={{ cursor: "pointer" }}
+              fontSize="large"
+              onClick={isClickedDisabled ? undefined : next}
+            />
           </Box>
 
-          <Link to={playlists ? `/${playlists[0]?.id}` : '/'}>
+          <Link to={playlists ? `/${playlists[0]?.id}` : "/"}>
             {/* className="see-all" */}
             <Button variant="contained">see all</Button>
           </Link>
@@ -94,7 +102,8 @@ const EachSlider = ({ playlists, des }) => {
             sliderRef = slider;
           }}
           swipe={false}
-          {...settings}>
+          {...settings}
+        >
           {playlists?.map((item) => {
             return (
               <>

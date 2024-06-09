@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
-import ContextProvider from "./components/context/ContextProvider";
+import ContextProvider from "./context/ContextProvider";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { blue, grey, red } from "@mui/material/colors";
 
