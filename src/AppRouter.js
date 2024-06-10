@@ -1,26 +1,27 @@
-import React, { useContext, useRef } from "react";
-import { Route, Switch } from "react-router";
-import { StoreContext } from "./context/ContextProvider";
-import SearchPage from "./pages/search/SearchPage";
+import React, { useContext, useRef } from 'react';
+import { Route, Switch } from 'react-router';
+import { StoreContext } from './context/ContextProvider';
+import SearchPage from './pages/search/SearchPage';
 // import React from 'react';
-import List from "@mui/material/List";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import ListItemButton from "@mui/material/ListItemButton";
-import ExpandLess from "@mui/icons-material/ExpandLess";
-import ExpandMore from "@mui/icons-material/ExpandMore";
-import Collapse from "@mui/material/Collapse";
+import List from '@mui/material/List';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemButton from '@mui/material/ListItemButton';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
+import Collapse from '@mui/material/Collapse';
 // import React from 'react';
-import { styled } from "@mui/material/styles";
+import { styled } from '@mui/material/styles';
 
-import Drawer from "@mui/material/Drawer";
-import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import { useState } from "react";
-import SongList from "./features/songsList/SongList";
-import Main from "./features/Main";
+import Drawer from '@mui/material/Drawer';
+import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import { useState } from 'react';
+import SongList from './features/songsList/SongList';
+import Main from './features/Main';
+// import CardSlider from './features/CardsSlider';
 
 const ResizableDrawer = ({ children, open, handleDrawerClose }) => {
   const [drawerWidth, setDrawerWidth] = useState(250);
@@ -31,8 +32,8 @@ const ResizableDrawer = ({ children, open, handleDrawerClose }) => {
     event.preventDefault();
     const initialX = event.clientX;
     mouseMoveListener = handleMouseMove.bind(null, initialX); // Bind with initialX
-    document.addEventListener("mousemove", mouseMoveListener);
-    document.addEventListener("mouseup", handleMouseUp);
+    document.addEventListener('mousemove', mouseMoveListener);
+    document.addEventListener('mouseup', handleMouseUp);
   };
 
   const handleMouseMove = (initialX, event) => {
@@ -42,8 +43,8 @@ const ResizableDrawer = ({ children, open, handleDrawerClose }) => {
   };
 
   const handleMouseUp = () => {
-    document.removeEventListener("mousemove", mouseMoveListener); // Use the stored reference
-    document.removeEventListener("mouseup", handleMouseUp);
+    document.removeEventListener('mousemove', mouseMoveListener); // Use the stored reference
+    document.removeEventListener('mouseup', handleMouseUp);
   };
 
   return (
@@ -51,26 +52,19 @@ const ResizableDrawer = ({ children, open, handleDrawerClose }) => {
       sx={{
         width: drawerWidth,
         flexShrink: 0,
-        "& .MuiDrawer-paper": {
-          position: "relative",
-          whiteSpace: "nowrap",
+        '& .MuiDrawer-paper': {
+          position: 'relative',
+          whiteSpace: 'nowrap',
           width: drawerWidth,
-          transition: "width 0s linear",
+          transition: 'width 0s linear',
         },
       }}
       variant="persistent"
       anchor="left"
-      open={open}
-    >
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <IconButton onClick={handleDrawerClose}>
-          {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-        </IconButton>
-        <div
-          ref={resizeRef}
-          style={{ width: 5, cursor: "ew-resize" }}
-          onMouseDown={handleMouseDown}
-        />
+      open={open}>
+      <div style={{ height: '50px', overflow: 'visible' }}>
+        <div ref={resizeRef} style={{ float: 'right', height: '100vh', width: 5, cursor: 'ew-resize', backgroundColor: 'red' }} onMouseDown={handleMouseDown} />
+        <IconButton onClick={handleDrawerClose}>{open ? <ChevronLeftIcon /> : <ChevronRightIcon />}</IconButton>
       </div>
       <Divider />
       {children}
@@ -79,9 +73,9 @@ const ResizableDrawer = ({ children, open, handleDrawerClose }) => {
 };
 
 const StyledListItemIcon = styled(ListItemIcon)({
-  width: "36px", // Adjust width as needed for your image
-  height: "36px", // Adjust height as needed for your image
-  minWidth: "unset",
+  width: '36px', // Adjust width as needed for your image
+  height: '36px', // Adjust height as needed for your image
+  minWidth: 'unset',
 });
 
 function FolderList() {
@@ -139,13 +133,13 @@ function FolderList() {
 }
 // export default FolderList;
 
-const AppRouter = ({ chooseTrack, accessToken }) => {
+const AppRouter = ({ chooseTrack, accessToken, drawerWidthState }) => {
   const { state } = useContext(StoreContext);
   return (
     <>
       <Switch>
         <Route exact path="/">
-          <Main chooseTrack={chooseTrack} />
+          <Main drawerWidthState={drawerWidthState} chooseTrack={chooseTrack} />
         </Route>
         <Route exact path="/search">
           <SearchPage accessToken={accessToken} chooseTrack={chooseTrack} />
@@ -164,9 +158,10 @@ const AppRouter = ({ chooseTrack, accessToken }) => {
           <FolderList />
         </Route>
         <Route path="/resize">
-          <ResizableDrawer open={true}>
+          {/* <CardSlider /> */}
+          {/* <ResizableDrawer open={true}>
             <p>dfdsf</p>
-          </ResizableDrawer>
+          </ResizableDrawer> */}
         </Route>
         {/* <Route path="/:id">
           <SeeMore accessToken={accessToken} />

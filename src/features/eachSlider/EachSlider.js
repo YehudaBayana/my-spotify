@@ -9,9 +9,11 @@ import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
 import ArrowCircleLeftIcon from "@mui/icons-material/ArrowCircleLeft";
 import Card from "../../components/card/Card";
 import { useRef } from "react";
-import { Box, Button, Grid, Paper } from "@mui/material";
+import { Box, Button, Grid, IconButton, Paper } from "@mui/material";
+import CardsSlider from '../CardsSlider';
 
-const EachSlider = ({ playlists, des }) => {
+const EachSlider = ({ playlists, des, drawerWidthState }) => {
+  let visibleCards = 4;
   let sliderRef = useRef(null);
   const [windowWith, setWindowWith] = useState(window.innerWidth);
   const [click, setClick] = useState(1);
@@ -19,6 +21,10 @@ const EachSlider = ({ playlists, des }) => {
   const [greyOutRight, setGreyOutRight] = useState(false);
   const [isClickedDisabled, setIsClickedDisabled] = useState(false);
   const cardsAmountDisplayed = Math.ceil((windowWith - 222) / 236);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const containerRef = useRef();
+  const [cardWidth, setCardWidth] = useState(0);
+
   const handleNavigation = (direction) => {
     setClick((oldClick) => {
       const newClick = direction === "next" ? oldClick + 1 : oldClick - 1;
@@ -43,6 +49,14 @@ const EachSlider = ({ playlists, des }) => {
       return newClick;
     });
   };
+  const handlePrev = () => {
+    setCurrentIndex((prevIndex) => Math.max(prevIndex - 1, 0));
+  };
+
+  const handleNext = () => {
+    setCurrentIndex((prevIndex) => Math.min(prevIndex + 1, playlists.length - visibleCards));
+  };
+
 
   const next = () => {
     if (click < playlists.length / cardsAmountDisplayed) {
@@ -73,22 +87,29 @@ const EachSlider = ({ playlists, des }) => {
 
   return (
     <>
+    <Box sx={{flexGrow:1}}>
       <Container style={{ margin: "40px 0" }}>
         <h2 className="genre-title">{des}</h2>
         <div className="flex-between">
           <Box sx={{ margin: "0 10px" }}>
+          <IconButton color='info' sx={{padding:"1px"}} disabled={currentIndex === 0}>
             <ArrowCircleLeftIcon
-              color={greyOutLeft ? "secondary" : "info"}
+              // color={greyOutLeft ? "secondary" : "info"}
               sx={{ cursor: "pointer" }}
               fontSize="large"
-              onClick={isClickedDisabled ? undefined : previous}
+              onClick={handlePrev}
+              
             />
+            </IconButton>
+            <IconButton color='info' sx={{padding:"1px"}} disabled={currentIndex >= playlists.length - visibleCards}>
             <ArrowCircleRightIcon
-              color={greyOutRight ? "secondary" : "info"}
+              // color={greyOutRight ? "secondary" : "info"}
               sx={{ cursor: "pointer" }}
               fontSize="large"
-              onClick={isClickedDisabled ? undefined : next}
+              onClick={handleNext}
+              // disabled={currentIndex >= playlists.length - visibleCards}
             />
+            </IconButton>
           </Box>
 
           <Link to={playlists ? `/${playlists[0]?.id}` : "/"}>
@@ -96,7 +117,8 @@ const EachSlider = ({ playlists, des }) => {
             <Button variant="contained">see all</Button>
           </Link>
         </div>
-        <Slider
+        <CardsSlider drawerWidthState={drawerWidthState} playlists={playlists} containerRef={containerRef} setCardWidth={setCardWidth} currentIndex={currentIndex} cardWidth={cardWidth} visibleCards={visibleCards}/>
+        {/* <Slider
           centerPadding="10px"
           ref={(slider) => {
             sliderRef = slider;
@@ -111,8 +133,9 @@ const EachSlider = ({ playlists, des }) => {
               </>
             );
           })}
-        </Slider>
+        </Slider> */}
       </Container>
+      </Box>
       {/* <hr /> */}
     </>
   );

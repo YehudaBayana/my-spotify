@@ -1,47 +1,42 @@
 //--------------------------- gpt correction
-import { useState, useEffect, useCallback } from "react";
-import axios from "axios";
-import { clientId, SERVER_DOMAIN } from "../constants";
+import { useState, useEffect, useCallback } from 'react';
+import axios from 'axios';
+import { clientId, SERVER_DOMAIN } from '../constants';
+import { getUser } from './useFetchMusicInfo';
 
 const getSessionItem = (key) => {
-  const item = window.sessionStorage.getItem(key);
-  return item === "undefined" || item === "NaN" ? null : item;
+  const item = window.localStorage.getItem(key);
+  return item === 'undefined' || item === 'NaN' ? null : item;
 };
 
 export default function useAuth(code) {
-  const [accessToken, setAccessToken] = useState(
-    getSessionItem("access_token")
-  );
-  const [refreshToken, setRefreshToken] = useState(
-    getSessionItem("refresh_token")
-  );
-  const [expiresIn, setExpiresIn] = useState(
-    Number(getSessionItem("expires_in"))
-  );
+  const [accessToken, setAccessToken] = useState(getSessionItem('access_token'));
+  const [refreshToken, setRefreshToken] = useState(getSessionItem('refresh_token'));
+  const [expiresIn, setExpiresIn] = useState(Number(getSessionItem('expires_in')));
 
   const getRefreshToken = useCallback(async () => {
-    // const refreshToken = sessionStorage.getItem("refresh_token");
-    console.log("refreshToken ", refreshToken);
+    // const refreshToken = localStorage.getItem("refresh_token");
+    console.log('refreshToken ', refreshToken);
 
     if (!refreshToken) {
-      console.error("No refresh token available");
+      console.error('No refresh token available');
       return;
     }
 
-    const url = "https://accounts.spotify.com/api/token";
+    const url = 'https://accounts.spotify.com/api/token';
 
     // const clientIdR = clientId;
-    const clientSecret = "15f61c725fdc4d7a92813509eaab1ff6";
+    const clientSecret = '15f61c725fdc4d7a92813509eaab1ff6';
     const basicAuth = btoa(`${clientId}:${clientSecret}`);
 
     const payload = {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
+        'Content-Type': 'application/x-www-form-urlencoded',
         Authorization: `Basic ${basicAuth}`,
       },
       body: new URLSearchParams({
-        grant_type: "refresh_token",
+        grant_type: 'refresh_token',
         refresh_token: refreshToken,
       }),
     };
@@ -51,19 +46,19 @@ export default function useAuth(code) {
       const data = await response.json();
 
       if (!response.ok) {
-        console.error("Failed to refresh token", data);
+        console.error('Failed to refresh token', data);
         return;
       }
 
-      sessionStorage.setItem("access_token", data.access_token);
-      sessionStorage.setItem("expires_in", data.expires_in);
+      localStorage.setItem('access_token', data.access_token);
+      localStorage.setItem('expires_in', data.expires_in);
       setAccessToken(data.access_token);
       setExpiresIn(data.expires_in);
       if (data.refresh_token) {
-        sessionStorage.setItem("refresh_token", data.refresh_token);
+        localStorage.setItem('refresh_token', data.refresh_token);
       }
     } catch (error) {
-      console.error("Error refreshing token", error);
+      console.error('Error refreshing token', error);
     }
   }, [refreshToken]);
 
@@ -76,14 +71,14 @@ export default function useAuth(code) {
       setRefreshToken(refreshToken);
       setExpiresIn(expiresIn);
 
-      window.sessionStorage.setItem("access_token", accessToken);
-      window.sessionStorage.setItem("refresh_token", refreshToken);
-      window.sessionStorage.setItem("expires_in", expiresIn);
+      window.localStorage.setItem('access_token', accessToken);
+      window.localStorage.setItem('refresh_token', refreshToken);
+      window.localStorage.setItem('expires_in', expiresIn);
 
-      window.history.pushState({}, null, "/");
+      window.history.pushState({}, null, '/');
     } catch (error) {
-      console.error("Login error:", error);
-      window.location = "/";
+      console.error('Login error:', error);
+      window.location = '/';
     }
   }, []);
 
@@ -97,17 +92,27 @@ export default function useAuth(code) {
       setAccessToken(accessToken);
       setExpiresIn(expiresIn);
 
-      window.sessionStorage.setItem("access_token", accessToken);
-      window.sessionStorage.setItem("expires_in", expiresIn);
+      window.localStorage.setItem('access_token', accessToken);
+      window.localStorage.setItem('expires_in', expiresIn);
     } catch (error) {
-      console.error("Refresh token error:", error);
-      window.location = "/";
+      console.error('Refresh token error:', error);
+      window.location = '/';
     }
   }, [refreshToken]);
 
   useEffect(() => {
     if (code) {
       login();
+    } else{
+      async function verify() {
+        const userRes = await getUser(accessToken);
+        console.log('userRes ', userRes);
+        if (userRes.error) {
+          setAccessToken(null);
+          setExpiresIn(0);
+        }
+      }
+      verify()
     }
   }, []);
 
@@ -132,7 +137,7 @@ export default function useAuth(code) {
 // const SERVER_DOMAIN = "http://localhost:5001/";
 
 // const getSessionItem = (key) => {
-//   const item = window.sessionStorage.getItem(key);
+//   const item = window.localStorage.getItem(key);
 //   return item === "undefined" || item === "NaN" ? null : item;
 // };
 
@@ -154,9 +159,9 @@ export default function useAuth(code) {
 //       setRefreshToken(refreshToken);
 //       setExpiresIn(expiresIn);
 
-//       window.sessionStorage.setItem("accessToken", accessToken);
-//       window.sessionStorage.setItem("refreshToken", refreshToken);
-//       window.sessionStorage.setItem("expiresIn", expiresIn);
+//       window.localStorage.setItem("accessToken", accessToken);
+//       window.localStorage.setItem("refreshToken", refreshToken);
+//       window.localStorage.setItem("expiresIn", expiresIn);
 
 //       window.history.pushState({}, null, "/");
 //     } catch (error) {
@@ -175,8 +180,8 @@ export default function useAuth(code) {
 //       setAccessToken(accessToken);
 //       setExpiresIn(expiresIn);
 
-//       window.sessionStorage.setItem("accessToken", accessToken);
-//       window.sessionStorage.setItem("expiresIn", expiresIn);
+//       window.localStorage.setItem("accessToken", accessToken);
+//       window.localStorage.setItem("expiresIn", expiresIn);
 //     } catch (error) {
 //       console.error("Refresh token error:", error);
 //       window.location = "/";
@@ -207,19 +212,19 @@ export default function useAuth(code) {
 // const SERVER_DOMAIN = "http://localhost:5001/";
 
 // export default function useAuth(code) {
-//   let refreshTokenSession = window.sessionStorage.getItem("refreshToken");
+//   let refreshTokenSession = window.localStorage.getItem("refreshToken");
 //   let expiresInSession =
-//     window.sessionStorage.getItem("expiresIn") == "undefined" ||
-//     window.sessionStorage.getItem("expiresIn") == "NaN"
-//       ? window.sessionStorage.removeItem("expiresIn")
-//       : window.sessionStorage.getItem("expiresIn")
-//       ? window.sessionStorage.getItem("expiresIn")
+//     window.localStorage.getItem("expiresIn") == "undefined" ||
+//     window.localStorage.getItem("expiresIn") == "NaN"
+//       ? window.localStorage.removeItem("expiresIn")
+//       : window.localStorage.getItem("expiresIn")
+//       ? window.localStorage.getItem("expiresIn")
 //       : null;
 //   let accessTokenSession =
-//     window.sessionStorage.getItem("accessToken") == "undefined"
-//       ? window.sessionStorage.removeItem("accessToken")
-//       : window.sessionStorage.getItem("accessToken")
-//       ? window.sessionStorage.getItem("accessToken")
+//     window.localStorage.getItem("accessToken") == "undefined"
+//       ? window.localStorage.removeItem("accessToken")
+//       : window.localStorage.getItem("accessToken")
+//       ? window.localStorage.getItem("accessToken")
 //       : null;
 //   const [accessToken, setAccessToken] = useState(
 //     accessTokenSession && accessTokenSession
@@ -241,22 +246,22 @@ export default function useAuth(code) {
 //           setAccessToken(res.data.accessToken);
 //           setRefreshToken(res.data.refreshToken);
 //           setExpiresIn(res.data.expiresIn);
-//           window.sessionStorage.setItem("accessToken", res.data.accessToken);
-//           window.sessionStorage.setItem("refreshToken", res.data.refreshToken);
-//           window.sessionStorage.setItem("expiresIn", res.data.expiresIn);
-//           if (window.sessionStorage.getItem("expiresIn") != "NaN") {
+//           window.localStorage.setItem("accessToken", res.data.accessToken);
+//           window.localStorage.setItem("refreshToken", res.data.refreshToken);
+//           window.localStorage.setItem("expiresIn", res.data.expiresIn);
+//           if (window.localStorage.getItem("expiresIn") != "NaN") {
 //             setInterval(() => {
 //               let expiresInSession = Number(
-//                 window.sessionStorage.getItem("expiresIn")
+//                 window.localStorage.getItem("expiresIn")
 //               );
 //               setExpiresIn(expiresInSession - (expiresInSession - 60));
-//               window.sessionStorage.setItem(
+//               window.localStorage.setItem(
 //                 "expiresIn",
 //                 String(expiresInSession - (expiresInSession - 60))
 //               );
 //             }, (expiresInSession - 60) * 1000);
 //           } else {
-//             window.sessionStorage.removeItem("expiresIn");
+//             window.localStorage.removeItem("expiresIn");
 //           }
 //           window.history.pushState({}, null, "/");
 //         })
@@ -277,8 +282,8 @@ export default function useAuth(code) {
 //           console.log("resssss ", res);
 //           setAccessToken(res.data.accessToken);
 //           setExpiresIn(res.data.expiresIn);
-//           window.sessionStorage.setItem("accessToken", res.data.accessToken);
-//           window.sessionStorage.setItem("expiresIn", res.data.expiresIn);
+//           window.localStorage.setItem("accessToken", res.data.accessToken);
+//           window.localStorage.setItem("expiresIn", res.data.expiresIn);
 //         })
 //         .catch((err) => {
 //           console.log("errrrrrrr ", err);

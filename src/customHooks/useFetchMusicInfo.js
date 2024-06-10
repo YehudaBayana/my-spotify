@@ -67,6 +67,8 @@ async function getCategoryPlaylists(accessToken, categoryId) {
 
 const fetchInitialData = async (spotifyApi, dispatch, accessToken) => {
   const user = await getUser(accessToken);
+  dispatch({ type: reducerActionTypes.SET_USER_DETAILS, payload: user });
+
   const userAlbums = await getUserAlbums(accessToken);
   dispatch({
     type: reducerActionTypes.SET_USER_ALBUMS,
@@ -78,7 +80,7 @@ const fetchInitialData = async (spotifyApi, dispatch, accessToken) => {
     type: reducerActionTypes.SET_USER_PLAYLISTS,
     payload: userPlaylist.items,
   });
-  dispatch({ type: reducerActionTypes.SET_USER_DETAILS, payload: user });
+
   const userSavedData = await getUserSavedTracks(accessToken);
   dispatch({
     type: reducerActionTypes.SET_SAVED_TRACKS,
@@ -143,6 +145,12 @@ function getUserAlbums(accessToken) {
 function getAlbumTracks(accessToken, albumId) {
   const url = `https://api.spotify.com/v1/albums/${albumId}/tracks`;
   return customDynamicFetch(url, accessToken);
+}
+
+function isAlbumSaved(accessToken, ids) {
+  const idsConcatenatedAsUrlQueryString = ids.join("%2C");
+  const url = `https://api.spotify.com/v1/me/albums/contains?ids=${idsConcatenatedAsUrlQueryString}`;
+  return customDynamicFetch(url, accessToken)
 }
 
 async function customDynamicFetch(url, accessToken) {

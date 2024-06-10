@@ -12,23 +12,38 @@ import { DRAWERHEIGHT, drawerWidth } from "../constants";
 
 const AppLayout = ({ chooseTrack, accessToken, playingTrack, divRef }) => {
   const { state } = useContext(StoreContext);
+  const [drawerWidthState, setDrawerWidthState] = useState(drawerWidth);
+  const [deltaXState, setDeltaXState] = useState(drawerWidth);
   const { userPlaylists, userAlbums } = state;
   const [open, setOpen] = useState(true);
 
   const handleDrawerOpen = () => {
     setOpen(true);
+    setDrawerWidthState(drawerWidth);
+    setDeltaXState(drawerWidth)
   };
-
+  
   const handleDrawerClose = () => {
     setOpen(false);
+    setDrawerWidthState(90)
+    setDeltaXState(90)
   };
 
   return (
     <>
       <Box sx={{ display: "flex" }}>
         <CssBaseline />
-        <CustomAppBar open={open} handleDrawerOpen={handleDrawerOpen} />
+        <CustomAppBar
+        open={open}
+        handleDrawerOpen={handleDrawerOpen} 
+        drawerWidthState={drawerWidthState}
+        />
         <CustomDrawer
+        setOpen={setOpen}
+        deltaXState={deltaXState}
+        setDeltaXState={setDeltaXState}
+          drawerWidthState={drawerWidthState}
+          setDrawerWidthState={setDrawerWidthState}
           open={open}
           handleDrawerClose={handleDrawerClose}
           links={links}
@@ -42,22 +57,25 @@ const AppLayout = ({ chooseTrack, accessToken, playingTrack, divRef }) => {
             marginLeft: "-23px",
             marginRight: "-23px",
             flexGrow: 1,
-            width: open ? `calc(100% - ${drawerWidth}px)` : "90%",
+            width: open ? `calc(100% - ${drawerWidthState}px)` : "90%",
             position: "relative",
           }}
         >
           <Grid>
             <div ref={divRef}></div>
-            <AppRouter chooseTrack={chooseTrack} accessToken={accessToken} />
+            <AppRouter drawerWidthState={drawerWidthState} chooseTrack={chooseTrack} accessToken={accessToken} />
           </Grid>
           <Grid
             position="fixed"
-            width={`calc(100% - ${open ? drawerWidth : 64}px)`}
+            width={`calc(100% - ${open ? drawerWidthState : 90}px)`}
+            // width={`100vw`}
             sx={{
               top: `calc(100vh - 52px)`,
-              left: (open ? drawerWidth : 64) + "px",
+              left: `${open ? drawerWidthState : 90}px`,
+              // left: "0px",
               zIndex: 9999,
-              transition: "0.27s",
+              transition: "0s",
+              // transition: "0.27s",
               transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
             }}
           >

@@ -20,24 +20,10 @@ export const Container = styled.div`
 `;
 
 function App() {
-  const [accessToken, setAccessToken] = useState(useAuth(code));
+  const accessToken = useAuth(code);
   console.log("accessToken ", accessToken);
-  const [isVerifyFinished, setIsVerifyFinished] = useState(false);
-  useEffect(() => {
-    async function verify() {
-      const userRes = await getUser(accessToken);
-      console.log("userRes ", userRes);
-      if (userRes.error) {
-        setAccessToken(null);
-      }
-    }
-    verify().finally(() => {
-      setIsVerifyFinished(true);
-    });
-  }, [accessToken, isVerifyFinished]);
   return (
     <>
-      {isVerifyFinished && (
         <Router>
           <ScrollToTop />
           {accessToken ? (
@@ -50,7 +36,6 @@ function App() {
             </>
           )}
         </Router>
-      )}
     </>
   );
 }
