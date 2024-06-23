@@ -11,44 +11,37 @@ import Card from "../../components/card/Card";
 import { useRef } from "react";
 import { Box, Button, Grid, IconButton, Paper } from "@mui/material";
 import CardsSlider from '../CardsSlider';
+import { PLAYLIST_CARD_WIDTH } from '../../constants';
 
 const EachSlider = ({ playlists, des, drawerWidthState }) => {
-  let visibleCards = 4;
-  let sliderRef = useRef(null);
+  // let visibleCards = 4;
+  const [visibleCards, setVisibleCards] = useState(window.innerWidth);
   const [windowWith, setWindowWith] = useState(window.innerWidth);
-  const [click, setClick] = useState(1);
-  const [greyOutLeft, setGreyOutLeft] = useState(true);
-  const [greyOutRight, setGreyOutRight] = useState(false);
-  const [isClickedDisabled, setIsClickedDisabled] = useState(false);
-  const cardsAmountDisplayed = Math.ceil((windowWith - 222) / 236);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [cardWidth, setCardWidth] = useState(PLAYLIST_CARD_WIDTH);
   const containerRef = useRef();
-  const [cardWidth, setCardWidth] = useState(0);
 
-  const handleNavigation = (direction) => {
-    setClick((oldClick) => {
-      const newClick = direction === "next" ? oldClick + 1 : oldClick - 1;
-
-      // Slide to next or previous
-      if (direction === "next") {
-        sliderRef.slickNext();
-      } else {
-        sliderRef.slickPrev();
+  let timeout;
+  useEffect(() => {
+    if (timeout) {
+      clearTimeout(timeout);
+      timeout = undefined;
+    }
+    const updateCardWidth = () => {
+      if (containerRef.current) {
+        const containerWidth = containerRef.current.offsetWidth;
+        const newVisibleCards = Math.floor(containerWidth / PLAYLIST_CARD_WIDTH);
+        setVisibleCards(newVisibleCards)
+        setCardWidth(containerWidth / newVisibleCards);
       }
+    };
 
-      // Disable click temporarily
-      setIsClickedDisabled(true);
-      setTimeout(() => {
-        setIsClickedDisabled(false);
-      }, 550);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    timeout = setTimeout(() => {
+      updateCardWidth();
+    }, 1000);
+  }, [drawerWidthState, visibleCards]);
 
-      // Update grey out states
-      setGreyOutLeft(newClick <= 1);
-      setGreyOutRight(newClick >= playlists.length / cardsAmountDisplayed);
-
-      return newClick;
-    });
-  };
   const handlePrev = () => {
     setCurrentIndex((prevIndex) => Math.max(prevIndex - 1, 0));
   };
@@ -57,33 +50,11 @@ const EachSlider = ({ playlists, des, drawerWidthState }) => {
     setCurrentIndex((prevIndex) => Math.min(prevIndex + 1, playlists.length - visibleCards));
   };
 
-
-  const next = () => {
-    if (click < playlists.length / cardsAmountDisplayed) {
-      handleNavigation("next");
-    }
-  };
-
-  const previous = () => {
-    if (click > 1) {
-      handleNavigation("previous");
-    }
-  };
-
   useEffect(() => {
     window.addEventListener("resize", () => {
       setWindowWith(window.innerWidth);
     });
   }, [windowWith]);
-
-  let settings = {
-    dots: false,
-    arrows: false,
-    infinite: false,
-    speed: 500,
-    slidesToShow: cardsAmountDisplayed,
-    slidesToScroll: cardsAmountDisplayed,
-  };
 
   return (
     <>
@@ -94,7 +65,6 @@ const EachSlider = ({ playlists, des, drawerWidthState }) => {
           <Box sx={{ margin: "0 10px" }}>
           <IconButton color='info' sx={{padding:"1px"}} disabled={currentIndex === 0}>
             <ArrowCircleLeftIcon
-              // color={greyOutLeft ? "secondary" : "info"}
               sx={{ cursor: "pointer" }}
               fontSize="large"
               onClick={handlePrev}
@@ -103,40 +73,20 @@ const EachSlider = ({ playlists, des, drawerWidthState }) => {
             </IconButton>
             <IconButton color='info' sx={{padding:"1px"}} disabled={currentIndex >= playlists.length - visibleCards}>
             <ArrowCircleRightIcon
-              // color={greyOutRight ? "secondary" : "info"}
               sx={{ cursor: "pointer" }}
               fontSize="large"
               onClick={handleNext}
-              // disabled={currentIndex >= playlists.length - visibleCards}
             />
             </IconButton>
           </Box>
 
           <Link to={playlists ? `/${playlists[0]?.id}` : "/"}>
-            {/* className="see-all" */}
             <Button variant="contained">see all</Button>
           </Link>
         </div>
-        <CardsSlider drawerWidthState={drawerWidthState} playlists={playlists} containerRef={containerRef} setCardWidth={setCardWidth} currentIndex={currentIndex} cardWidth={cardWidth} visibleCards={visibleCards}/>
-        {/* <Slider
-          centerPadding="10px"
-          ref={(slider) => {
-            sliderRef = slider;
-          }}
-          swipe={false}
-          {...settings}
-        >
-          {playlists?.map((item) => {
-            return (
-              <>
-                <Card playlistDetails={item} />
-              </>
-            );
-          })}
-        </Slider> */}
+        {playlists?.length > 0 && <CardsSlider cardWidth={cardWidth} playlists={playlists} containerRef={containerRef} currentIndex={currentIndex} visibleCards={visibleCards}/>}
       </Container>
       </Box>
-      {/* <hr /> */}
     </>
   );
 };

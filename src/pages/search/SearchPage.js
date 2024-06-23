@@ -10,12 +10,12 @@ import Blog from "./Blog";
 import { useState } from "react";
 import { useContext } from "react";
 import { StoreContext } from "../../context/ContextProvider";
-import { searchMenu } from "../../constants";
+import { reducerActionTypes, searchMenu } from "../../constants";
 import { useHistory } from "react-router-dom";
 import Card from "../../components/card/Card";
 import { useFetchSearch } from "../../customHooks/useFetchMusicInfo";
 // import { msToMinutesAndSeconds } from "../../../utils";
-import TracksRes from "./TracksRes";
+import SearchResTracks from "./TracksRes";
 
 export default function SearchPage({ accessToken, chooseTrack }) {
   const history = useHistory();
@@ -26,7 +26,10 @@ export default function SearchPage({ accessToken, chooseTrack }) {
   const [selectedRes, setSelectedRes] = useState([]);
   const [bool, setBool] = useState(true);
   function handlePlay(track) {
-    chooseTrack(track);
+    dispatch({
+      type:reducerActionTypes.SET_PLAYING_TRACK,
+      payload:track
+    });
   }
   useFetchSearch(
     searchValue,
@@ -39,7 +42,6 @@ export default function SearchPage({ accessToken, chooseTrack }) {
 
   const handleListItemClick = (event, index, itemMenu) => {
     setSelectedIndex(index);
-    console.log("searchRes ", searchRes);
     if (Object.keys(searchRes).length > 0) {
       const selectedItems = searchRes[searchMenu[index]].items.map((item) => {
         return item;
@@ -92,6 +94,7 @@ export default function SearchPage({ accessToken, chooseTrack }) {
                 {searchMenu.map((itemMenu, i) => (
                   <>
                     <ListItemButton
+                    key={i}
                       selected={selectedIndex === i}
                       onClick={(event) =>
                         handleListItemClick(event, i, itemMenu)
@@ -106,7 +109,7 @@ export default function SearchPage({ accessToken, chooseTrack }) {
             </Grid>
             <Grid container xs={6} md={9}>
               {selectedIndex === 0 ? (
-                <TracksRes selectedRes={selectedRes} handlePlay={handlePlay} />
+                <SearchResTracks selectedRes={selectedRes} handlePlay={handlePlay} />
               ) : selectedIndex === 1 ? (
                 <Grid
                   container
@@ -114,10 +117,10 @@ export default function SearchPage({ accessToken, chooseTrack }) {
                   columns={{ xs: 4, sm: 8, md: 12 }}
                 >
                   {searchRes &&
-                    searchRes[searchMenu[selectedIndex]]?.items?.map((item) => {
+                    searchRes[searchMenu[selectedIndex]]?.items?.map((item, i) => {
                       return (
                         <>
-                          <Grid item xs={2} sm={4} md={4}>
+                          <Grid key={i} item xs={2} sm={4} md={4}>
                             <Card playlistDetails={item} />
                           </Grid>
                         </>

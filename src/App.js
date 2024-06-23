@@ -21,7 +21,6 @@ export const Container = styled.div`
 
 function App() {
   const accessToken = useAuth(code);
-  console.log("accessToken ", accessToken);
   return (
     <>
         <Router>

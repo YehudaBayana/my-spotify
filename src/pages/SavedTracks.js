@@ -12,12 +12,12 @@ const TrackDiv = styled.div`
   }
 `;
 
-const SavedTracks = ({ chooseTrack }) => {
+const SavedTracks = () => {
   const { state } = useContext(StoreContext);
   let playlist = state.savedTracks;
 
   function handleClick(track) {
-    chooseTrack(track);
+    
   }
 
   function msToMinutesAndSeconds(ms) {

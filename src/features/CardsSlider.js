@@ -1,81 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Card, CardContent, CardMedia, Typography, Box, IconButton } from '@mui/material';
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { styled } from '@mui/system';
+import React from 'react';
+import { Card, CardContent, CardMedia, Typography, Box, CardActions, Button, IconButton} from '@mui/material';
 import { Link } from 'react-router-dom/cjs/react-router-dom';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
-const TruncatedTypography = styled(Typography)({
-  display: '-webkit-box',
-  overflow: 'hidden',
-  WebkitBoxOrient: 'vertical',
-  WebkitLineClamp: 2,
-  textOverflow: 'ellipsis',
-});
-
-const CardSlider = ({ visibleCards, playlists, drawerWidthState, handleNext, handlePrev,containerRef,setCardWidth,currentIndex, cardWidth }) => {
-//   const [currentIndex, setCurrentIndex] = useState(0);
-//   const containerRef = useRef();
-//   const [cardWidth, setCardWidth] = useState(0);
-
-
-//   useEffect(() => {
-//     const updateCardWidth = () => {
-//       if (containerRef.current) {
-//         const containerWidth = containerRef.current.offsetWidth;
-//         console.log('containerWidth / visibleCards ', containerWidth / visibleCards);
-//         setCardWidth(containerWidth / visibleCards);
-//       }
-//     };
-
-//     // window.addEventListener('resize', updateCardWidth);
-//     updateCardWidth();
-
-//     return () => {
-//       //   window.removeEventListener('resize', updateCardWidth);
-//     };
-//   }, [visibleCards]);
-
-  let timeout;
-  useEffect(() => {
-      if (timeout) {
-        clearTimeout(timeout);
-        timeout = undefined;
-      }
-      const updateCardWidth = () => {
-        if (containerRef.current) {
-          const containerWidth = containerRef.current.offsetWidth;
-          console.log('containerWidth / visibleCards ', containerWidth / visibleCards);
-          setCardWidth(containerWidth / visibleCards);
-        }
-      };
-
-    // window.addEventListener('resize', updateCardWidth);
-    //   updateCardWidth();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    timeout = setTimeout(() => {
-      updateCardWidth();
-    }, 1000);
-  }, [drawerWidthState, visibleCards]);
-
-  function handleResize(e) {
-    console.log('e ', e);
-  }
-
-  
-//   useEffect(() => {
-    // if (currentIndex >= cards.length - visibleCards) {
-    //   return;
-    // }
-    // const interval = setInterval(() => {
-    //   setCurrentIndex((prevIndex) => Math.min(prevIndex + 1, cards.length - visibleCards));
-    // }, 3000);
-    // return () => clearInterval(interval);
-//   }, [currentIndex, playlists.length, visibleCards]);
-
+const CardSlider = ({ playlists, containerRef, currentIndex, cardWidth }) => {
   return (
-    <Box sx={{ maxWidth: 1200, margin: '0 auto', position: 'relative' }} ref={containerRef}>
-      <Box onResize={handleResize} sx={{ display: 'flex', overflow: 'hidden', width: '100%' }}>
+    <Box sx={{ margin: '0 auto', position: 'relative' }} ref={containerRef}>
+      <Box sx={{ display: 'flex', overflow: 'hidden', width: '100%' }}>
         <Box
           sx={{
             display: 'flex',
@@ -84,40 +15,49 @@ const CardSlider = ({ visibleCards, playlists, drawerWidthState, handleNext, han
             width: `${playlists.length * cardWidth}px`,
           }}>
           {playlists.map((playlist) => (
-              <Card sx={{ flex: `0 0 ${cardWidth}px`, boxSizing: 'border-box', padding: '10px' }}>
-                <Link style={{ textDecoration: 'none', color: 'inherit' }} to={`/playlist/${playlist.id}`} key={playlist.id}>
-              <CardMedia component="img" height="140" image={playlist?.images[0]?.url} alt={playlist.name} />
-              <CardContent>
-                <Typography gutterBottom variant="h5" component="div">
-                  {playlist.name}
-                </Typography>
-                <TruncatedTypography dangerouslySetInnerHTML={{ __html: fixHtmlTags(playlist.description) }} variant="body2" color="text.secondary">
-                  {/* {fixHtmlTags(playlist.description)} */}
-                </TruncatedTypography>
-              </CardContent>
+             <Card key={playlist.id} sx={{ width: cardWidth, margin:"10px 10px", boxShadow:"unset", background:"lightgrey"}}>
+              <Link style={{ textDecoration: 'none', color: 'inherit' }} to={`/playlist/${playlist.id}`} key={playlist.id}>
+             <CardMedia
+               component="img"
+               height="194"
+               image={playlist?.images[0]?.url}
+               alt="Paella dish"
+             />
+             <CardContent>
+               <Typography variant="h5" color="text.secondary">
+               {playlist.name}
+               </Typography>
+             </CardContent>
              </Link>
-            </Card>
+             <CardActions sx={{display: "flex", justifyContent:"space-between"}} disableSpacing>
+               <Button size="small">Play</Button>
+               <IconButton aria-label="add to favorites">
+                 <MoreVertIcon />
+               </IconButton>
+               
+             </CardActions>
+           </Card>
+            // <Card sx={{ flex: `0 0 ${cardWidth}px`, boxSizing: 'border-box', padding: '10px' }}>
+            //   <Link style={{ textDecoration: 'none', color: 'inherit' }} to={`/playlist/${playlist.id}`} key={playlist.id}>
+            //     <CardMedia component="img" height="140" image={playlist?.images[0]?.url} alt={playlist.name} />
+            //     <CardContent>
+            //       <Typography gutterBottom variant="h5" component="div">
+            //         {playlist.name}
+            //       </Typography>
+            //       {isIncludeHtml(playlist.description) ? null : (
+            //         <TruncatedTypography variant="body2" color="text.secondary">
+            //           {playlist.description}
+            //         </TruncatedTypography>
+            //       )}
+            //     </CardContent>
+            //   </Link>
+            // </Card>
           ))}
         </Box>
       </Box>
-      <IconButton onClick={handlePrev} sx={{ position: 'absolute', top: '50%', left: 0, transform: 'translateY(-50%)' }} disabled={currentIndex === 0}>
-        <ArrowBackIosIcon />
-      </IconButton>
-      <IconButton onClick={handleNext} sx={{ position: 'absolute', top: '50%', right: 0, transform: 'translateY(-50%)' }} disabled={currentIndex >= playlists.length - visibleCards}>
-        <ArrowForwardIosIcon />
-      </IconButton>
     </Box>
   );
 };
-function fixHtmlTags(html) {
-    // Regular expression to match href attributes without quotes
-    const regex = /href=([^" >]+)/g;
-    
-    // Replace the matched href attribute with quoted version
-    const fixedHtml = html.replace(regex, (match, p1) => `href="${p1}"`);
-    
-    return fixedHtml;
-}
 
 export default CardSlider;
 

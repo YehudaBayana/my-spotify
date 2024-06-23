@@ -2,7 +2,7 @@ import * as React from 'react';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 
-export default function RightClickMenu({children, }) {
+export default function RightClickMenu({children, menuOptions}) {
   const [contextMenu, setContextMenu] = React.useState(null);
 
   const handleContextMenu = (event) => {
@@ -35,10 +35,11 @@ export default function RightClickMenu({children, }) {
             : undefined
         }
       >
-        <MenuItem onClick={handleClose}>Copy</MenuItem>
-        <MenuItem onClick={handleClose}>Print</MenuItem>
-        <MenuItem onClick={handleClose}>Highlight</MenuItem>
-        <MenuItem onClick={handleClose}>Email</MenuItem>
+        {menuOptions.map((option, index) => (
+          <MenuItem key={index} onClick={() => { option.action(); handleClose(); }}>
+            {option.label}
+          </MenuItem>
+        ))}
       </Menu>
     </div>
   );

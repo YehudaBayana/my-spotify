@@ -46,3 +46,6 @@ export const links = [
 
 export const drawerWidth = 240;
 export const DRAWERHEIGHT = 65;
+export const PLAYLIST_CARD_WIDTH = 200;
+export const MIN_OPEN_WIDTH = 210;
+export const CLOSE_WIDTH = 70;

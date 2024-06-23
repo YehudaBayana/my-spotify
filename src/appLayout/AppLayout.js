@@ -4,13 +4,14 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Grid from "@mui/material/Grid";
 import { StoreContext } from "../context/ContextProvider";
 import AppRouter from "../AppRouter";
-import { links } from "../constants";
+import { CLOSE_WIDTH, MIN_OPEN_WIDTH, links } from "../constants";
 import Player from "./Player";
 import CustomAppBar from "./CustomAppBar";
 import CustomDrawer from "./CustomDrawer";
 import { DRAWERHEIGHT, drawerWidth } from "../constants";
 
-const AppLayout = ({ chooseTrack, accessToken, playingTrack, divRef }) => {
+const AppLayout = ({ accessToken, divRef }) => {
+  
   const { state } = useContext(StoreContext);
   const [drawerWidthState, setDrawerWidthState] = useState(drawerWidth);
   const [deltaXState, setDeltaXState] = useState(drawerWidth);
@@ -25,8 +26,8 @@ const AppLayout = ({ chooseTrack, accessToken, playingTrack, divRef }) => {
   
   const handleDrawerClose = () => {
     setOpen(false);
-    setDrawerWidthState(90)
-    setDeltaXState(90)
+    setDrawerWidthState(CLOSE_WIDTH)
+    setDeltaXState(CLOSE_WIDTH)
   };
 
   return (
@@ -63,7 +64,7 @@ const AppLayout = ({ chooseTrack, accessToken, playingTrack, divRef }) => {
         >
           <Grid>
             <div ref={divRef}></div>
-            <AppRouter drawerWidthState={drawerWidthState} chooseTrack={chooseTrack} accessToken={accessToken} />
+            <AppRouter drawerWidthState={drawerWidthState} accessToken={accessToken} />
           </Grid>
           <Grid
             position="fixed"
@@ -83,7 +84,7 @@ const AppLayout = ({ chooseTrack, accessToken, playingTrack, divRef }) => {
               <div className="playerSticky">
                 <Player
                   accessToken={accessToken}
-                  trackUri={playingTrack?.uri}
+                  trackUri={state?.playingTrack?.uri}
                 />
               </div>
             </div>

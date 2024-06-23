@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { StoreContext } from "../context/ContextProvider";
 import EachSlider from "./eachSlider/EachSlider";
 
-const Main = ({ chooseTrack, drawerWidthState }) => {
+const Main = ({drawerWidthState }) => {
   const { state } = useContext(StoreContext);
 
   return (
@@ -16,7 +16,7 @@ const Main = ({ chooseTrack, drawerWidthState }) => {
         <>
           {state.genres.map((item, i) => {
             return state.playlistDes[i] !== "New Releases" ? (
-              <EachSlider drawerWidthState={drawerWidthState} key={i} playlists={item} des={state.playlistDes[i]} />
+              <EachSlider drawerWidthState={drawerWidthState} key={item.id} playlists={item} des={state.playlistDes[i]} />
             ) : null;
           })}
         </>

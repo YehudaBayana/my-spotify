@@ -2,7 +2,7 @@ import React, { useReducer, createContext } from "react";
 import SpotifyWebApi from "spotify-web-api-node";
 import {
   fetchAlbumTracks,
-  fetchPlaylistTracks,
+  fetchPlayableItems,
 } from "../customHooks/useFetchMusicInfo";
 import { reducerActionTypes, clientId } from "../constants";
 
@@ -31,7 +31,6 @@ const initialState = {
 };
 
 const reducer = (state, action) => {
-  console.log("action type ", action.type);
   switch (action.type) {
     case reducerActionTypes.SET_ACCESS_TOKEN:
       return { ...state, accessToken: action.payload };
@@ -83,33 +82,8 @@ export const StoreContext = createContext();
 
 const ContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
-
-  function updatePlaylist(id, type = "playlist") {
-    if (type === "playlist") {
-      let selectedPlaylist;
-      state.genres.forEach((playlists) => {
-        if (playlists.find((item) => item.id === id)) {
-          selectedPlaylist = playlists.find((item) => item.id === id);
-        }
-      });
-      if (state.userPlaylists.find((item) => item.id === id)) {
-        selectedPlaylist = state.userPlaylists.find((item) => item.id === id);
-      }
-      dispatch({ type: "setDetail", payload: selectedPlaylist });
-      fetchPlaylistTracks(state.accessToken, selectedPlaylist.id, dispatch);
-    }
-    if (type === "album") {
-      let selectedAlbum;
-      if (state.userAlbums.find((item) => item.id === id)) {
-        selectedAlbum = state.userAlbums.find((item) => item.id === id);
-      }
-      dispatch({ type: "setDetail", payload: selectedAlbum });
-      fetchAlbumTracks(state.accessToken, selectedAlbum.id, dispatch);
-    }
-  }
-
   return (
-    <StoreContext.Provider value={{ state, dispatch, updatePlaylist }}>
+    <StoreContext.Provider value={{ state, dispatch }}>
       {children}
     </StoreContext.Provider>
   );

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import { styled } from '@mui/material/styles';
 import MuiDrawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
@@ -12,74 +12,52 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { Link } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
-import { drawerWidth, DRAWERHEIGHT } from '../constants';
+import { drawerWidth, DRAWERHEIGHT, MIN_OPEN_WIDTH, CLOSE_WIDTH, reducerActionTypes } from '../constants';
 import { useTheme } from '@mui/styles';
 import LibrarySearch from './LibrarySearch';
 import { Button, Grid } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import SortIcon from '@mui/icons-material/Sort';
 import RightClickMenu from '../features/RightClickMenu';
+import { Drawer, DrawerHeader, StyledListItemIcon } from './styledComponents';
+import { removePlaylistPlaylist } from '../customHooks/useFetchMusicInfo';
+import { StoreContext } from '../context/ContextProvider';
+import AreYouSurePrompt from '../components/AreYouSurePrompt';
+import LibraryList from './LibraryList';
 
-const DrawerHeader = styled('div')(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'flex-end',
-  padding: theme.spacing(0, 1),
-  ...theme.mixins.toolbar,
-  ['@media (min-width:600px)']: {
-    minHeight: DRAWERHEIGHT,
-  },
-}));
-
-const openedMixin = (theme) => ({
-  width: drawerWidth,
-  transition: theme.transitions.create('width', {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.enteringScreen,
-  }),
-  overflowX: 'hidden',
-});
-
-const closedMixin = (theme) => ({
-  transition: theme.transitions.create('width', {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  overflowX: 'hidden',
-  width: `calc(${theme.spacing(7)} + 1px)`,
-  [theme.breakpoints.up('sm')]: {
-    width: `calc(${theme.spacing(8)} + 1px)`,
-  },
-});
-
-const Drawer = styled(MuiDrawer, {
-  shouldForwardProp: (prop) => prop !== 'open',
-})(({ theme, open }) => ({
-  width: drawerWidth,
-  flexShrink: 0,
-  whiteSpace: 'nowrap',
-  boxSizing: 'border-box',
-  ...(open && {
-    ...openedMixin(theme),
-    '& .MuiDrawer-paper': openedMixin(theme),
-  }),
-  ...(!open && {
-    ...closedMixin(theme),
-    '& .MuiDrawer-paper': closedMixin(theme),
-  }),
-}));
-
-const StyledListItemIcon = styled(ListItemIcon)({
-  width: '36px',
-  height: '36px',
-  minWidth: 'unset',
-  marginRight: '10px !important',
-});
 
 const CustomDrawer = ({ open, handleDrawerClose, links, userPlaylists, userAlbums, drawerWidthState, setDrawerWidthState, deltaXState, setDeltaXState, setOpen }) => {
   const theme = useTheme();
   const resizeRef = useRef(null);
-  let mouseMoveListener; // Variable to store the reference to the mousemove listener
+  let mouseMoveListener; 
+
+  // const handleContextMenu = (event, item) => {
+  //   setSelectedItem(item);
+  //   setMenuOptions([
+  //     { label: 'remove from library', action: () => setOpenDialog(item) },
+  //   ]);
+  // };
+
+  // const removeFromLibrary = async (playlist) => {
+  //   try {
+  //     const removeRes = await removePlaylistPlaylist(accessToken, playlist.id)
+  //     dispatch({
+  //       type: reducerActionTypes.SET_USER_PLAYLISTS,
+  //       payload: state.userPlaylists.filter(item => item.id !== playlist.id)
+  //     })
+  //   } catch (error) {
+  //    console.log("err ",error); 
+  //   }
+  // };
+
+  // const handleDeleteConfirm = async () => {
+  //   await removeFromLibrary(selectedItem);
+  //   setOpenDialog(false);
+  // };
+
+  // const handleDialogClose = () => {
+  //   setOpenDialog(false);
+  // };
 
   const handleMouseDown = (event) => {
     event.preventDefault();
@@ -91,13 +69,19 @@ const CustomDrawer = ({ open, handleDrawerClose, links, userPlaylists, userAlbum
 
   const handleMouseMove = (initialX, event) => {
     const deltaX = event.clientX - initialX;
-    const newWidth = drawerWidthState + deltaX;
-    setDeltaXState(newWidth);
-    if (newWidth < 90) {
-      setOpen(false);
-    } else {
-      setOpen(true);
+    let newWidth;
+    if (open) {
+      if ((drawerWidthState + deltaX) < 500 && (drawerWidthState + deltaX) > MIN_OPEN_WIDTH) {
+        newWidth = (drawerWidthState + deltaX);
+      }else if ((drawerWidthState + deltaX) > 500) {
+        newWidth = 500;
+      } else {
+          newWidth = MIN_OPEN_WIDTH;
+      }
+    }else{
+      newWidth = CLOSE_WIDTH
     }
+    setDeltaXState(newWidth);
     setDrawerWidthState(Math.max(0, Math.min(window.innerWidth, newWidth))); // Ensure minimum and maximum width
   };
 
@@ -177,11 +161,17 @@ const CustomDrawer = ({ open, handleDrawerClose, links, userPlaylists, userAlbum
           </div>
         </Grid>
         <Divider />
-        <List>
+        <LibraryList open={open}/>
+        {/* <List>
+        <AreYouSurePrompt
+        open={openDialog}
+        onClose={handleDialogClose}
+        onConfirm={handleDeleteConfirm}
+      />
+          <RightClickMenu menuOptions={menuOptions} >
           {[...userPlaylists, ...userAlbums].map((item) => (
-            <RightClickMenu key={item.id}>
             <Link style={{ textDecoration: 'none', color: 'black' }} to={`/${item.type}/${item.id}`}>
-              <ListItem disablePadding sx={{ display: 'block' }}>
+              <ListItem onContextMenu={(event) => handleContextMenu(event, item)} disablePadding sx={{ display: 'block' }}>
                 <ListItemButton
                   sx={{
                     minHeight: 48,
@@ -207,9 +197,9 @@ const CustomDrawer = ({ open, handleDrawerClose, links, userPlaylists, userAlbum
                 </ListItemButton>
               </ListItem>
             </Link>
-            </RightClickMenu>
           ))}
-        </List>
+        </RightClickMenu>
+        </List> */}
       </div>
     </Drawer>
   );

@@ -19,7 +19,6 @@ function FeaturedPost(props) {
       setWindowWith(window.innerWidth);
     });
   }, [windowWith]);
-  console.log("windowWith ", windowWith);
   // windowWith < 700 ? 6 : 12
   return (
     <Grid item xs={12} md={windowWith < 1350 ? 12 : 6}>

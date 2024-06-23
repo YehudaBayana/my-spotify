@@ -5,12 +5,11 @@ import {
   TableBody,
   TableCell,
   TableContainer,
-  TableHead,
   TableRow,
 } from "@mui/material";
 import { msToMinutesAndSeconds } from "../../utils";
 
-const TracksRes = ({ handlePlay, selectedRes }) => {
+const SearchResTracks = ({ handlePlay, selectedRes }) => {
   return (
     <TableContainer sx={{ borderRadius: 0 }} component={Paper}>
       <Table
@@ -18,31 +17,12 @@ const TracksRes = ({ handlePlay, selectedRes }) => {
         sx={{ minWidth: 450 }}
         aria-label="caption table"
       >
-        <TableHead>
-          <TableRow sx={{ backgroundColor: "lightGrey" }}>
-            <TableCell width="10%" align="left">
-              image
-            </TableCell>
-            <TableCell width="30%" align="left">
-              Title
-            </TableCell>
-            <TableCell width="30%" align="left">
-              Album
-            </TableCell>
-            <TableCell width="15%" align="left">
-              Date added
-            </TableCell>
-            <TableCell width="15%" align="left">
-              time
-            </TableCell>
-          </TableRow>
-        </TableHead>
         <TableBody>
           {typeof selectedRes === "object" &&
             selectedRes.map((track) => (
               <>
                 <TableRow onClick={() => handlePlay(track)} key={track?.id}>
-                  <TableCell align="left" component="th" scope="row">
+                  <TableCell width="10%" align="left" component="th" scope="row">
                     <img
                       src={track?.album?.images[2].url}
                       loading="lazy"
@@ -52,6 +32,7 @@ const TracksRes = ({ handlePlay, selectedRes }) => {
                     />
                   </TableCell>
                   <TableCell
+                  width="30%"
                     sx={{
                       whiteSpace: "nowrap",
                       overflow: "hidden",
@@ -65,6 +46,7 @@ const TracksRes = ({ handlePlay, selectedRes }) => {
                     {track?.name}
                   </TableCell>
                   <TableCell
+                  width="30%"
                     sx={{
                       whiteSpace: "nowrap",
                       overflow: "hidden",
@@ -76,10 +58,10 @@ const TracksRes = ({ handlePlay, selectedRes }) => {
                   >
                     {track?.album.name}
                   </TableCell>
-                  <TableCell align="left">
+                  <TableCell width="15%" align="left">
                     {track?.album.release_date}
                   </TableCell>
-                  <TableCell align="left">
+                  <TableCell width="15%" align="left">
                     {msToMinutesAndSeconds(track && track?.duration_ms)}
                   </TableCell>
                 </TableRow>
@@ -91,4 +73,4 @@ const TracksRes = ({ handlePlay, selectedRes }) => {
   );
 };
 
-export default TracksRes;
+export default SearchResTracks;

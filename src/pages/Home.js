@@ -42,17 +42,6 @@ export default function Home({ accessToken }) {
   //   };
   // }, []);
 
-  function chooseTrack(track) {
-    console.log("track ", track);
-    setPlayingTrack(track);
-    // embedControllerState.loadUri(track.uri);
-    // embedControllerState.play();
-    // setTimeout(() => {
-    //   const spotifyEmbedWindow = document.querySelector('iframe[src*="spotify.com/embed"]').contentWindow;
-    //   spotifyEmbedWindow.postMessage({ command: 'toggle' }, '*');
-    // }, 1000);
-  }
-
   useFetchAllMusic(accessToken);
   useGetHomePagePlaylists(dispatch, accessToken);
 
@@ -67,8 +56,6 @@ export default function Home({ accessToken }) {
       <AppLayout
         divRef={iframeRef}
         accessToken={accessToken}
-        playingTrack={playingTrack}
-        chooseTrack={chooseTrack}
       />
     </>
   );

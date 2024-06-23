@@ -106,10 +106,8 @@ export default function useAuth(code) {
     } else{
       async function verify() {
         const userRes = await getUser(accessToken);
-        console.log('userRes ', userRes);
         if (userRes.error) {
-          setAccessToken(null);
-          setExpiresIn(0);
+          getRefreshToken();
         }
       }
       verify()

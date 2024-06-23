@@ -10,67 +10,11 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import Collapse from '@mui/material/Collapse';
-// import React from 'react';
 import { styled } from '@mui/material/styles';
-
-import Drawer from '@mui/material/Drawer';
-import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { useState } from 'react';
 import SongList from './features/songsList/SongList';
 import Main from './features/Main';
-// import CardSlider from './features/CardsSlider';
-
-const ResizableDrawer = ({ children, open, handleDrawerClose }) => {
-  const [drawerWidth, setDrawerWidth] = useState(250);
-  const resizeRef = useRef(null);
-  let mouseMoveListener; // Variable to store the reference to the mousemove listener
-
-  const handleMouseDown = (event) => {
-    event.preventDefault();
-    const initialX = event.clientX;
-    mouseMoveListener = handleMouseMove.bind(null, initialX); // Bind with initialX
-    document.addEventListener('mousemove', mouseMoveListener);
-    document.addEventListener('mouseup', handleMouseUp);
-  };
-
-  const handleMouseMove = (initialX, event) => {
-    const deltaX = event.clientX - initialX;
-    const newWidth = drawerWidth + deltaX;
-    setDrawerWidth(Math.max(0, Math.min(window.innerWidth, newWidth))); // Ensure minimum and maximum width
-  };
-
-  const handleMouseUp = () => {
-    document.removeEventListener('mousemove', mouseMoveListener); // Use the stored reference
-    document.removeEventListener('mouseup', handleMouseUp);
-  };
-
-  return (
-    <Drawer
-      sx={{
-        width: drawerWidth,
-        flexShrink: 0,
-        '& .MuiDrawer-paper': {
-          position: 'relative',
-          whiteSpace: 'nowrap',
-          width: drawerWidth,
-          transition: 'width 0s linear',
-        },
-      }}
-      variant="persistent"
-      anchor="left"
-      open={open}>
-      <div style={{ height: '50px', overflow: 'visible' }}>
-        <div ref={resizeRef} style={{ float: 'right', height: '100vh', width: 5, cursor: 'ew-resize', backgroundColor: 'red' }} onMouseDown={handleMouseDown} />
-        <IconButton onClick={handleDrawerClose}>{open ? <ChevronLeftIcon /> : <ChevronRightIcon />}</IconButton>
-      </div>
-      <Divider />
-      {children}
-    </Drawer>
-  );
-};
+import './index.css';
 
 const StyledListItemIcon = styled(ListItemIcon)({
   width: '36px', // Adjust width as needed for your image
@@ -133,31 +77,33 @@ function FolderList() {
 }
 // export default FolderList;
 
-const AppRouter = ({ chooseTrack, accessToken, drawerWidthState }) => {
+const AppRouter = ({ accessToken, drawerWidthState }) => {
   const { state } = useContext(StoreContext);
   return (
     <>
       <Switch>
         <Route exact path="/">
-          <Main drawerWidthState={drawerWidthState} chooseTrack={chooseTrack} />
+          <Main drawerWidthState={drawerWidthState}  />
         </Route>
         <Route exact path="/search">
-          <SearchPage accessToken={accessToken} chooseTrack={chooseTrack} />
+          <SearchPage accessToken={accessToken}  />
         </Route>
         <Route path="/savedTracks">
           <h1>saved tracks</h1>
-          {/* <SavedTracks chooseTrack={chooseTrack} /> */}
+          {/* <SavedTracks  /> */}
         </Route>
         <Route path="/playlist/:id">
-          <SongList chooseTrack={chooseTrack} />
+          <SongList  />
         </Route>
         <Route path="/album/:id">
-          <SongList chooseTrack={chooseTrack} />
+          <SongList  />
         </Route>
         <Route path="/folder">
           <FolderList />
         </Route>
         <Route path="/resize">
+          {/* <App /> */}
+          {/* <DraggableList /> */}
           {/* <CardSlider /> */}
           {/* <ResizableDrawer open={true}>
             <p>dfdsf</p>
@@ -165,7 +111,7 @@ const AppRouter = ({ chooseTrack, accessToken, drawerWidthState }) => {
         </Route>
         {/* <Route path="/:id">
           <SeeMore accessToken={accessToken} />
-          {state.isClicked && <Playlist chooseTrack={chooseTrack} />}
+          {state.isClicked && <Playlist  />}
         </Route> */}
         {/* <Redirect to='/' /> */}
       </Switch>
