@@ -52,11 +52,6 @@ const AlbumHeader = ({ album }) => {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item xs={2} sm container>
-              <Grid item xs container display={"block"} alignSelf={'flex-end'} direction="column" spacing={2}>
-                <Button sx={{float:"right",width:"auto", maxWidth:"100px"}} variant='contained' color='success'>edit</Button>
-              </Grid>
-            </Grid>
           </Grid>
         </Paper>
       );

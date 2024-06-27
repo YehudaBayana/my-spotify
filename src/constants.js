@@ -33,7 +33,7 @@ export const searchMenu = [
 
 export const links = [
   {
-    text: "home",
+    text: "explore",
     path: "/",
     icon: <HomeIcon />,
   },

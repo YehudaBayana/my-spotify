@@ -22,17 +22,18 @@ import { StoreContext } from '../../context/ContextProvider';
 
 const emails = ['username@gmail.com', 'user02@gmail.com'];
 
-function SimpleDialog(props) {
+function SimpleDialog({ onClose, selectedValue, open, handleAddToPlaylist }) {
   const { state } = useContext(StoreContext);
-  const userOwnedPlaylists = state.userPlaylists.filter(playlist=> playlist.owner.id === state.userName.id);
-  const { onClose, selectedValue, open } = props;
+  const userOwnedPlaylists = state.userPlaylists.filter((playlist) => playlist.owner.id === state.userName.id);
+  // const { onClose, selectedValue, open } = props;
 
   const handleClose = () => {
     onClose(selectedValue);
   };
 
-  const handleListItemClick = (value) => {
-    onClose(value);
+  const handleListItemClick = (playlist) => {
+    handleAddToPlaylist(playlist);
+    // onClose(value);
   };
 
   return (
@@ -42,20 +43,19 @@ function SimpleDialog(props) {
         {userOwnedPlaylists.map((playlist) => (
           <ListItem disableGutters key={playlist.id}>
             <ListItemButton onClick={() => handleListItemClick(playlist)}>
-              <ListItemAvatar>
-                <Avatar sx={{ bgcolor: blue[100], color: blue[600] }}>
-                  <img width="100%" src={playlist.images[0].url} alt="" />
-                </Avatar>
-              </ListItemAvatar>
+              {playlist?.images?.length > 0 && (
+                <ListItemAvatar>
+                  <Avatar sx={{ bgcolor: blue[100], color: blue[600] }}>
+                    <img width="100%" src={playlist.images[0].url} alt="" />
+                  </Avatar>
+                </ListItemAvatar>
+              )}
               <ListItemText primary={playlist.name} />
             </ListItemButton>
           </ListItem>
         ))}
         <ListItem disableGutters>
-          <ListItemButton
-            autoFocus
-            onClick={() => handleListItemClick('addAccount')}
-          >
+          <ListItemButton autoFocus onClick={() => handleListItemClick('addAccount')}>
             <ListItemAvatar>
               <Avatar>
                 <AddIcon />
@@ -97,34 +97,31 @@ function SimpleDialogDemo() {
       <Button variant="outlined" onClick={handleClickOpen}>
         Open simple dialog
       </Button>
-      <SimpleDialog
-        selectedValue={selectedValue}
-        open={open}
-        onClose={handleClose}
-      />
+      <SimpleDialog selectedValue={selectedValue} open={open} onClose={handleClose} />
     </div>
   );
 }
 
+export default function CheckedTracksActions({ selected, handleDelete, handleAddToPlaylist, setCheckedTracks, isPlaylistEditable }) {
+  const [openDialog, setOpenDialog] = React.useState(false);
 
-
-export default function CheckedTracksActions({ selected, handleDelete, handleAddToPlaylist }) {
-  const [open, setOpen] = React.useState(false);
-
-  const handleClickOpen = () => {
-    setOpen(true);
+  const handleClickOpenDialog = () => {
+    setOpenDialog(true);
   };
 
   const handleClose = (value) => {
-    setOpen(false);
+    setOpenDialog(false);
   };
 
   const content = (
-   <Stack sx={{alignItems:"center", justifyContent: 'space-around', padding: '10px', background: 'lightblue', height: 80, width: '100%' }} direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 1, sm: 2, md: 4 }}>
-       <Grid container spacing={2}>
+    <Stack
+      sx={{ alignItems: 'center', justifyContent: 'space-around', padding: '10px', background: 'lightblue', height: 80, width: '100%' }}
+      direction={{ xs: 'column', sm: 'row' }}
+      spacing={{ xs: 1, sm: 2, md: 4 }}>
+      <Grid container spacing={2}>
         <Grid xs={4} md={4}>
-          <Tooltip title="Delete from playlist" placement="top">
-            <IconButton>
+          <Tooltip title="cancel" placement="top">
+            <IconButton onClick={() => setCheckedTracks([])}>
               <ClearIcon />
             </IconButton>
           </Tooltip>
@@ -133,32 +130,36 @@ export default function CheckedTracksActions({ selected, handleDelete, handleAdd
           <Typography variant="h6">{selected} selected</Typography>
         </Grid>
       </Grid>
-     <Stack direction="row" alignItems="center">
-        <Tooltip title="Delete from playlist" placement="top">
-          <IconButton onClick={handleDelete}>
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
+      <Stack direction="row" alignItems="center">
+        {isPlaylistEditable && (
+          <Tooltip title="Delete from playlist" placement="top">
+            <IconButton onClick={handleDelete}>
+              <DeleteIcon />
+            </IconButton>
+          </Tooltip>
+        )}
         <Tooltip title="add to playlist" placement="top">
-          <IconButton onClick={handleClickOpen}>
+          <IconButton onClick={handleClickOpenDialog}>
             <PlaylistAddIcon />
           </IconButton>
         </Tooltip>
       </Stack>
       <SimpleDialog
+        handleAddToPlaylist={handleAddToPlaylist}
         // selectedValue={selectedValue}
-        open={open}
+        open={openDialog}
         onClose={handleClose}
       />
-      </Stack>
+    </Stack>
   );
+
   return (
     <Snackbar
       anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       open={true}
       key={'bottom'}
       // message={content}
-      sx={{ width: '350px', marginBottom: '50px', backgroundColor: 'lightgrey', display: open ? "none" : "flex" }}>
+      sx={{ width: '350px', marginBottom: '50px', backgroundColor: 'lightgrey', display: openDialog ? 'none' : 'flex' }}>
       {content}
     </Snackbar>
   );

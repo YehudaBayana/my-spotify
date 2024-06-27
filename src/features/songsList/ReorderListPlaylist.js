@@ -10,10 +10,9 @@ import { useState } from 'react';
 import { ListItem, Avatar, ListItemButton, Checkbox } from '@mui/material';
 import { reducerActionTypes } from '../../constants';
 import { addTracksToPlaylist, fetchPlayableItems, removeFromPlaylist, updatePlaylist } from '../../customHooks/useFetchMusicInfo';
-import { makeArrayUnique, msToMinutesAndSeconds } from '../../utils';
+import {  msToMinutesAndSeconds } from '../../utils';
 import Divider from '@mui/material/Divider';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { Height } from '@mui/icons-material';
 import CheckedTracksActions from './CheckedTracksActions';
 
 const StyledListItemNew = styled(ListItem)(({ theme }) => ({
@@ -31,38 +30,51 @@ const ReorderListPlaylist = ({ edit, setEdit }) => {
   const [tracks, setTracks] = useState([]);
   const [checkedTracks, setCheckedTracks] = useState([]);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [isPlaylistEditable, setIsPlaylistEditable] = useState(false);
   const [playlist, setPlaylist] = useState();
-  // const [checkedActionsOpen, setCheckedActionsOpen] = useState(false);
-
-  // useEffect(() => {
-  //   // setCheckedActionsOpen(true);
-  // }, [edit])
-
-  // const handleClick = (newState) => () => {
-  //   setCheckedActionsOpen({ ...checkedActionsOpen, open: true });
-  // };
-
-  // const handleClose = () => {
-  //   setCheckedActionsOpen({ ...checkedActionsOpen, open: false });
-  // };
+  const [rgb, setRgb] = useState();
 
   useEffect(() => {
-    async function execute() {
-      const { playlistRes, tracks } = await fetchPlayableItems(accessToken || localStorage.getItem('access_token'), playlistId, type);
-      setPlaylist(playlistRes);
-      // console.log("tracks ,", tracks);
-      if (tracks.length > 0) {
-        // setTracks(tracks);
-        setTracks(
-          tracks
-          // makeArrayUnique(tracks)
-          // [...new Set(tracks.map((obj) => obj.id))].map((id) => {
-          //   // Find the object with the matching ID in the original array
-          //   return tracks.find((obj) => obj.id === id);
-          // })
-        );
-      }
+    if (playlist?.images[0]?.url) {
+      fetch('https://www.wix.com/benko0/dominant-color/_functions/imagecolor?url=' + playlist?.images[0]?.url, {
+        method: 'GET',
+      })
+        .then((res) => {
+          return res.json();
+        })
+        .then((res) => {
+          console.log('res ', res);
+          const [r, g, b] = res.color;
+          setRgb(`rgba(${r},${g},${b}`);
+        })
+        .catch((err) => {
+          console.log('err ', err);
+        });
     }
+  }, [playlist]);
+
+  async function execute() {
+    const { playlistRes, tracks } = await fetchPlayableItems(accessToken || localStorage.getItem('access_token'), playlistId, type);
+    setPlaylist(playlistRes);
+    console.log('playlistRes ', playlistRes);
+    console.log('ids equal: ', playlistRes.owner.id === state.userName.id);
+    console.log('playlistRes.owner.id: ', playlistRes.owner.id);
+    console.log('state.userName.id: ', state.userName.id);
+    if (playlistRes.owner.id === state.userName.id) {
+      setIsPlaylistEditable(true);
+    } else {
+      setIsPlaylistEditable(false);
+    }
+
+    // console.log("tracks ,", tracks);
+    if (tracks.length > 0) {
+      // setTracks(tracks);
+      setTracks(tracks);
+    } else {
+      setTracks([]);
+    }
+  }
+  useEffect(() => {
     execute();
   }, [playlistId, type]);
 
@@ -83,7 +95,7 @@ const ReorderListPlaylist = ({ edit, setEdit }) => {
     setTracks(newItems);
     updatePlaylist(accessToken, playlistId, body)
       .then((res) => {
-        console.log("res ",res);
+        console.log('res ', res);
         if (!res) {
           setTracks(tempTracks);
         }
@@ -127,6 +139,31 @@ const ReorderListPlaylist = ({ edit, setEdit }) => {
     try {
       const removed = await removeFromPlaylist(accessToken, playlist.id, checkedTracks, playlist.snapshot_id);
       console.log('removed ', removed.json());
+      // setTracks((oldTracks) => {
+      // const filteredTracks = oldTracks.filter((track) => !checkedTracks.map((item) => item.uri).includes(track.uri));
+      await execute();
+      // if (filteredTracks.length === 0) {
+      //   setPlaylist(old=>({...old, tracks:{items: old.tracks.items.filter((track) => !checkedTracks.map((item) => item.uri).includes(track.uri))}}))
+      // }
+      // return filteredTracks;
+      // });
+      setEdit(false);
+      setCheckedTracks([]);
+    } catch (error) {
+      console.log('yuda error ', error);
+    }
+  };
+
+  const handleAddToPlaylist = async (playlist) => {
+    console.log('handle delete ', checkedTracks);
+    const body = {
+      uris: checkedTracks.map((track) => track.uri),
+      position: 0,
+    };
+
+    try {
+      const removed = await addTracksToPlaylist(accessToken, playlist.id, body);
+      console.log('removed ', removed.json());
       setTracks((oldTracks) => {
         console.log('before ', oldTracks);
         console.log(
@@ -142,92 +179,101 @@ const ReorderListPlaylist = ({ edit, setEdit }) => {
     }
   };
 
-  const handleAddToPlaylist = async () => {
-    console.log('handle delete ', checkedTracks);
-    // const body = {
-    //   uris: checkedTracks.map(track => track.uri),
-    //   position:0
-    // }
-    // try {
-    //   const removed = await addTracksToPlaylist(accessToken, playlist.id, body);
-    //   console.log('removed ', removed.json());
-    //   setTracks((oldTracks) => {
-    //     console.log('before ', oldTracks);
-    //     console.log(
-    //       'after ',
-    //       oldTracks.filter((track) => !checkedTracks.map((item) => item.uri).includes(track.uri))
-    //     );
-    //     return oldTracks.filter((track) => !checkedTracks.map((item) => item.uri).includes(track.uri));
-    //   });
-    //   setEdit(false);
-    //   setCheckedTracks([]);
-    // } catch (error) {
-    //   console.log('yuda error ', error);
-    // }
-  };
+  async function handleAddTrack(track) {
+    const body = {
+      uris: [track.uri],
+      position: 0,
+    };
+    const addToPlaylistRes = await addTracksToPlaylist(accessToken, playlistId, body);
+    // const res = await addToPlaylistRes.json();
+    // console.log("addToPlaylistRes ",);
+
+    if (addToPlaylistRes.status === 200) {
+      // setPlaylist(old=>{
+      //   console.log("new playlist ",{...old, tracks:{total: old.tracks.total, items:[...old.tracks.items,track]}});
+      //   return ({...old, tracks:{total: old.tracks.total ? old.tracks.total + 1 : 1, items:[...old.tracks.items,track]}})
+      // });
+      // setTracks(old=>{
+      //   return [...old, track]
+      // });
+      execute();
+    }
+    return addToPlaylistRes;
+  }
 
   return (
     <>
-      <PlaylistHeader edit={edit} setEdit={setEdit} playlist={playlist} />
-      {edit && <CheckedTracksActions selected={checkedTracks.length} handleDelete={handleDelete} handleAddToPlaylist={handleAddToPlaylist} open={edit} />}
-      <DragDropContext onDragEnd={handleOnDragEnd}>
-        <Droppable droppableId="droppable">
-          {(provided) => (
-            <List style={{ borderRadius: '0px' }} {...provided.droppableProps} ref={provided.innerRef} component={Paper}>
-              {tracks?.map((track, index) => {
-                // console.log('track.id ', track.id);
-                return (
-                  <>
-                    <Draggable isDragDisabled={isUpdating} key={index} draggableId={index+""} index={index}>
-                      {(provided) => (
-                        <>
-                          <List
-                            onClick={(e) => {
-                              handleTrackClick(e, track, false);
-                            }}
-                            // className={draggingIndex === index ? 'dragging' : ''}
-                            key={track.id}
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            role="menubar"
-                            orientation="horizontal"
-                            sx={{ height: '50px', display: 'flex', flexDirection: 'row', padding: '0' }}>
-                            <ListItemButton>
-                            <StyledListItemNew key={track.id} sx={{ flex: 1 }} role="none">
+      <PlaylistHeader rgb={rgb} isPlaylistEditable={isPlaylistEditable} edit={edit} setEdit={setEdit} playlist={playlist} setCheckedTracks={setCheckedTracks} />
+      <Paper sx={{ minHeight: '90vh', background: rgb ? `linear-gradient(to bottom, ${rgb}, 0.5) 0%, ${rgb}, 0) 10%)` : 'lightgrey' }}>
+        {checkedTracks.length > 0 && <CheckedTracksActions isPlaylistEditable={isPlaylistEditable} selected={checkedTracks.length} handleDelete={handleDelete} handleAddToPlaylist={handleAddToPlaylist} setCheckedTracks={setCheckedTracks} />}
+        <DragDropContext onDragEnd={handleOnDragEnd}>
+          <Droppable droppableId="droppable">
+            {(provided) => (
+              <List elevation={0} style={{ background: 'rgba(255,255,255,0)', borderRadius: '0px' }} {...provided.droppableProps} ref={provided.innerRef} component={Paper}>
+                {tracks?.map((track, index) => {
+                  console.log("checkedTracks ",checkedTracks);
+                  const isChecked = checkedTracks.find(item=>item.uri === track.uri)
+                  // console.log('track.id ', track.id);
+                  return (
+                    <>
+                      <Draggable isDragDisabled={!isPlaylistEditable ? true : isUpdating} key={index} draggableId={index + ''} index={index}>
+                        {(provided) => (
+                          <>
+                            <List
+                              onClick={(e) => {
+                                handleTrackClick(e, track, false);
+                              }}
+                              // className={draggingIndex === index ? 'dragging' : ''}
+                              key={track?.id}
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                              role="menubar"
+                              orientation="horizontal"
+                              sx={{ height: '50px', display: 'flex', flexDirection: 'row', padding: '0' }}>
+                              <ListItemButton sx={{ position: 'relative', '&:hover .MuiCheckbox-root': { visibility: 'visible' }}}>
+                                <StyledListItemNew sx={{ flex: 1 }} role="none">
                                   {index + 1}
                                 </StyledListItemNew>
-                              <StyledListItemNew key={track.id} sx={{ flex: 2 }} role="none">
-                                <Avatar src={track?.album?.images[0]?.url} />
-                              </StyledListItemNew>
-                              <StyledListItemNew key={track.id} sx={{ flex: 25 }} role="none">
-                                {track.name}
-                              </StyledListItemNew>
-                              <StyledListItemNew key={track.id} sx={{ flex: 5 }} role="none">
-                                {track.album.release_date}
-                              </StyledListItemNew>
-                              <StyledListItemNew key={track.id} sx={{ flex: 3 }} role="none">
-                                {msToMinutesAndSeconds(track.duration_ms)}
-                              </StyledListItemNew>
-                              {edit && (
-                                <StyledListItemNew key={track.id} sx={{ flex: 5 }} role="none">
-                                  <Checkbox onClick={(e) => handleTrackClick(e, track, true)} />
+                                {track?.album?.images[0]?.url && (
+                                  <StyledListItemNew sx={{ flex: 2 }} role="none">
+                                    <Avatar src={track?.album?.images[0]?.url} />
+                                  </StyledListItemNew>
+                                )}
+
+                                <StyledListItemNew sx={{ flex: 25 }} role="none">
+                                  {track?.name}
                                 </StyledListItemNew>
-                              )}
-                            </ListItemButton>
-                          </List>
-                          <Divider />
-                        </>
-                      )}
-                    </Draggable>
-                  </>
-                );
-              })}
-              {provided.placeholder}
-            </List>
-          )}
-        </Droppable>
-      </DragDropContext>
+                                <StyledListItemNew sx={{ flex: 3 }} role="none">
+                                  {track?.album.release_date}
+                                </StyledListItemNew>
+                                <StyledListItemNew sx={{ flex: 1 }} role="none">
+                                  {msToMinutesAndSeconds(track?.duration_ms)}
+                                </StyledListItemNew>
+                                {/* {edit && ( */}
+                                  <StyledListItemNew sx={{ flex: 1, visibility: isChecked ? 'visible' : "hidden" }} role="none">
+                                    <Checkbox checked={isChecked} onClick={(e) => handleTrackClick(e, track, true)} />
+                                  </StyledListItemNew>
+                                {/* )} */}
+                              </ListItemButton>
+                            </List>
+                            <Divider />
+                          </>
+                        )}
+                      </Draggable>
+                    </>
+                  );
+                })}
+                {provided.placeholder}
+              </List>
+            )}
+          </Droppable>
+        </DragDropContext>
+
+        {/* <Box margin={'auto'} height={200} width={500} my={4} display="flex" alignItems="center" justifyContent="center" gap={4} p={2}>
+          <SearchToAdd playlistTracks={tracks} handleAddTrack={handleAddTrack} />
+        </Box> */}
+      </Paper>
     </>
   );
 };

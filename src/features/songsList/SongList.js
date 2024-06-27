@@ -9,7 +9,7 @@ export default function SongList() {
   const type = location.pathname.split('/').filter((item) => item)[0];
   const [edit, setEdit] = useState(false);
   return (
-    <Paper sx={{ marginBottom: 8, width: '100%' }}>
+    <Paper elevation={0} sx={{ marginBottom: 8, width: '100%' }}>
       {type === 'playlist' ? <ReorderListPlaylist edit={edit} setEdit={setEdit} /> : <ReorderListAlbum />}
     </Paper>
   );

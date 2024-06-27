@@ -5,7 +5,7 @@ import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import ButtonBase from '@mui/material/ButtonBase';
 import { isIncludeHtml } from '../../utils';
-import { Button, TextField } from '@mui/material';
+import { Box, Button, TextField } from '@mui/material';
 
 const Img = styled('img')({
   margin: 'auto',
@@ -14,32 +14,72 @@ const Img = styled('img')({
   maxHeight: '100%',
 });
 
-const PlaylistHeader = ({ playlist, edit, setEdit }) => {
+const PlaylistHeader = ({ playlist, edit, setEdit, setCheckedTracks, isPlaylistEditable, rgb }) => {
   const [name, setName] = useState(playlist?.name);
-  console.log('playlist?.name ', playlist?.name);
+  
+  // console.log('playlist?.name ', playlist?.name);
   useEffect(() => {
     if (playlist?.name) {
       setName(playlist?.name);
     }
   }, [edit]);
+
+  // useEffect(() => {
+  //   if (playlist?.images[0]?.url) {
+  //     fetch('https://www.wix.com/benko0/dominant-color/_functions/imagecolor?url=' + playlist?.images[0]?.url, {
+  //       method: 'GET',
+  //     })
+  //       .then((res) => {
+  //         return res.json();
+  //       })
+  //       .then((res) => {
+  //         console.log('res ', res);
+  //         const [r,g,b] = res.color
+  //         setRgb(`rgba(${r},${g},${b}`)
+  //       })
+  //       .catch((err) => {
+  //         console.log('err ', err);
+  //       });
+  //   }
+  // }, [playlist]);
+
   const toggleEdit = () => {
     setEdit((old) => !old);
+    setCheckedTracks([]);
   };
+  console.log("color ",rgb ? `linear-gradient(to top, ${rgb}, 1) 0%, ${rgb}, 0) 100%)` : 'lightgrey');
 
   return (
     <Paper
+      elevation={0}
       sx={{
         p: 2,
         margin: 'auto',
         borderRadius: 0,
+        // border:"1px solid red",
         // maxWidth: 500,
         flexGrow: 1,
-        backgroundColor: (theme) => (theme.palette.mode === 'dark' ? '#1A2027' : '#fff'),
+        background: rgb ? `linear-gradient(to bottom, ${rgb}, 1) 0%, ${rgb}, 0.5) 100%)` : 'lightgrey',
       }}>
       <Grid container spacing={2}>
-        <Grid item xs={3}>
+        <Grid item xs={2}>
           <ButtonBase id="playlistImage" sx={{ width: '100%' }}>
-            {playlist ? <Img alt="complex" src={playlist?.images[0]?.url} /> : null}
+            {playlist?.images?.length > 0 ? (
+              <Img alt="complex" src={playlist?.images[0]?.url} />
+            ) : (
+              <Box
+                height={200}
+                width={200}
+                // my={4}
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                // gap={4}
+                // p={2}
+                sx={{ background: 'grey' }}>
+                This Box uses MUI System props for quick customization.
+              </Box>
+            )}
           </ButtonBase>
         </Grid>
         <Grid item xs={8} sm container>
@@ -67,13 +107,16 @@ const PlaylistHeader = ({ playlist, edit, setEdit }) => {
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xs={2} sm container>
-          <Grid item xs container display={'block'} alignSelf={'flex-end'} direction="column" spacing={2}>
-            <Button onClick={toggleEdit} sx={{ float: 'right', width: 'auto', maxWidth: '100px' }} variant="contained" color="success">
-              edit
-            </Button>
+
+        {isPlaylistEditable && (
+          <Grid item xs={2} sm container>
+            <Grid item xs container display={'block'} alignSelf={'flex-end'} direction="column" spacing={2}>
+              <Button onClick={toggleEdit} sx={{ float: 'right', width: 'auto', maxWidth: '100px' }} variant="contained" color="success">
+                edit
+              </Button>
+            </Grid>
           </Grid>
-        </Grid>
+        )}
       </Grid>
     </Paper>
   );

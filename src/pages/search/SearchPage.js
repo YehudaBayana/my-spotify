@@ -16,15 +16,19 @@ import Card from "../../components/card/Card";
 import { useFetchSearch } from "../../customHooks/useFetchMusicInfo";
 // import { msToMinutesAndSeconds } from "../../../utils";
 import SearchResTracks from "./TracksRes";
+import { useLocation } from 'react-router-dom/cjs/react-router-dom';
 
-export default function SearchPage({ accessToken, chooseTrack }) {
+export default function SearchPage({ accessToken, addToPlaylist = false, handleAddTrack, playlistTracks }) {
+  const queryParams = new URLSearchParams(useLocation().search);
+  const searchValueFromParam = queryParams.get('q') ? queryParams.get('q') : ""; 
   const history = useHistory();
-  const { state, dispatch } = useContext(StoreContext);
+  const { dispatch } = useContext(StoreContext);
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [searchValue, setSearchValue] = useState(null);
+  const [searchValue, setSearchValue] = useState(searchValueFromParam);
   const [searchRes, setSearchRes] = useState({});
   const [selectedRes, setSelectedRes] = useState([]);
   const [bool, setBool] = useState(true);
+  const filteredSearchMenu = addToPlaylist ? searchMenu.filter(item => item === "tracks" || item==="playlists"): searchMenu
   function handlePlay(track) {
     dispatch({
       type:reducerActionTypes.SET_PLAYING_TRACK,
@@ -32,10 +36,10 @@ export default function SearchPage({ accessToken, chooseTrack }) {
     });
   }
   useFetchSearch(
-    searchValue,
+    searchValue || searchValueFromParam,
     setSearchRes,
     accessToken,
-    searchMenu[selectedIndex],
+    filteredSearchMenu[selectedIndex],
     setSelectedRes,
     bool
   );
@@ -43,7 +47,7 @@ export default function SearchPage({ accessToken, chooseTrack }) {
   const handleListItemClick = (event, index, itemMenu) => {
     setSelectedIndex(index);
     if (Object.keys(searchRes).length > 0) {
-      const selectedItems = searchRes[searchMenu[index]].items.map((item) => {
+      const selectedItems = searchRes[filteredSearchMenu[index]].items.map((item) => {
         return item;
       });
       setSelectedRes(selectedItems);
@@ -70,6 +74,7 @@ export default function SearchPage({ accessToken, chooseTrack }) {
               placeholder="Search field"
               type="search"
               variant="outlined"
+              value={searchValue}
               onKeyDown={handleKeyDown}
               onChange={(e) => setSearchValue(e.target.value)}
               fullWidth
@@ -91,7 +96,7 @@ export default function SearchPage({ accessToken, chooseTrack }) {
             <Grid xs={6} md={3}>
               <List component="nav" aria-label="secondary mailbox folder">
                 <Divider />
-                {searchMenu.map((itemMenu, i) => (
+                {filteredSearchMenu.map((itemMenu, i) => (
                   <>
                     <ListItemButton
                     key={i}
@@ -100,7 +105,8 @@ export default function SearchPage({ accessToken, chooseTrack }) {
                         handleListItemClick(event, i, itemMenu)
                       }
                     >
-                      <ListItemText primary={itemMenu} />
+                      {/* TODO: develop playlists selection */}
+                      <ListItemText primary={itemMenu === "playlists"? itemMenu + "(undeveloped)":itemMenu} /> 
                     </ListItemButton>
                     <Divider />
                   </>
@@ -109,7 +115,7 @@ export default function SearchPage({ accessToken, chooseTrack }) {
             </Grid>
             <Grid container xs={6} md={9}>
               {selectedIndex === 0 ? (
-                <SearchResTracks selectedRes={selectedRes} handlePlay={handlePlay} />
+                <SearchResTracks playlistTracks={playlistTracks} handleAddTrack={handleAddTrack} addToPlaylist={addToPlaylist} selectedRes={selectedRes} setSelectedRes={setSelectedRes} handlePlay={handlePlay} />
               ) : selectedIndex === 1 ? (
                 <Grid
                   container
@@ -117,7 +123,7 @@ export default function SearchPage({ accessToken, chooseTrack }) {
                   columns={{ xs: 4, sm: 8, md: 12 }}
                 >
                   {searchRes &&
-                    searchRes[searchMenu[selectedIndex]]?.items?.map((item, i) => {
+                    searchRes[filteredSearchMenu[selectedIndex]]?.items?.map((item, i) => {
                       return (
                         <>
                           <Grid key={i} item xs={2} sm={4} md={4}>
