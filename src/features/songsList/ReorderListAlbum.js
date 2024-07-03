@@ -38,6 +38,7 @@ const ReorderListAlbum = () => {
       }
     }
     execute();
+    return () => {}
   }, [playlistId, type]);
 
   return (

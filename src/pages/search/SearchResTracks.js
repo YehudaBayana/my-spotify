@@ -3,9 +3,10 @@ import { Button, Paper, Table, TableBody, TableCell, TableContainer, TableRow } 
 import { msToMinutesAndSeconds } from '../../utils';
 import AddIcon from '@mui/icons-material/Add';
 
-const SearchResTracks = ({ handlePlay, selectedRes, addToPlaylist, handleAddTrack, setSelectedRes, playlistTracks }) => {
+const SearchResTracks = ({ handlePlay, selectedRes, addToPlaylist, handleAddTrack, setSelectedRes, playlistTracks, setTracks }) => {
+  console.log("playlistTracks ",playlistTracks);
   return (
-    <TableContainer elevation={0} sx={{ borderRadius: 0 }} component={Paper}>
+    <TableContainer square elevation={0} sx={{ borderRadius: 0 }} component={Paper}>
       <Table
         // style={{ tableLayout: "fixed" }}
         sx={{ minWidth: 450 }}
@@ -13,7 +14,7 @@ const SearchResTracks = ({ handlePlay, selectedRes, addToPlaylist, handleAddTrac
         <TableBody>
           {typeof selectedRes === 'object' &&
             selectedRes
-              .filter((obj1) => !playlistTracks.some((obj2) => obj2.id === obj1.id))
+              ?.filter((obj1) => !playlistTracks?.some((obj2) => obj2.id === obj1.id))
               .map((track) => (
                 <>
                   <TableRow
@@ -55,14 +56,16 @@ const SearchResTracks = ({ handlePlay, selectedRes, addToPlaylist, handleAddTrac
                           onClick={async (e) => {
                             e.stopPropagation();
                             let mashu = await handleAddTrack(track);
-                            if (mashu.status === 200) {
+                            console.log("mashu ",mashu);
+                            if (mashu.status === 200 || mashu.status === 201 ) {
                               setSelectedRes((old) => old.filter((item) => item.uri !== track.uri));
+                              setTracks(old => ([track, ...old]))
                             }
                           }}
                           variant="contained"
                           endIcon={<AddIcon />}>
                           Add
-                        </Button>{' '}
+                        </Button>
                       </TableCell>
                     ) : (
                       <>

@@ -1,15 +1,11 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import "./eachSlider.css";
 import { Container } from "../../App";
 import { Link } from "react-router-dom";
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
 import ArrowCircleLeftIcon from "@mui/icons-material/ArrowCircleLeft";
-import Card from "../../components/card/Card";
 import { useRef } from "react";
-import { Box, Button, Grid, IconButton, Paper } from "@mui/material";
+import { Box, Button, IconButton } from "@mui/material";
 import CardsSlider from '../CardsSlider';
 import { PLAYLIST_CARD_WIDTH } from '../../constants';
 
@@ -40,6 +36,7 @@ const EachSlider = ({ playlists, des, drawerWidthState }) => {
     timeout = setTimeout(() => {
       updateCardWidth();
     }, 1000);
+    return () => {}
   }, [drawerWidthState, visibleCards]);
 
   const handlePrev = () => {
@@ -54,6 +51,7 @@ const EachSlider = ({ playlists, des, drawerWidthState }) => {
     window.addEventListener("resize", () => {
       setWindowWith(window.innerWidth);
     });
+    return () => {}
   }, [windowWith]);
 
   return (

@@ -1,6 +1,31 @@
 import React from 'react';
+import { clientId } from '../../constants';
+
+const loaclUrl = "http://localhost:3000";
+
+const scopes = [
+  'ugc-image-upload',
+  'user-read-playback-state',
+  'user-modify-playback-state',
+  'user-read-currently-playing',
+  'user-read-private',
+  'user-read-email',
+  'user-library-modify',
+  'user-library-read',
+  'user-top-read',
+  'user-read-recently-played',
+  'playlist-modify-private',
+  'playlist-read-private',
+  'playlist-modify-public',
+  'playlist-read-collaborative',
+  'app-remote-control',
+  'streaming',
+  'user-follow-modify',
+  'user-follow-read'
+];
+
 const AUTH_URL =
-  'https://accounts.spotify.com/authorize?client_id=057cdd5b992444f2858403e816dcae20&response_type=code&redirect_uri=http://localhost:3000/&scope=streaming%20user-read-email%20user-read-private%20user-library-read%20user-library-modify%20user-read-playback-state%20user-modify-playback-state';
+  `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=code&redirect_uri=${loaclUrl}/&scope=${scopes.join('%20')}`;
 
 const HeroSection = () => {
   return (

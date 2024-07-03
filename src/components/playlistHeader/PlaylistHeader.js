@@ -22,6 +22,7 @@ const PlaylistHeader = ({ playlist, edit, setEdit, setCheckedTracks, isPlaylistE
     if (playlist?.name) {
       setName(playlist?.name);
     }
+    return () => {}
   }, [edit]);
 
   // useEffect(() => {
@@ -47,10 +48,11 @@ const PlaylistHeader = ({ playlist, edit, setEdit, setCheckedTracks, isPlaylistE
     setEdit((old) => !old);
     setCheckedTracks([]);
   };
-  console.log("color ",rgb ? `linear-gradient(to top, ${rgb}, 1) 0%, ${rgb}, 0) 100%)` : 'lightgrey');
+  // console.log("color ",rgb ? `linear-gradient(to top, ${rgb}, 1) 0%, ${rgb}, 0) 100%)` : 'lightgrey');
 
   return (
     <Paper
+    square
       elevation={0}
       sx={{
         p: 2,

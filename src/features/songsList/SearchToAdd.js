@@ -17,7 +17,7 @@ const style = {
   p: 4,
 };
 
-export default function SearchToAdd({handleAddTrack, playlistTracks}) {
+export default function SearchToAdd({handleAddTrack, playlistTracks, setTracks}) {
   const [open, setOpen] = React.useState(false);
   const { state } = React.useContext(StoreContext);
   const { accessToken } = state;
@@ -30,7 +30,7 @@ export default function SearchToAdd({handleAddTrack, playlistTracks}) {
       <Modal sx={{ overflow: 'auto' }} open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
         <Box sx={style}>
           <div style={{width:"100%"}}>
-            <SearchPage playlistTracks={playlistTracks} handleAddTrack={handleAddTrack} addToPlaylist={true} accessToken={accessToken} />
+            <SearchPage setTracks={setTracks} playlistTracks={playlistTracks} handleAddTrack={handleAddTrack} addToPlaylist={true} accessToken={accessToken} />
           </div>
         </Box>
       </Modal>

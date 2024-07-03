@@ -28,6 +28,8 @@ const LibrarySearch = () => {
 
   return (
     <Paper
+    elevation={0}
+    square
       component="form"
       sx={{
         display: 'flex',

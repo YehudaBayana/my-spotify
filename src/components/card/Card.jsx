@@ -4,11 +4,13 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { CardActionArea } from '@mui/material';
-import { Link } from 'react-router-dom/cjs/react-router-dom';
+import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom/cjs/react-router-dom';
 
 
 export default function Card({ playlistDetails }) {// background:"lightGrey"
   // console.log("playlistDetails ",playlistDetails);
+  // let match = useRouteMatch();
   return (
     <MuiCard sx={{ maxWidth: 345, margin:"0px 10px", boxShadow:"none", background:"inherit"}}>
       <CardActionArea>

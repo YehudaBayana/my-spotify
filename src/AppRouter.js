@@ -1,5 +1,6 @@
 import React, { useContext, useRef } from 'react';
-import { Route, Switch } from 'react-router';
+// import { Route, Switch } from 'react-router';
+import { BrowserRouter, Routes, Route, RouterProvider } from 'react-router-dom';
 import { StoreContext } from './context/ContextProvider';
 import SearchPage from './pages/search/SearchPage';
 // import React from 'react';
@@ -11,10 +12,9 @@ import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import Collapse from '@mui/material/Collapse';
 import { styled } from '@mui/material/styles';
-import { useState } from 'react';
 import SongList from './features/songsList/SongList';
 import Main from './features/Main';
-import './index.css';
+// import './index.css';
 
 const StyledListItemIcon = styled(ListItemIcon)({
   width: '36px', // Adjust width as needed for your image
@@ -76,46 +76,45 @@ function FolderList() {
   );
 }
 // export default FolderList;
-
+// export const router = createBrowserRouter(
+//   createRoutesFromElements(
+//     <Route path="/" element={<Main drawerWidthState={drawerWidthState}  />}>
+//       <Route path="dashboard" element={<Dashboard />} />
+//       {/* ... etc. */}
+//     </Route>
+//   )
+// );
 const AppRouter = ({ accessToken, drawerWidthState }) => {
   const { state } = useContext(StoreContext);
   return (
-    <>
-      <Switch>
-        <Route exact path="/">
-          <Main drawerWidthState={drawerWidthState}  />
-        </Route>
-        <Route exact path="/search">
-          <SearchPage accessToken={accessToken}  />
-        </Route>
-        <Route path="/savedTracks">
-          <h1>saved tracks</h1>
-          {/* <SavedTracks  /> */}
-        </Route>
-        <Route path="/playlist/:id">
-          <SongList  />
-        </Route>
-        <Route path="/album/:id">
-          <SongList  />
-        </Route>
-        <Route path="/folder">
-          <FolderList />
-        </Route>
-        <Route path="/resize">
-          {/* <App /> */}
-          {/* <DraggableList /> */}
-          {/* <CardSlider /> */}
-          {/* <ResizableDrawer open={true}>
-            <p>dfdsf</p>
-          </ResizableDrawer> */}
-        </Route>
-        {/* <Route path="/:id">
-          <SeeMore accessToken={accessToken} />
-          {state.isClicked && <Playlist  />}
-        </Route> */}
-        {/* <Redirect to='/' /> */}
-      </Switch>
-    </>
+    // <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Main drawerWidthState={drawerWidthState} />} />
+        <Route path="/search" element={<SearchPage accessToken={accessToken} />} />
+        <Route path="/savedTracks" element={<h1>Saved</h1>} />
+        <Route path="/playlist/:id" element={<SongList />} />
+        <Route path="/album/:id" element={<SongList />} />
+      </Routes>
+    // </BrowserRouter>
+    // <BrowserRouter>
+    //   <Routes>
+    //     <Route exact path="/">
+    //       <Main drawerWidthState={drawerWidthState} />
+    //     </Route>
+    //     <Route path="/search">
+    //       <SearchPage accessToken={accessToken} />
+    //     </Route>
+    //     <Route path="/savedTracks">
+    //       <h1>saved </h1>
+    //     </Route>
+    //     <Route path="/playlist/:id">
+    //       <SongList />
+    //     </Route>
+    //     <Route path="/album/:id">
+    //       <SongList />
+    //     </Route>
+    //   </Routes>
+    // </BrowserRouter>
   );
 };
 

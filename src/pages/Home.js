@@ -16,6 +16,7 @@ export default function Home({ accessToken }) {
       type: reducerActionTypes.SET_ACCESS_TOKEN,
       payload: accessToken,
     });
+    return () => {}
   }, [accessToken]);
   const iframeRef = useRef(null);
 
@@ -49,6 +50,7 @@ export default function Home({ accessToken }) {
     window.addEventListener("resize", () => {
       setWindowWith(window.innerWidth);
     });
+    return () => {}
   }, [windowWith]);
 
   return (

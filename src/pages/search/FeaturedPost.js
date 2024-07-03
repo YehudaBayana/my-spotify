@@ -18,6 +18,7 @@ function FeaturedPost(props) {
     window.addEventListener("resize", () => {
       setWindowWith(window.innerWidth);
     });
+    return () => {}
   }, [windowWith]);
   // windowWith < 700 ? 6 : 12
   return (

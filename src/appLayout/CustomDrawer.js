@@ -13,7 +13,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { Link } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import { drawerWidth, DRAWERHEIGHT, MIN_OPEN_WIDTH, CLOSE_WIDTH, reducerActionTypes } from '../constants';
-import { useTheme } from '@mui/styles';
+// import { useTheme } from '@mui/styles';
 import LibrarySearch from './LibrarySearch';
 import { Button, Grid } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
@@ -27,7 +27,7 @@ import LibraryList from './LibraryList';
 
 
 const CustomDrawer = ({ open, handleDrawerClose, links, userPlaylists, userAlbums, drawerWidthState, setDrawerWidthState, deltaXState, setDeltaXState, setOpen }) => {
-  const theme = useTheme();
+  // const theme = useTheme();
   const resizeRef = useRef(null);
   let mouseMoveListener; 
 
@@ -111,7 +111,7 @@ const CustomDrawer = ({ open, handleDrawerClose, links, userPlaylists, userAlbum
         <div ref={resizeRef} style={{ left: deltaXState, position: 'fixed', float: 'right', height: '100vh', width: 5, cursor: 'ew-resize', zIndex: 999999 }} onMouseDown={handleMouseDown} />
         <DrawerHeader>
           <h2>Yuda music</h2>
-          <IconButton onClick={handleDrawerClose}>{theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}</IconButton>
+          <IconButton onClick={handleDrawerClose}><ChevronLeftIcon /></IconButton>
         </DrawerHeader>
         <Divider />
         <List>

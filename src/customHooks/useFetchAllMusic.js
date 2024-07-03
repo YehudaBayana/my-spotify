@@ -13,6 +13,7 @@ const useFetchAllMusic = (accessToken) => {
     if (!accessToken) return;
 
     fetchAllTracks(state.spotifyApi, dispatch, accessToken);
+    return () => {}
   }, [accessToken, dispatch, state.spotifyApi]);
 };
 

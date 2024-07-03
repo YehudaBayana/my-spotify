@@ -71,7 +71,7 @@ const AppLayout = ({ accessToken, divRef }) => {
             width={`calc(100% - ${open ? drawerWidthState : 90}px)`}
             // width={`100vw`}
             sx={{
-              top: `calc(100vh - 52px)`,
+              top: `calc(100vh - 80px)`,
               left: `${open ? drawerWidthState : 90}px`,
               // left: "0px",
               zIndex: 9999,
@@ -84,7 +84,7 @@ const AppLayout = ({ accessToken, divRef }) => {
               <div className="playerSticky">
                 <Player
                   accessToken={accessToken}
-                  trackUri={state?.playingTrack?.uri}
+                  // trackUri={state?.playingTrack}
                 />
               </div>
             </div>

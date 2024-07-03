@@ -1,7 +1,8 @@
 import React from 'react';
 import { Card, CardContent, CardMedia, Typography, Box, CardActions, Button, IconButton} from '@mui/material';
-import { Link } from 'react-router-dom/cjs/react-router-dom';
+// import { Link } from 'react-router-dom/cjs/react-router-dom';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { Link } from 'react-router-dom';
 
 const CardSlider = ({ playlists, containerRef, currentIndex, cardWidth }) => {
   return (

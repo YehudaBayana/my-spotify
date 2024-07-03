@@ -14,53 +14,53 @@ export default function useAuth(code) {
   const [refreshToken, setRefreshToken] = useState(getSessionItem('refresh_token'));
   const [expiresIn, setExpiresIn] = useState(Number(getSessionItem('expires_in')));
 
-  const getRefreshToken = useCallback(async () => {
-    // const refreshToken = localStorage.getItem("refresh_token");
-    console.log('refreshToken ', refreshToken);
+  // const getRefreshToken = useCallback(async () => {
+  //   // const refreshToken = localStorage.getItem("refresh_token");
+  //   console.log('refreshToken ', refreshToken);
 
-    if (!refreshToken) {
-      console.error('No refresh token available');
-      return;
-    }
+  //   if (!refreshToken) {
+  //     console.error('No refresh token available');
+  //     return;
+  //   }
 
-    const url = 'https://accounts.spotify.com/api/token';
+  //   const url = 'https://accounts.spotify.com/api/token';
 
-    // const clientIdR = clientId;
-    const clientSecret = '15f61c725fdc4d7a92813509eaab1ff6';
-    const basicAuth = btoa(`${clientId}:${clientSecret}`);
+  //   // const clientIdR = clientId;
+  //   const clientSecret = CLIENT_SECRET;
+  //   const basicAuth = btoa(`${clientId}:${clientSecret}`);
 
-    const payload = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        Authorization: `Basic ${basicAuth}`,
-      },
-      body: new URLSearchParams({
-        grant_type: 'refresh_token',
-        refresh_token: refreshToken,
-      }),
-    };
+  //   const payload = {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/x-www-form-urlencoded',
+  //       Authorization: `Basic ${basicAuth}`,
+  //     },
+  //     body: new URLSearchParams({
+  //       grant_type: 'refresh_token',
+  //       refresh_token: refreshToken,
+  //     }),
+  //   };
 
-    try {
-      const response = await fetch(url, payload);
-      const data = await response.json();
+  //   try {
+  //     const response = await fetch(url, payload);
+  //     const data = await response.json();
 
-      if (!response.ok) {
-        console.error('Failed to refresh token', data);
-        return;
-      }
+  //     if (!response.ok) {
+  //       console.error('Failed to refresh token', data);
+  //       return;
+  //     }
 
-      localStorage.setItem('access_token', data.access_token);
-      localStorage.setItem('expires_in', data.expires_in);
-      setAccessToken(data.access_token);
-      setExpiresIn(data.expires_in);
-      if (data.refresh_token) {
-        localStorage.setItem('refresh_token', data.refresh_token);
-      }
-    } catch (error) {
-      console.error('Error refreshing token', error);
-    }
-  }, [refreshToken]);
+  //     localStorage.setItem('access_token', data.access_token);
+  //     localStorage.setItem('expires_in', data.expires_in);
+  //     setAccessToken(data.access_token);
+  //     setExpiresIn(data.expires_in);
+  //     if (data.refresh_token) {
+  //       localStorage.setItem('refresh_token', data.refresh_token);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error refreshing token', error);
+  //   }
+  // }, [refreshToken]);
 
   const login = useCallback(async () => {
     try {
@@ -107,23 +107,24 @@ export default function useAuth(code) {
       async function verify() {
         const userRes = await getUser(accessToken);
         if (userRes.error) {
-          getRefreshToken();
+          refreshAccessToken();
         }
       }
       verify()
     }
+    return () => {}
   }, []);
 
   useEffect(() => {
     if (!expiresIn) return;
 
     const refreshTokenTimeout = setInterval(() => {
-      // refreshAccessToken();
-      getRefreshToken();
+      refreshAccessToken();
+      // getRefreshToken();
     }, (expiresIn - 60) * 1000);
 
     return () => clearInterval(refreshTokenTimeout);
-  }, [expiresIn, getRefreshToken]);
+  }, [expiresIn, refreshAccessToken]);
 
   return accessToken;
 }

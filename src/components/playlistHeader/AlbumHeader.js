@@ -17,6 +17,8 @@ const Img = styled('img')({
 const AlbumHeader = ({ album }) => {
     return (
         <Paper
+        elevation={0}
+        square
           sx={{
             p: 2,
             margin: 'auto',

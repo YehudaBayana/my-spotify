@@ -11,17 +11,17 @@ import { useState } from "react";
 import { useContext } from "react";
 import { StoreContext } from "../../context/ContextProvider";
 import { reducerActionTypes, searchMenu } from "../../constants";
-import { useHistory } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Card from "../../components/card/Card";
 import { useFetchSearch } from "../../customHooks/useFetchMusicInfo";
 // import { msToMinutesAndSeconds } from "../../../utils";
-import SearchResTracks from "./TracksRes";
-import { useLocation } from 'react-router-dom/cjs/react-router-dom';
+import SearchResTracks from "./SearchResTracks";
+// import { useLocation } from 'react-router-dom/cjs/react-router-dom';
 
-export default function SearchPage({ accessToken, addToPlaylist = false, handleAddTrack, playlistTracks }) {
+export default function SearchPage({ accessToken, addToPlaylist = false, handleAddTrack, playlistTracks, setTracks }) {
   const queryParams = new URLSearchParams(useLocation().search);
   const searchValueFromParam = queryParams.get('q') ? queryParams.get('q') : ""; 
-  const history = useHistory();
+  const navigate = useNavigate();
   const { dispatch } = useContext(StoreContext);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [searchValue, setSearchValue] = useState(searchValueFromParam);
@@ -58,7 +58,7 @@ export default function SearchPage({ accessToken, addToPlaylist = false, handleA
     if (event.key === "Enter" && searchValue) {
       const params = new URLSearchParams();
       params.append("q", searchValue);
-      history.push({ search: params.toString() });
+      navigate(`?q=${searchValue}`);
       setBool((old) => !old);
     }
   };
@@ -115,7 +115,7 @@ export default function SearchPage({ accessToken, addToPlaylist = false, handleA
             </Grid>
             <Grid container xs={6} md={9}>
               {selectedIndex === 0 ? (
-                <SearchResTracks playlistTracks={playlistTracks} handleAddTrack={handleAddTrack} addToPlaylist={addToPlaylist} selectedRes={selectedRes} setSelectedRes={setSelectedRes} handlePlay={handlePlay} />
+                <SearchResTracks setTracks={setTracks} playlistTracks={playlistTracks} handleAddTrack={handleAddTrack} addToPlaylist={addToPlaylist} selectedRes={selectedRes} setSelectedRes={setSelectedRes} handlePlay={handlePlay} />
               ) : selectedIndex === 1 ? (
                 <Grid
                   container
