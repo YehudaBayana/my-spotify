@@ -4,17 +4,17 @@ import { Container } from "../../App";
 import { Link } from "react-router-dom";
 import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
 import ArrowCircleLeftIcon from "@mui/icons-material/ArrowCircleLeft";
-import { Box, Button, IconButton } from "@mui/material";
+import { Box, Button, IconButton, Typography } from "@mui/material";
 import CardsSlider from "../CardsSlider";
 import { PLAYLIST_CARD_WIDTH } from "../../constants";
 
 interface EachSliderProps {
   playlists: any[]; // Update with actual type
-  des: string; // Update with actual type
+  description: any; // Update with actual type
   drawerWidthState: any; // Update with actual type
 }
 
-const EachSlider: React.FC<EachSliderProps> = ({ playlists, des, drawerWidthState }) => {
+const EachSlider: React.FC<EachSliderProps> = ({ playlists, description, drawerWidthState }) => {
   const [visibleCards, setVisibleCards] = useState<number>(window.innerWidth);
   const [windowWith, setWindowWith] = useState<number>(window.innerWidth);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
@@ -67,23 +67,23 @@ const EachSlider: React.FC<EachSliderProps> = ({ playlists, des, drawerWidthStat
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
+  }, []);  
 
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
         <Container style={{ margin: "40px 0" }}>
-          <h2 className="genre-title">{des}</h2>
+          {/* <h2 className="genre-title">{description}</h2> */}
           <div className="flex-between">
             <Box sx={{ margin: "0 10px" }}>
-              <IconButton onClick={handlePrev} color="info" sx={{ padding: "1px" }} disabled={currentIndex === 0}>
+              <IconButton onClick={handlePrev} color="primary" sx={{ padding: "1px" }} disabled={currentIndex === 0}>
                 <ArrowCircleLeftIcon sx={{ cursor: "pointer" }} fontSize="large" />
               </IconButton>
-              <IconButton onClick={handleNext} color="info" sx={{ padding: "1px" }} disabled={currentIndex >= playlists.length - visibleCards}>
+              <IconButton onClick={handleNext} color="primary" sx={{ padding: "1px" }} disabled={currentIndex >= playlists.length - visibleCards}>
                 <ArrowCircleRightIcon sx={{ cursor: "pointer" }} fontSize="large" />
               </IconButton>
             </Box>
-
+            <Typography padding={"0px"} margin={0} variant='h4'>{description}</Typography>
             <Link to={playlists ? `/${playlists[0]?.id}` : "/"}>
               <Button variant="contained">see all</Button>
             </Link>

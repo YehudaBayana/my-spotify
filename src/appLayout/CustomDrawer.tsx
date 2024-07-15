@@ -1,21 +1,21 @@
-import React, { useRef } from "react";
-import Divider from "@mui/material/Divider";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import IconButton from "@mui/material/IconButton";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import { Link } from "react-router-dom";
-import Typography from "@mui/material/Typography";
-import { Button, Grid } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import SortIcon from "@mui/icons-material/Sort";
-import { Drawer, DrawerHeader } from "./styledComponents";
-import LibrarySearch from "./LibrarySearch";
-import LibraryList from "./LibraryList";
-import { DRAWERHEIGHT, drawerWidth, MIN_OPEN_WIDTH, CLOSE_WIDTH, links } from "../constants";
+import React, { useRef, useState } from 'react';
+import Divider from '@mui/material/Divider';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import IconButton from '@mui/material/IconButton';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import { Link } from 'react-router-dom';
+import Typography from '@mui/material/Typography';
+import { Button, Grid, Menu, MenuItem } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import SortIcon from '@mui/icons-material/Sort';
+import { Drawer, DrawerHeader } from './styledComponents';
+import LibrarySearch from './LibrarySearch';
+import LibraryList from './LibraryList';
+import { DRAWERHEIGHT, drawerWidth, MIN_OPEN_WIDTH, CLOSE_WIDTH, links } from '../constants';
 
 interface CustomDrawerProps {
   open: boolean;
@@ -27,15 +27,28 @@ interface CustomDrawerProps {
 }
 
 const CustomDrawer: React.FC<CustomDrawerProps> = ({ open, handleDrawerClose, drawerWidthState, setDrawerWidthState, deltaXState, setDeltaXState }) => {
+  const [search, setSearch] = useState('');
+  const [sortBy, setSortBy] = useState('');
   const resizeRef = useRef<HTMLDivElement>(null);
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const openSort = Boolean(anchorEl);
+  const handleSortClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleSortClose = (sortByArg: string) => {
+    setAnchorEl(null);
+    setSortBy(sortByArg);
+  };
+
+
   let mouseMoveListener: (event: MouseEvent) => void;
 
   const handleMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
     event.preventDefault();
     const initialX = event.clientX;
     mouseMoveListener = handleMouseMove.bind(null, initialX);
-    document.addEventListener("mousemove", mouseMoveListener);
-    document.addEventListener("mouseup", handleMouseUp);
+    document.addEventListener('mousemove', mouseMoveListener);
+    document.addEventListener('mouseup', handleMouseUp);
   };
 
   const handleMouseMove = (initialX: number, event: MouseEvent) => {
@@ -57,8 +70,8 @@ const CustomDrawer: React.FC<CustomDrawerProps> = ({ open, handleDrawerClose, dr
   };
 
   const handleMouseUp = () => {
-    document.removeEventListener("mousemove", mouseMoveListener);
-    document.removeEventListener("mouseup", handleMouseUp);
+    document.removeEventListener('mousemove', mouseMoveListener);
+    document.removeEventListener('mouseup', handleMouseUp);
   };
 
   return (
@@ -66,22 +79,21 @@ const CustomDrawer: React.FC<CustomDrawerProps> = ({ open, handleDrawerClose, dr
       sx={{
         width: drawerWidthState,
         flexShrink: 0,
-        "& .MuiDrawer-paper": {
-          whiteSpace: "nowrap",
+        '& .MuiDrawer-paper': {
+          whiteSpace: 'nowrap',
           width: drawerWidthState,
-          transition: "width 0s linear",
+          transition: 'width 0s linear',
         },
-        "& ::-webkit-scrollbar": {
-          display: "none",
+        '& ::-webkit-scrollbar': {
+          display: 'none',
         },
-        msOverflowStyle: "none",
-        scrollbarWidth: "none",
+        msOverflowStyle: 'none',
+        scrollbarWidth: 'none',
       }}
       variant="permanent"
-      open={open}
-    >
-      <div style={{ height: "100vh", overflow: "visible", padding: 0, margin: 0, boxSizing: "border-box" }}>
-        <div ref={resizeRef} style={{ left: deltaXState, position: "fixed", float: "right", height: "100vh", width: 5, cursor: "ew-resize", zIndex: 999999 }} onMouseDown={handleMouseDown} />
+      open={open}>
+      <div style={{ height: '100vh', overflow: 'visible', padding: 0, margin: 0, boxSizing: 'border-box' }}>
+        <div ref={resizeRef} style={{ left: deltaXState, position: 'fixed', float: 'right', height: '100vh', width: 5, cursor: 'ew-resize', zIndex: 999999 }} onMouseDown={handleMouseDown} />
         <DrawerHeader>
           <h2>Yuda music</h2>
           <IconButton onClick={handleDrawerClose}>
@@ -91,22 +103,20 @@ const CustomDrawer: React.FC<CustomDrawerProps> = ({ open, handleDrawerClose, dr
         <Divider />
         <List>
           {links.map((obj) => (
-            <Link key={obj.text} style={{ textDecoration: "none", color: "black" }} to={obj.path}>
-              <ListItem disablePadding sx={{ display: "block" }}>
+            <Link key={obj.text} style={{ textDecoration: 'none', color: 'black' }} to={obj.path}>
+              <ListItem disablePadding sx={{ display: 'block' }}>
                 <ListItemButton
                   sx={{
                     minHeight: 48,
-                    justifyContent: open ? "initial" : "center",
+                    justifyContent: open ? 'initial' : 'center',
                     px: 2.5,
-                  }}
-                >
+                  }}>
                   <ListItemIcon
                     sx={{
                       minWidth: 0,
-                      mr: open ? 3 : "auto",
-                      justifyContent: "center",
-                    }}
-                  >
+                      mr: open ? 3 : 'auto',
+                      justifyContent: 'center',
+                    }}>
                     {obj.icon}
                   </ListItemIcon>
                   <ListItemText primary={obj.text} sx={{ opacity: open ? 1 : 0 }} />
@@ -129,16 +139,32 @@ const CustomDrawer: React.FC<CustomDrawerProps> = ({ open, handleDrawerClose, dr
           </Grid>
         </Grid>
         <Grid xs={10} md={8}>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <LibrarySearch />
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <LibrarySearch setSearch={setSearch} search={search} />
 
-            <Button color="secondary">
+            <Button id="basic-button"
+        aria-controls={openSort ? 'basic-menu' : undefined}
+        aria-haspopup="true"
+        aria-expanded={openSort ? 'true' : undefined}
+        onClick={handleSortClick} color="secondary">
               <SortIcon />
             </Button>
+            <Menu
+              id="basic-menu"
+              anchorEl={anchorEl}
+              open={openSort}
+              onClose={()=>handleSortClose(sortBy)}
+              MenuListProps={{
+                'aria-labelledby': 'basic-button',
+              }}>
+              <MenuItem sx={{background: sortBy === "" ? "lightgrey": "" }} onClick={()=>handleSortClose("")}>default</MenuItem>
+              <MenuItem sx={{background: sortBy === "A-Z" ? "lightgrey": "" }} onClick={()=>handleSortClose("A-Z")}>A-Z</MenuItem>
+              <MenuItem sx={{background: sortBy === "Z-A" ? "lightgrey": "" }} onClick={()=>handleSortClose("Z-A")}>Z-A</MenuItem>
+            </Menu>
           </div>
         </Grid>
         <Divider />
-        <LibraryList open={open} />
+        <LibraryList search={search} sortBy={sortBy} open={open} />
       </div>
     </Drawer>
   );

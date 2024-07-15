@@ -22,6 +22,9 @@ export const reducerActionTypes = {
   SET_PLAYLIST_DES: "setPlaylistDes" as const,
   SET_ALBUM: "setAlbum" as const,
   SET_IS_DRAGGING: "setIsDragging" as const,
+  SET_QUEUE: "setQueue" as const,
+  UPDATE_QUEUE: "updateQueue" as const,
+  SET_CHECKED_TRACKS: "setCheckedTracks" as const,
 };
 
 export const searchMenu: string[] = ["tracks", "playlists", "artists", "episodes", "shows"];
@@ -50,3 +53,10 @@ export const DRAWERHEIGHT: number = 65;
 export const PLAYLIST_CARD_WIDTH: number = 200;
 export const MIN_OPEN_WIDTH: number = 210;
 export const CLOSE_WIDTH: number = 70;
+
+export const myColors = {
+  background:"#FFD2FC",
+  main:"rgb(156, 39, 176)",
+  secondary:"#DDFFF7",
+  slider:"#B96AC9",
+};

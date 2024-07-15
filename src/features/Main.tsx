@@ -16,7 +16,7 @@ const Main: React.FC<MainProps> = ({ drawerWidthState }) => {
       ) : (
         <>
           {state.genres.map((item: any, i: number) => {
-            return state.playlistDes[i] !== "New Releases" ? <EachSlider drawerWidthState={drawerWidthState} key={item.id} playlists={item} des={state.playlistDes[i]} /> : null;
+            return state.playlistDes[i] !== "New Releases" ? <EachSlider drawerWidthState={drawerWidthState} key={item.id} playlists={item} description={state.playlistDes[i]} /> : null;
           })}
         </>
       )}

@@ -2,21 +2,22 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import ContextProvider from "./context/ContextProvider";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { ThemeProvider, createTheme} from "@mui/material/styles";
 import { blue, grey } from "@mui/material/colors";
-import { CssBaseline } from "@mui/material";
+import { CssBaseline, GlobalStyles } from "@mui/material";
+import { myColors } from './constants';
 
 const theme = createTheme({
   palette: {
     background: {
-      default: "white", //'#d5a3a3', // Set the default background color
+      default: myColors.background, //'#d5a3a3', // Set the default background color
     },
     primary: {
-      main: blue[500],
+      main: myColors.main,
     },
-    secondary: {
-      main: grey[200],
-    },
+    // secondary: {
+    //   main: grey[200],
+    // },
   },
 });
 

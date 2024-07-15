@@ -5,16 +5,17 @@ import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { CardActionArea } from "@mui/material";
 import { Link } from "react-router-dom";
+import { Playlist } from 'src/types';
 
-interface PlaylistDetails {
-  id: string;
-  name: string;
-  description: string;
-  images: { url: string }[];
-}
+// interface Playlist {
+//   id: string;
+//   name: string;
+//   description: string;
+//   images: { url: string }[];
+// }
 
 interface CardProps {
-  playlistDetails: PlaylistDetails;
+  playlistDetails: Playlist;
 }
 
 const Card: React.FC<CardProps> = ({ playlistDetails }) => {

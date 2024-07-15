@@ -5,28 +5,28 @@ interface SearchResult {
   // Add properties based on the actual response from the API
 }
 
-interface PlaylistTracksResponse {
-  tracks: { items: { track: any }[] };
-  playlistRes?: any;
-}
+// interface PlaylistTracksResponse {
+//   tracks: { items: { track: any }[] };
+//   playlistRes?: any;
+// }
 
 // Replace `dynamicGetRequest` with appropriate library (e.g., Axios)
-type GetRequest = (url: string, accessToken: string) => Promise<any>;
-type DeleteRequest = (
-  url: string,
-  accessToken: string,
-  body?: any
-) => Promise<any>;
-type UpdateRequest = (
-  url: string,
-  accessToken: string,
-  body?: any
-) => Promise<any>;
-type AddRequest = (
-  url: string,
-  accessToken: string,
-  body?: any
-) => Promise<any>;
+// type GetRequest = (url: string, accessToken: string) => Promise<any>;
+// type DeleteRequest = (
+//   url: string,
+//   accessToken: string,
+//   body?: any
+// ) => Promise<any>;
+// type UpdateRequest = (
+//   url: string,
+//   accessToken: string,
+//   body?: any
+// ) => Promise<any>;
+// type AddRequest = (
+//   url: string,
+//   accessToken: string,
+//   body?: any
+// ) => Promise<any>;
 
 const useFetchSearch: (
   searchValue: string,
@@ -67,19 +67,31 @@ export const useGetHomePagePlaylists: (
       const categories = await getCategories(accessToken, dispatch);
       let messages: string[] = [];
       let playlistsArr: any[][] = [];
-      categories.categories.items.forEach((category:any) => {
-        getCategoryPlaylists(accessToken, category.id).then((data) => {
-          messages.push(data.message);
-          playlistsArr.push(data.playlists.items);
-        });
+    
+      // Create an array of promises
+      const promises = categories.categories.items.map(async (category: any) => {
+        const data = await getCategoryPlaylists(accessToken, category.id);
+        console.log("data.message ", data.message);
+        console.log("typeof ", typeof data.message);
+        messages.push(data.message);
+        playlistsArr.push(data.playlists.items);
       });
+    
+      // Wait for all promises to resolve
+      await Promise.all(promises);
+    
+      // Now, messages and playlistsArr are populated
+      console.log("messages ", JSON.parse(JSON.stringify(messages)));
+    
       dispatch({ type: "setPlaylistDes", payload: messages });
       dispatch({
         type: reducerActionTypes.SET_GENRES,
         payload: playlistsArr,
       });
     };
+    
     fetchData();
+    
     return () => {};
   }, []);
 };
@@ -87,9 +99,11 @@ export const useGetHomePagePlaylists: (
 async function getCategories(accessToken: string, dispatch: any) {
   const url = "https://api.spotify.com/v1/browse/categories?locale=US&offset=0&limit=1";
   const data = await getRequest(url, accessToken);
+  console.log("data ",data);
+  
   dispatch({
     type: "setCategories",
-    payload: data.categories.items,
+    payload: data.categories.items.filter((item:any)=>item.length > 2),
   });
   return data;
 }
@@ -185,23 +199,28 @@ async function getPlaylistTracks(accessToken: string, playlist_id: string) {
   let isFirst = true;
   if (accessToken) {
     
-  do {
-    const data = await getRequest(nextUrl, accessToken);
-    if (isFirst) {
-      tracks.push(...data.tracks.items.map((item:any) => item.track));
-      nextUrl = data.tracks.next;
-      playlistRes = data;
-    } else {
-      tracks.push(...data.items.map((item:any) => item.track));
-      nextUrl = data.next;
-    }
-    isFirst = false;
-  } while (nextUrl);
-
-  return { tracks, playlistRes };
+    do {
+      const data = await getRequest(nextUrl, accessToken);
+      if (isFirst) {
+        tracks.push(...data.tracks.items.map((item:any) => item.track));
+        nextUrl = data.tracks.next;
+        playlistRes = data;
+      } else {
+        tracks.push(...data.items.map((item:any) => item.track));
+        nextUrl = data.next;
+      }
+      isFirst = false;
+    } while (nextUrl);
+    
+    return { tracks, playlistRes };
+  }
+  return { tracks:[], playlistRes:[] };
+  
 }
-return { tracks:[], playlistRes:[] };
 
+function getTrack(accessToken: string, id: string): Promise<any> {
+  const url = `https://api.spotify.com/v1/tracks/${id}`;
+  return getRequest(url, accessToken);
 }
 
 function removeFromLibrary(
@@ -266,6 +285,19 @@ function addTracksToPlaylist(
   body: { uris: string[] }
 ): Promise<any> {
   const url = `https://api.spotify.com/v1/playlists/${playlist_id}/tracks`;
+  return addRequest(url, accessToken, JSON.stringify(body));
+}
+
+function addPlaylist(
+  accessToken: string,
+  user_id: string,
+  body: { 
+    name: string,
+    description: string,
+    public: boolean,
+   }
+): Promise<any> {
+  const url = `https://api.spotify.com/v1/users/${user_id}/playlists`;
   return addRequest(url, accessToken, JSON.stringify(body));
 }
 
@@ -386,4 +418,6 @@ export {
   updatePlaylistOrder,
   updatePlaylistDetails,
   addTracksToPlaylist,
+  addPlaylist,
+  getTrack
 };

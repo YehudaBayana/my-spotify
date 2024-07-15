@@ -9,10 +9,11 @@ import SearchToAdd from "./SearchToAdd";
 import { ListItem, Avatar, ListItemButton, Checkbox, Box, Divider } from "@mui/material";
 import { reducerActionTypes } from "../../constants";
 import { addTracksToPlaylist, fetchPlayableItems, removeFromPlaylist, updatePlaylistOrder } from "../../customHooks/useFetchMusicInfo";
-import { makeArrayUnique, msToMinutesAndSeconds } from "../../utils";
+import { handleCheckboxToggle, handlePlayTrack, makeArrayUnique, msToMinutesAndSeconds } from "../../utils";
 import { DragDropContext, Droppable, Draggable, DropResult } from "react-beautiful-dnd";
 import CheckedTracksActions from "./CheckedTracksActions";
 import "./songsList.css";
+import { Playlist, Track } from 'src/types';
 
 const StyledListItemNew = styled(ListItem)(({ theme }) => ({
   whiteSpace: "nowrap",
@@ -26,26 +27,27 @@ interface Item {
   content: string;
 }
 
-interface Track {
-  uri: string;
-  id: string;
-  name: string;
-  album: {
-    images: { url: string }[];
-    release_date: string;
-  };
-  duration_ms: number;
-}
+// interface Track {
+//   uri: string;
+//   id: string;
+//   name: string;
+//   album: {
+//     images: { url: string }[];
+//     release_date: string;
+//   };
+//   duration_ms: number;
+// }
 
-interface Playlist {
-  id: string;
-  name: string;
-  description: string;
-  owner: { id: string };
-  images: { url: string }[];
-  tracks: { total: number };
-  snapshot_id: string;
-}
+// interface Playlist {
+//   id: string;
+//   name: string;
+//   description: string;
+//   owner: { id: string };
+//   images: { url: string }[];
+//   tracks: { total: number };
+//   snapshot_id: string;
+//   public: boolean;
+// }
 
 interface ReorderListPlaylistProps {
   edit: boolean;
@@ -56,14 +58,16 @@ const ReorderListPlaylist: React.FC<ReorderListPlaylistProps> = ({ edit, setEdit
   const location = useLocation();
   const [type, playlistId] = location.pathname.split("/").filter((item) => item);
   const { dispatch, state } = useContext(StoreContext);
-  const { accessToken } = state;
+  const { accessToken, checkedTracks } = state;
   const [draggedItem, setDraggedItem] = useState<Track | null>(null);
   const [tracks, setTracks] = useState<Track[]>([]);
-  const [checkedTracks, setCheckedTracks] = useState<{ uri: string }[]>([]);
+  // const [checkedTracks, setCheckedTracks] = useState<{ uri: string }[]>([]);
   const [isUpdating, setIsUpdating] = useState(false);
   const [isPlaylistEditable, setIsPlaylistEditable] = useState(false);
   const [sourceIndex, setSourceIndex] = useState<number>(0);
   const [destinationIndex, setDestinationIndex] = useState<number>(0);
+  const properTracks = tracks?.filter(item=>item);
+
 
   const [playlist, setPlaylist] = useState<Playlist>({
     id: "",
@@ -73,6 +77,8 @@ const ReorderListPlaylist: React.FC<ReorderListPlaylistProps> = ({ edit, setEdit
     images: [{ url: "" }],
     tracks: { total: 0 },
     snapshot_id: "",
+    public: false,
+    type:"",
   });
   const [rgb, setRgb] = useState<string>("");
 
@@ -98,43 +104,46 @@ const ReorderListPlaylist: React.FC<ReorderListPlaylistProps> = ({ edit, setEdit
     execute(playlistId);
   }, [playlistId, type, accessToken]);
 
-  const handleTrackClick = (e: React.MouseEvent<HTMLUListElement>, track: Track, isCheckbox: boolean) => {
-    e.stopPropagation();
-    if (!isCheckbox) {
-      const targetCondition = (obj: Track) => obj.id === track.id;
-      const targetIndex = tracks.findIndex(targetCondition);
-      const previousTracks = targetIndex !== -1 ? tracks.slice(0, targetIndex) : tracks;
-      const nextTracks = targetIndex !== -1 ? tracks.slice(targetIndex + 1) : [];
-      dispatch({
-        type: reducerActionTypes.SET_PLAYING_TRACK,
-        payload: { playing: track, nextTracks, previousTracks },
-      });
-    }
+  const handleTrackClick = (e: React.MouseEvent<HTMLUListElement>, track: Track) => {
+    // e.stopPropagation();
+    handlePlayTrack(tracks, dispatch);  
+      // const targetCondition = (obj: Track) => obj.id === track.id;
+      // const targetIndex = tracks.findIndex(targetCondition);
+      // const previousTracks = targetIndex !== -1 ? tracks.slice(0, targetIndex) : tracks;
+      // const nextTracks = targetIndex !== -1 ? tracks.slice(targetIndex + 1) : [];
+      // dispatch({
+      //   type: reducerActionTypes.SET_PLAYING_TRACK,
+      //   payload: { playing: track, nextTracks, previousTracks },
+      // });
   };
 
-  const handleCheckboxToggle = (e: React.MouseEvent<HTMLButtonElement>, track: Track, isCheckbox: boolean) => {
-    e.stopPropagation();
-    setCheckedTracks((oldValue) => {
-      if (e.target instanceof HTMLInputElement && e.target.checked) {
-        if (!oldValue.map((item) => item.uri).includes(track.uri)) {
-          return [...oldValue, { uri: track.uri }];
-        }
-        return oldValue;
-      } else {
-        if (oldValue.map((item) => item.uri).includes(track.uri)) {
-          return oldValue.filter((item) => item.uri !== track.uri);
-        }
-        return oldValue;
-      }
-    });
-  };
+  // const handleCheckboxToggle = (e: React.MouseEvent<HTMLButtonElement>, track: Track, isCheckbox: boolean) => {
+  //   e.stopPropagation();
+  //   setCheckedTracks((oldValue) => {
+  //     if (e.target instanceof HTMLInputElement && e.target.checked) {
+  //       if (!oldValue.map((item) => item.uri).includes(track.uri)) {
+  //         return [...oldValue, { uri: track.uri }];
+  //       }
+  //       return oldValue;
+  //     } else {
+  //       if (oldValue.map((item) => item.uri).includes(track.uri)) {
+  //         return oldValue.filter((item) => item.uri !== track.uri);
+  //       }
+  //       return oldValue;
+  //     }
+  //   });
+  // };
 
   const handleDelete = async () => {
     try {
       const removed = await removeFromPlaylist(accessToken, playlist!.id, checkedTracks, playlist!.snapshot_id);
       await execute(playlistId);
       setEdit(false);
-      setCheckedTracks([]);
+      // setCheckedTracks([]);
+      dispatch({
+        type:reducerActionTypes.SET_CHECKED_TRACKS,
+        payload: []
+      })
     } catch (error) {
       console.log("yuda error ", error);
     }
@@ -151,7 +160,11 @@ const ReorderListPlaylist: React.FC<ReorderListPlaylistProps> = ({ edit, setEdit
       const res = await added.json();
       if (res?.snapshot_id) {
         setEdit(false);
-        setCheckedTracks([]);
+        // setCheckedTracks([]);
+        dispatch({
+          type:reducerActionTypes.SET_CHECKED_TRACKS,
+          payload: []
+        })
       }
     } catch (error) {
       console.log("yuda error ", error);
@@ -198,7 +211,6 @@ const ReorderListPlaylist: React.FC<ReorderListPlaylistProps> = ({ edit, setEdit
 
     let itemsCopy = tracks.filter((track) => track !== draggedItem);
     itemsCopy.splice(index, 0, draggedItem);
-    console.log("draggOver");
 
     setTracks(itemsCopy);
   };
@@ -229,10 +241,12 @@ const ReorderListPlaylist: React.FC<ReorderListPlaylistProps> = ({ edit, setEdit
       payload: false,
     });
   };
+  
+
 
   return (
     <>
-      <PlaylistHeader rgb={rgb} isPlaylistEditable={isPlaylistEditable} edit={edit} setEdit={setEdit} playlist={playlist} setCheckedTracks={setCheckedTracks} />
+      <PlaylistHeader total={properTracks.length} setPlaylist={setPlaylist} rgb={rgb} isPlaylistEditable={isPlaylistEditable} edit={edit} setEdit={setEdit} playlist={playlist}/>
       <Paper
         elevation={0}
         square
@@ -244,10 +258,9 @@ const ReorderListPlaylist: React.FC<ReorderListPlaylistProps> = ({ edit, setEdit
         {checkedTracks.length > 0 && (
           <CheckedTracksActions
             isPlaylistEditable={isPlaylistEditable}
-            selected={checkedTracks.length}
             handleDelete={handleDelete}
             handleAddToPlaylist={handleAddToPlaylist}
-            setCheckedTracks={setCheckedTracks}
+            // setCheckedTracks={setCheckedTracks}
           />
         )}
 
@@ -260,7 +273,10 @@ const ReorderListPlaylist: React.FC<ReorderListPlaylistProps> = ({ edit, setEdit
           }}
           component={Paper}
         >
-          {makeArrayUnique(tracks)?.map((track, index) => {
+          {properTracks.map((track, index) => {
+            if (!track?.id) {
+              // console.log("track?.id ",track);
+            }
             const isChecked = !!checkedTracks.find((item) => item.uri === track.uri);
             return (
               <React.Fragment key={index}>
@@ -274,9 +290,9 @@ const ReorderListPlaylist: React.FC<ReorderListPlaylistProps> = ({ edit, setEdit
                   }}
                   className="list-item"
                   onClick={(e: React.MouseEvent<HTMLUListElement>) => {
-                    handleTrackClick(e, track, false);
+                    handleTrackClick(e, track);
                   }}
-                  key={track.id}
+                  key={track?.id}
                   sx={{
                     height: "50px",
                     display: "flex",
@@ -291,7 +307,7 @@ const ReorderListPlaylist: React.FC<ReorderListPlaylistProps> = ({ edit, setEdit
                         visibility: "visible",
                       },
                     }}
-                    draggable
+                    draggable={isPlaylistEditable}
                     onDragStart={(e) => onDragStart(e, index)}
                     // onDragEnd={onDragEnd}
                     className="draggable"
@@ -322,7 +338,7 @@ const ReorderListPlaylist: React.FC<ReorderListPlaylistProps> = ({ edit, setEdit
                       }}
                       role="none"
                     >
-                      <Checkbox checked={isChecked} onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleCheckboxToggle(e, track, true)} />
+                      <Checkbox checked={isChecked} onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleCheckboxToggle(e, track, dispatch, checkedTracks)} />
                     </StyledListItemNew>
                   </ListItemButton>
                 </List>

@@ -25,7 +25,7 @@ const AlbumHeader = ({ album }: { album: any }) => {
         // maxWidth: 500,
         // backgroundColor:"lightblue",
         flexGrow: 1,
-        backgroundColor: (theme) => (theme.palette.mode === "dark" ? "#1A2027" : "lightblue"),
+        backgroundColor: (theme) => (theme.palette.mode === "dark" ? "#1A2027" : theme.palette.primary.main),
       }}
     >
       <Grid container spacing={2}>

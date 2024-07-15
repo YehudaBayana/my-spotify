@@ -1,7 +1,12 @@
-import React from "react";
-import { Card, CardContent, CardMedia, Typography, Box, CardActions, Button, IconButton } from "@mui/material";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { Link } from "react-router-dom";
+import React, { useContext } from 'react';
+import { Card, CardContent, CardMedia, Typography, Box, CardActions, Button, IconButton } from '@mui/material';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { Link } from 'react-router-dom';
+import { myColors, reducerActionTypes } from 'src/constants';
+import { fetchPlayableItems } from 'src/customHooks/useFetchMusicInfo';
+import { StoreContext } from 'src/context/ContextProvider';
+import { Track } from 'src/types';
+import { handlePlayTrack } from 'src/utils';
 
 interface CardSliderProps {
   playlists: any[]; // Update with actual type
@@ -11,29 +16,53 @@ interface CardSliderProps {
 }
 
 const CardSlider: React.FC<CardSliderProps> = ({ playlists, containerRef, currentIndex, cardWidth }) => {
+  const {state, dispatch} = useContext(StoreContext);
+  const {accessToken} = state;
+  const handlePlay = async (playlistId:string, type: string)=>{
+    const {tracks} = await fetchPlayableItems(accessToken, playlistId, type);
+    handlePlayTrack(tracks, dispatch);
+    // const targetCondition = (obj: Track) => obj.id === tracks[0].id;
+    //   const targetIndex = tracks.findIndex(targetCondition);
+    //   const previousTracks = targetIndex !== -1 ? tracks.slice(0, targetIndex) : tracks;
+    //   const nextTracks = targetIndex !== -1 ? tracks.slice(targetIndex + 1) : [];
+    //   dispatch({
+    //     type: reducerActionTypes.SET_PLAYING_TRACK,
+    //     payload: { playing: tracks[0], nextTracks, previousTracks },
+    //   });
+  }
   return (
-    <Box sx={{ margin: "0 auto", position: "relative" }} ref={containerRef}>
-      <Box sx={{ display: "flex", overflow: "hidden", width: "100%" }}>
+    <Box sx={{ margin: '0 auto', position: 'relative' }} ref={containerRef}>
+      <Box sx={{ display: 'flex', overflow: 'hidden', width: '100%' }}>
         <Box
           sx={{
-            display: "flex",
-            transition: "transform 0.5s ease-in-out",
+            display: 'flex',
+            transition: 'transform 0.5s ease-in-out',
             transform: `translateX(-${currentIndex * cardWidth}px)`,
             width: `${playlists.length * cardWidth}px`,
-          }}
-        >
+          }}>
           {playlists.map((playlist) => (
-            <Card key={playlist.id} sx={{ width: cardWidth, margin: "10px 10px", boxShadow: "unset", background: "lightgrey" }}>
-              <Link style={{ textDecoration: "none", color: "inherit" }} to={`/playlist/${playlist.id}`} key={playlist.id}>
+            <Card variant="elevation" key={playlist.id} sx={{ height: 'max-content', width: cardWidth, margin: '10px 10px', boxShadow: 'unset', background: myColors.secondary }}>
+              <Link style={{ textDecoration: 'none', color: 'inherit' }} to={`/playlist/${playlist.id}`} key={playlist.id}>
                 <CardMedia component="img" height="194" image={playlist?.images[0]?.url} alt="Paella dish" />
                 <CardContent>
-                  <Typography variant="h5" color="text.secondary">
+                  <Typography
+                  fontSize="20px"
+                    sx={{
+                      display: '-webkit-box',
+                      WebkitBoxOrient: 'vertical',
+                      WebkitLineClamp: 1,
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      // height: '3em', // Assuming line-height is 1.5em
+                    }}
+                    variant="h5"
+                    color="text.secondary">
                     {playlist.name}
                   </Typography>
                 </CardContent>
               </Link>
-              <CardActions sx={{ display: "flex", justifyContent: "space-between" }} disableSpacing>
-                <Button size="small">Play</Button>
+              <CardActions sx={{ display: 'flex', justifyContent: 'space-between' }} disableSpacing>
+                <Button onClick={()=> handlePlay(playlist.id, playlist.type)} size="small">Play</Button>
                 <IconButton aria-label="add to favorites">
                   <MoreVertIcon />
                 </IconButton>

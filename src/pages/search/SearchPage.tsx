@@ -1,18 +1,20 @@
-import React, { useState, useContext, KeyboardEvent, MouseEvent } from "react";
-import Box from "@mui/material/Box";
-import List from "@mui/material/List";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemText from "@mui/material/ListItemText";
-import Divider from "@mui/material/Divider";
-import { Container, TextField } from "@mui/material";
-import Grid2 from "@mui/material/Unstable_Grid2"; // Update this line
-import Blog from "./Blog";
-import { StoreContext } from "../../context/ContextProvider";
-import { reducerActionTypes, searchMenu } from "../../constants";
-import { useNavigate, useLocation } from "react-router-dom";
-import Card from "../../components/card/Card";
-import { useFetchSearch } from "../../customHooks/useFetchMusicInfo";
-import SearchResTracks from "./SearchResTracks";
+import React, { useState, useContext, KeyboardEvent, MouseEvent } from 'react';
+import Box from '@mui/material/Box';
+import List from '@mui/material/List';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemText from '@mui/material/ListItemText';
+import Divider from '@mui/material/Divider';
+import { Container, TextField } from '@mui/material';
+import Grid2 from '@mui/material/Unstable_Grid2'; // Update this line
+import Blog from './Blog';
+import { StoreContext } from '../../context/ContextProvider';
+import { reducerActionTypes, searchMenu } from '../../constants';
+import { useNavigate, useLocation } from 'react-router-dom';
+import Card from '../../components/card/Card';
+import { useFetchSearch } from '../../customHooks/useFetchMusicInfo';
+import SearchResTracks from './SearchResTracks';
+import { Track } from 'src/types';
+import { handlePlayTrack } from 'src/utils';
 
 interface SearchPageProps {
   accessToken: string;
@@ -24,7 +26,7 @@ interface SearchPageProps {
 
 export default function SearchPage({ accessToken, addToPlaylist = false, handleAddTrack, playlistTracks, setTracks }: SearchPageProps) {
   const queryParams = new URLSearchParams(useLocation().search);
-  const searchValueFromParam = queryParams.get("q") || "";
+  const searchValueFromParam = queryParams.get('q') || '';
   const navigate = useNavigate();
   const { dispatch } = useContext(StoreContext);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -33,13 +35,18 @@ export default function SearchPage({ accessToken, addToPlaylist = false, handleA
   const [selectedRes, setSelectedRes] = useState<any[]>([]);
   const [bool, setBool] = useState(true);
 
-  const filteredSearchMenu = addToPlaylist ? searchMenu.filter((item) => item === "tracks" || item === "playlists") : searchMenu;
+  const filteredSearchMenu = addToPlaylist ? searchMenu.filter((item) => item === 'tracks' || item === 'playlists') : searchMenu;
 
-  function handlePlay(track: any) {
-    dispatch({
-      type: reducerActionTypes.SET_PLAYING_TRACK,
-      payload: track,
-    });
+  function handlePlay(track: Track) {
+    handlePlayTrack(selectedRes, dispatch);  
+    // const targetCondition = (obj: Track) => obj.id === track.id;
+    // const targetIndex = selectedRes.findIndex(targetCondition);
+    // const previousTracks = targetIndex !== -1 ? selectedRes.slice(0, targetIndex) : selectedRes;
+    // const nextTracks = targetIndex !== -1 ? selectedRes.slice(targetIndex + 1) : [];
+    // dispatch({
+    //   type: reducerActionTypes.SET_PLAYING_TRACK,
+    //   payload: { playing: track, nextTracks, previousTracks },
+    // });
   }
 
   useFetchSearch(searchValue || searchValueFromParam, setSearchRes, accessToken, filteredSearchMenu[selectedIndex], setSelectedRes, bool);
@@ -55,16 +62,16 @@ export default function SearchPage({ accessToken, addToPlaylist = false, handleA
   };
 
   const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
-    if (event.key === "Enter" && searchValue) {
+    if (event.key === 'Enter' && searchValue) {
       const params = new URLSearchParams();
-      params.append("q", searchValue);
+      params.append('q', searchValue);
       navigate(`?q=${searchValue}`);
       setBool((old) => !old);
     }
   };
 
   return (
-    <Box sx={{ flexGrow: 1, margin: "30px 0" }}>
+    <Box sx={{ flexGrow: 1, margin: '30px 0' }}>
       <Container>
         <Grid2 container spacing={2}>
           <Grid2 xs={12}>
@@ -79,20 +86,20 @@ export default function SearchPage({ accessToken, addToPlaylist = false, handleA
               onChange={(e) => setSearchValue(e.target.value)}
               fullWidth
               sx={{
-                backgroundColor: "lightgray",
-                borderRadius: "4px",
+                backgroundColor: 'lightgray',
+                borderRadius: '4px',
               }}
             />
           </Grid2>
 
-          <Grid2 xs={12} container justifyContent="space-between" alignItems="flex-start" flexDirection={{ xs: "column", sm: "row" }} sx={{ fontSize: "12px" }}>
+          <Grid2 xs={12} container justifyContent="space-between" alignItems="flex-start" flexDirection={{ xs: 'column', sm: 'row' }} sx={{ fontSize: '12px' }}>
             <Grid2 xs={6} md={3}>
               <List component="nav" aria-label="secondary mailbox folder">
                 <Divider />
                 {filteredSearchMenu.map((itemMenu, i) => (
                   <React.Fragment key={i}>
                     <ListItemButton selected={selectedIndex === i} onClick={(event) => handleListItemClick(event, i, itemMenu)}>
-                      <ListItemText primary={itemMenu === "playlists" ? itemMenu + "(undeveloped)" : itemMenu} />
+                      <ListItemText primary={itemMenu === 'playlists' ? itemMenu + '(undeveloped)' : itemMenu} />
                     </ListItemButton>
                     <Divider />
                   </React.Fragment>

@@ -4,6 +4,7 @@ import { StoreContext } from "./context/ContextProvider";
 import SearchPage from "./pages/search/SearchPage";
 import SongList from "./features/songsList/SongList";
 import Main from "./features/Main";
+import CurrentSongPlaying from './features/currentSongPlaying/CurrentSongPlaying';
 
 interface AppRouterProps {
   accessToken: string;
@@ -19,6 +20,7 @@ const AppRouter: React.FC<AppRouterProps> = ({ accessToken, drawerWidthState }) 
       <Route path="/savedTracks" element={<h1>Saved</h1>} />
       <Route path="/playlist/:id" element={<SongList />} />
       <Route path="/album/:id" element={<SongList />} />
+      <Route path="/test" element={<CurrentSongPlaying open={true} drawerWidthState={drawerWidthState} />} />
     </Routes>
   );
 };

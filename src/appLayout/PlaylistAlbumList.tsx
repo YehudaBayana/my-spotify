@@ -9,37 +9,38 @@ import { StoreContext } from "../context/ContextProvider";
 import { StyledListItemIcon } from "./styledComponents";
 import AreYouSurePrompt from "../components/AreYouSurePrompt";
 import { reducerActionTypes } from "../constants";
+import { Playlist } from 'src/types';
 // import { PlaylistType } from '../types'; // assuming PlaylistType is defined elsewhere
-interface PlaylistType {
-  id: string;
-  name: string;
-  description: string;
-  owner: { id: string };
-  images: { url: string }[];
-  tracks: { total: number };
-  snapshot_id: string;
-  type: string;
-}
+// interface Playlist {
+//   id: string;
+//   name: string;
+//   description: string;
+//   owner: { id: string };
+//   images: { url: string }[];
+//   tracks: { total: number };
+//   snapshot_id: string;
+//   type: string;
+// }
 
 interface PlaylistAlbumListProps {
-  userPlaylists: PlaylistType[];
-  userAlbums: PlaylistType[];
+  userPlaylists: Playlist[];
+  userAlbums: Playlist[];
 }
 
 const PlaylistAlbumList: React.FC<PlaylistAlbumListProps> = ({ userPlaylists, userAlbums }) => {
   const { state, dispatch } = useContext(StoreContext);
   const { accessToken } = state;
   const [menuOptions, setMenuOptions] = useState<{ label: string; action: () => void }[]>([]);
-  const [selectedItem, setSelectedItem] = useState<PlaylistType | null>(null);
+  const [selectedItem, setSelectedItem] = useState<Playlist | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
 
-  const handleContextMenu = (event: React.MouseEvent<HTMLLIElement, MouseEvent>, item: PlaylistType) => {
+  const handleContextMenu = (event: React.MouseEvent<HTMLLIElement, MouseEvent>, item: Playlist) => {
     event.preventDefault();
     setSelectedItem(item);
     setMenuOptions([{ label: "remove from library", action: () => setOpenDialog(true) }]);
   };
 
-  const handleRemoveFromPlaylist = async (playlist: PlaylistType) => {
+  const handleRemoveFromPlaylist = async (playlist: Playlist) => {
     try {
       const removeRes = await removeFromLibrary(accessToken, [playlist.id]);
       dispatch({

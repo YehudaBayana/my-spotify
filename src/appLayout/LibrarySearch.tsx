@@ -3,9 +3,14 @@ import { IconButton, InputBase, Paper } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
 
-const LibrarySearch = () => {
+interface LibrarySearchProps {
+  search:string;
+  setSearch:React.Dispatch<React.SetStateAction<string>>;
+}
+
+const LibrarySearch : React.FC<LibrarySearchProps> = ({search, setSearch}) => {
   const [expanded, setExpanded] = useState(false);
-  const [searchText, setSearchText] = useState("");
+  // const [search, setSearch] = useState("");
 
   const handleExpandClick = () => {
     setExpanded(true);
@@ -13,15 +18,15 @@ const LibrarySearch = () => {
 
   const handleCollapse = () => {
     setExpanded(false);
-    setSearchText("");
+    setSearch("");
   };
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-    setSearchText(event.target.value);
+    setSearch(event.target.value);
   };
 
   const handleBlur = () => {
-    if (!searchText) {
+    if (!search) {
       handleCollapse();
     }
   };
@@ -48,7 +53,7 @@ const LibrarySearch = () => {
         <InputBase
           sx={{ ml: 1, flex: 1 }}
           placeholder="Library Search..."
-          value={searchText}
+          value={search}
           onChange={(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => handleSearchChange(e)}
           onBlur={handleBlur}
           autoFocus
