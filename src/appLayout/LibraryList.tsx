@@ -4,7 +4,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import { Link } from 'react-router-dom';
-import { reducerActionTypes } from '../constants';
+import { myColors, reducerActionTypes } from '../constants';
 import RightClickMenu from '../features/RightClickMenu';
 import { StyledListItemIcon } from './styledComponents';
 import { StoreContext } from '../context/ContextProvider';
@@ -12,6 +12,7 @@ import AreYouSurePrompt from '../components/AreYouSurePrompt';
 import { removeFromLibrary } from '../customHooks/useFetchMusicInfo';
 import { makeArrayUnique } from '../utils';
 import { Avatar, ListItemAvatar } from '@mui/material';
+import { Album, Playlist } from 'src/types';
 
 interface LibraryListProps {
   open: boolean;
@@ -26,21 +27,34 @@ const LibraryList: React.FC<LibraryListProps> = ({ open, search, sortBy }) => {
   const [menuOptions, setMenuOptions] = useState<Array<{ label: string; action: () => void }>>([]);
   const [selectedItem, setSelectedItem] = useState<any>(null); // Adjust type as per your item structure
   const [openDialog, setOpenDialog] = useState(false);
-  const filteredPlaylists = [...userPlaylists, ...userAlbums].filter((item) => item.name.toLowerCase().indexOf(search.toLowerCase()) > -1);
+  
+  let filteredPlaylists: any = [];
+  if (userPlaylists) {
+    filteredPlaylists = [...userPlaylists, ...userAlbums].filter((item) => item.name.toLowerCase().indexOf(search.toLowerCase()) > -1); 
+  }
   const handleContextMenu = (event: React.MouseEvent<HTMLLIElement, MouseEvent>, item: any) => {
     event.preventDefault();
     setSelectedItem(item);
     setMenuOptions([{ label: 'remove from library', action: () => setOpenDialog(true) }]);
   };
 
-  const removeFromLibraryHandler = async (playlist: any) => {
+  const removeFromLibraryHandler = async (playlist: Album | Playlist) => {
     try {
+      
       const removeRes = await removeFromLibrary(accessToken, [playlist.id], playlist.type);
       console.log('removeRes ', removeRes);
-      dispatch({
-        type: reducerActionTypes.SET_USER_PLAYLISTS,
-        payload: state.userPlaylists.filter((item) => item.id !== playlist.id),
-      });
+      if (playlist.type === "playlist") {
+        dispatch({
+          type: reducerActionTypes.SET_USER_PLAYLISTS,
+          payload: state.userPlaylists.filter((item) => item.id !== playlist.id),
+        });
+        
+      } else if (playlist.type === "album"){
+        dispatch({
+          type: reducerActionTypes.SET_USER_ALBUMS,
+          payload: state.userAlbums.filter((item) => item.id !== playlist.id),
+        });
+      }
     } catch (error) {
       console.log('err ', error);
     }
@@ -68,7 +82,7 @@ const LibraryList: React.FC<LibraryListProps> = ({ open, search, sortBy }) => {
   };
 
   return (
-    <List>
+    <List sx={{background: myColors.background}}>
       <AreYouSurePrompt open={openDialog} onClose={handleDialogClose} onConfirm={handleDeleteConfirm} />
       <RightClickMenu menuOptions={menuOptions}>
         {handleSortBy(filteredPlaylists).map((item, i) => {

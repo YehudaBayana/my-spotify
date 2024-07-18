@@ -44,21 +44,19 @@ export const handleCheckboxToggle = (e: React.MouseEvent<HTMLButtonElement>, tra
   if (e.target instanceof HTMLInputElement && e.target.checked) {
     if (!checkedTracks.map((item) => item.uri).includes(track.uri)) {
       res = [...checkedTracks, { uri: track.uri }];
-    } else{
+    } else {
       res = checkedTracks;
     }
   } else {
-    if(checkedTracks.map((item) => item.uri).includes(track.uri)) {
+    if (checkedTracks.map((item) => item.uri).includes(track.uri)) {
       res = checkedTracks.filter((item) => item.uri !== track.uri);
-    }else{
+    } else {
       res = checkedTracks;
     }
 
   }
-  console.log("res ",res);
-  
   dispatch({
-    type:reducerActionTypes.SET_CHECKED_TRACKS,
+    type: reducerActionTypes.SET_CHECKED_TRACKS,
     payload: res
   })
   // setCheckedTracks((oldValue) => {
@@ -76,7 +74,7 @@ export const handleCheckboxToggle = (e: React.MouseEvent<HTMLButtonElement>, tra
   // });
 };
 
-export const handleAddToPlaylist = async (playlist: Playlist,accessToken:string, checkedTracks:any, dispatch:any, setEdit:any) => {
+export const handleAddToPlaylist = async (playlist: Playlist, accessToken: string, checkedTracks: any, dispatch: any, setEdit: any) => {
   const body = {
     uris: checkedTracks.map((track: any) => track.uri),
     position: 0,
@@ -89,7 +87,7 @@ export const handleAddToPlaylist = async (playlist: Playlist,accessToken:string,
       setEdit(false);
       // setCheckedTracks([]);
       dispatch({
-        type:reducerActionTypes.SET_CHECKED_TRACKS,
+        type: reducerActionTypes.SET_CHECKED_TRACKS,
         payload: []
       })
     }
@@ -98,13 +96,13 @@ export const handleAddToPlaylist = async (playlist: Playlist,accessToken:string,
   }
 };
 
-export const handlePlayTrack = (tracks:any[], dispatch: any) =>{
-  const targetCondition = (obj: Track) => obj.id === tracks[0].id;
-      const targetIndex = tracks.findIndex(targetCondition);
-      const previousTracks = targetIndex !== -1 ? tracks.slice(0, targetIndex) : tracks;
-      const nextTracks = targetIndex !== -1 ? tracks.slice(targetIndex + 1) : [];
-      dispatch({
-        type: reducerActionTypes.SET_PLAYING_TRACK,
-        payload: { playing: tracks[0], nextTracks, previousTracks },
-      });
+export const handlePlayTrack = (tracks: any[], clickedTrack: Track | TrackShortV, dispatch: any) => {
+  const targetCondition = (obj: Track) => obj.id === clickedTrack.id;
+  const targetIndex = tracks.findIndex(targetCondition);
+  const previousTracks = targetIndex !== -1 ? tracks.slice(0, targetIndex) : tracks;
+  const nextTracks = targetIndex !== -1 ? tracks.slice(targetIndex + 1) : [];
+  dispatch({
+    type: reducerActionTypes.SET_PLAYING_TRACK,
+    payload: { playing: clickedTrack, nextTracks, previousTracks },
+  });
 }

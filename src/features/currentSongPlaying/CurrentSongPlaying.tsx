@@ -11,11 +11,11 @@ import { StoreContext } from 'src/context/ContextProvider';
 import { Track, TrackShortV } from 'src/types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import TrackDetails from "./TrackDetails"
+import TrackDetails from './TrackDetails';
 import { Card, CardMedia, CardContent, Chip } from '@mui/material';
 import { ListItemAvatar, ListItemText, ListItemSecondaryAction, Typography } from '@mui/material';
 import QueueList from './QueueList';
-
+import { myColors } from 'src/constants';
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -38,7 +38,7 @@ export default function CurrentSongPlaying({ drawerWidthState, open }: { drawerW
   const { checkedTracks, playingTrack } = state;
 
   const properTracks = [...playingTrack?.previousTracks, playingTrack.playing, ...playingTrack?.nextTracks].filter((item: TrackShortV) => item);
-//   console.log('properTracks ', properTracks);
+  //   console.log('properTracks ', properTracks);
 
   return (
     <React.Fragment>
@@ -63,18 +63,18 @@ export default function CurrentSongPlaying({ drawerWidthState, open }: { drawerW
           bottom: '80px',
           pointerEvents: 'none',
         }}>
-        <Grid display="flex" spacing={3} sx={{ width: '100%', height: '100%' }}>
+        <Grid display="flex" spacing={3} sx={{ width: '100%', height: '100%', background: myColors.background }}>
           <Grid height="100%" width="60%" justifyContent="center" alignContent="center" alignSelf="center">
-            <TrackDetails/>
+            <TrackDetails />
           </Grid>
           <Grid height="100%" width="40%" overflow="hidden" display="flex" flexDirection="column" boxShadow="5px 5px 10px rgba(0, 0, 0, 0.3);">
-            <Box width="100%" display="flex" justifyContent="center">
-              <Tabs sx={{ width: '100%', color:"black" }} value={currTab} onChange={handleChange} textColor="primary" indicatorColor="primary" aria-label="primary tabs example">
-                <Tab sx={{ width: '50%' }} value="up next" label="up next" />
-                <Tab sx={{ width: '50%' }} value="lyrics" label="lyrics" />
+            <Box width="100%" display="flex" justifyContent="center" >
+              <Tabs sx={{ background: myColors.background, width: '100%', color: 'black' }} value={currTab} onChange={handleChange} textColor="primary" indicatorColor="primary" aria-label="primary tabs example">
+                <Tab sx={{ width: '50%'}} value="up next" label="up next" />
+                <Tab sx={{ width: '50%'}} value="lyrics" label="lyrics" />
               </Tabs>
             </Box>
-            <QueueList currTab={currTab}/>
+            <QueueList currTab={currTab} />
           </Grid>
         </Grid>
       </Dialog>

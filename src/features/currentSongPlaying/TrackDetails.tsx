@@ -1,6 +1,7 @@
 import { Card, CardMedia, CardContent, Chip, Box } from '@mui/material';
 import { ListItemAvatar, ListItemText, ListItemSecondaryAction, Typography } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
+import { myColors } from 'src/constants';
 import { StoreContext } from 'src/context/ContextProvider';
 import { getTrack } from 'src/customHooks/useFetchMusicInfo';
 
@@ -101,8 +102,8 @@ const TrackDetails: React.FC = () => {
     return () => {};
   }, [queue]);
 
-  return (
-    <Card sx={{ boxShadow:"none", border: 'none', padding: '50px', maxWidth: 600, margin: 'auto', height: '100%', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+  return (//sx={{objectFit:"fill", marginTop:"70px"}} 
+    <Card sx={{ background: "transparent", boxShadow:"none", border: 'none', padding: '50px', maxWidth: 600, margin: 'auto', height: '100%', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
       <CardMedia component="img" height="100%" image={track.album.images[0].url} alt={`${track.name} album cover`} />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div" textAlign="center">

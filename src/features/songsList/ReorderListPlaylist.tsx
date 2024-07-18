@@ -61,7 +61,6 @@ const ReorderListPlaylist: React.FC<ReorderListPlaylistProps> = ({ edit, setEdit
   const { accessToken, checkedTracks } = state;
   const [draggedItem, setDraggedItem] = useState<Track | null>(null);
   const [tracks, setTracks] = useState<Track[]>([]);
-  // const [checkedTracks, setCheckedTracks] = useState<{ uri: string }[]>([]);
   const [isUpdating, setIsUpdating] = useState(false);
   const [isPlaylistEditable, setIsPlaylistEditable] = useState(false);
   const [sourceIndex, setSourceIndex] = useState<number>(0);
@@ -91,55 +90,40 @@ const ReorderListPlaylist: React.FC<ReorderListPlaylistProps> = ({ edit, setEdit
   }, [state.userName, playlist]);
 
   async function execute(playlistId: string) {
-    const { playlistRes, tracks } = await fetchPlayableItems(accessToken, playlistId, type);
-    setPlaylist(playlistRes);
-    if (tracks.length > 0) {
-      setTracks(tracks);
-    } else {
-      setTracks([]);
+    if (accessToken) {
+      const { playlistRes, tracks } = await fetchPlayableItems(accessToken, playlistId, type);
+      setPlaylist(playlistRes);
+      if (tracks.length > 0) {
+        setTracks(tracks);
+      } else {
+        setTracks([]);
+      }
     }
   }
 
   useEffect(() => {
     execute(playlistId);
+    dispatch({
+      type: reducerActionTypes.SET_CHECKED_TRACKS,
+      payload: []
+    })
+    // setEdit(false);
   }, [playlistId, type, accessToken]);
 
-  const handleTrackClick = (e: React.MouseEvent<HTMLUListElement>, track: Track) => {
-    // e.stopPropagation();
-    handlePlayTrack(tracks, dispatch);  
-      // const targetCondition = (obj: Track) => obj.id === track.id;
-      // const targetIndex = tracks.findIndex(targetCondition);
-      // const previousTracks = targetIndex !== -1 ? tracks.slice(0, targetIndex) : tracks;
-      // const nextTracks = targetIndex !== -1 ? tracks.slice(targetIndex + 1) : [];
-      // dispatch({
-      //   type: reducerActionTypes.SET_PLAYING_TRACK,
-      //   payload: { playing: track, nextTracks, previousTracks },
-      // });
+  const handleTrackClick = (track: Track) => {
+    handlePlayTrack(tracks, track, dispatch);  
   };
-
-  // const handleCheckboxToggle = (e: React.MouseEvent<HTMLButtonElement>, track: Track, isCheckbox: boolean) => {
-  //   e.stopPropagation();
-  //   setCheckedTracks((oldValue) => {
-  //     if (e.target instanceof HTMLInputElement && e.target.checked) {
-  //       if (!oldValue.map((item) => item.uri).includes(track.uri)) {
-  //         return [...oldValue, { uri: track.uri }];
-  //       }
-  //       return oldValue;
-  //     } else {
-  //       if (oldValue.map((item) => item.uri).includes(track.uri)) {
-  //         return oldValue.filter((item) => item.uri !== track.uri);
-  //       }
-  //       return oldValue;
-  //     }
-  //   });
-  // };
 
   const handleDelete = async () => {
     try {
-      const removed = await removeFromPlaylist(accessToken, playlist!.id, checkedTracks, playlist!.snapshot_id);
+      console.log("playlist.id ",playlist.id);
+      console.log("playlist.snapshot_id ",playlist.snapshot_id);
+      // console.log("playlist.snapshot_id ",playlist.snapshot_id);
+      const removed = await removeFromPlaylist(accessToken, playlist.id, checkedTracks, playlist.snapshot_id);
+      console.log("removed ",removed);
+      
       await execute(playlistId);
       setEdit(false);
-      // setCheckedTracks([]);
       dispatch({
         type:reducerActionTypes.SET_CHECKED_TRACKS,
         payload: []
@@ -160,7 +144,6 @@ const ReorderListPlaylist: React.FC<ReorderListPlaylistProps> = ({ edit, setEdit
       const res = await added.json();
       if (res?.snapshot_id) {
         setEdit(false);
-        // setCheckedTracks([]);
         dispatch({
           type:reducerActionTypes.SET_CHECKED_TRACKS,
           payload: []
@@ -224,8 +207,6 @@ const ReorderListPlaylist: React.FC<ReorderListPlaylistProps> = ({ edit, setEdit
     console.log("body ", body);
 
     setIsUpdating(true);
-    // const tempTracks = tracks;
-    // setTracks(newItems);
     updatePlaylistOrder(accessToken, playlistId, body)
       .then((res) => {
         console.log("res ", res);
@@ -260,7 +241,6 @@ const ReorderListPlaylist: React.FC<ReorderListPlaylistProps> = ({ edit, setEdit
             isPlaylistEditable={isPlaylistEditable}
             handleDelete={handleDelete}
             handleAddToPlaylist={handleAddToPlaylist}
-            // setCheckedTracks={setCheckedTracks}
           />
         )}
 
@@ -268,15 +248,12 @@ const ReorderListPlaylist: React.FC<ReorderListPlaylistProps> = ({ edit, setEdit
           square
           elevation={0}
           style={{
-            background: "rgba(255,255,255,1)",
+            background: "transparent",
             borderRadius: "0px",
           }}
           component={Paper}
         >
           {properTracks.map((track, index) => {
-            if (!track?.id) {
-              // console.log("track?.id ",track);
-            }
             const isChecked = !!checkedTracks.find((item) => item.uri === track.uri);
             return (
               <React.Fragment key={index}>
@@ -290,7 +267,7 @@ const ReorderListPlaylist: React.FC<ReorderListPlaylistProps> = ({ edit, setEdit
                   }}
                   className="list-item"
                   onClick={(e: React.MouseEvent<HTMLUListElement>) => {
-                    handleTrackClick(e, track);
+                    handleTrackClick(track);
                   }}
                   key={track?.id}
                   sx={{
@@ -309,7 +286,6 @@ const ReorderListPlaylist: React.FC<ReorderListPlaylistProps> = ({ edit, setEdit
                     }}
                     draggable={isPlaylistEditable}
                     onDragStart={(e) => onDragStart(e, index)}
-                    // onDragEnd={onDragEnd}
                     className="draggable"
                     disableRipple
                   >

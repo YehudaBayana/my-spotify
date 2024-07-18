@@ -1,6 +1,6 @@
 import { Avatar, Box, Checkbox, Divider, List, ListItem, ListItemButton, Paper } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { reducerActionTypes, SERVER_DOMAIN } from 'src/constants';
+import { myColors, reducerActionTypes, SERVER_DOMAIN } from 'src/constants';
 import { StoreContext } from 'src/context/ContextProvider';
 import { addTracksToPlaylist } from 'src/customHooks/useFetchMusicInfo';
 import { Playlist, Track, TrackShortV } from 'src/types';
@@ -16,15 +16,15 @@ const QueueList = ({ currTab }: { currTab: string }) => {
   //   const properTracks = [...playingTrack?.previousTracks, playingTrack.playing, ...playingTrack?.nextTracks].filter((item: TrackShortV) => item);
 
   const handleTrackClick = (track: TrackShortV) => {
-    handlePlayTrack(properTracks, dispatch);  
+    handlePlayTrack(properTracks, track, dispatch);  
     // const targetCondition = (obj: TrackShortV) => obj.id === track.id;
-      // const targetIndex = properTracks.findIndex(targetCondition);
-      // const previousTracks = targetIndex !== -1 ? properTracks.slice(0, targetIndex) : properTracks;
-      // const nextTracks = targetIndex !== -1 ? properTracks.slice(targetIndex + 1) : [];
-      // dispatch({
-      //   type: reducerActionTypes.SET_PLAYING_TRACK,
-      //   payload: { playing: track, nextTracks, previousTracks },
-      // });
+    //   const targetIndex = properTracks.findIndex(targetCondition);
+    //   const previousTracks = targetIndex !== -1 ? properTracks.slice(0, targetIndex) : properTracks;
+    //   const nextTracks = targetIndex !== -1 ? properTracks.slice(targetIndex + 1) : [];
+    //   dispatch({
+    //     type: reducerActionTypes.SET_PLAYING_TRACK,
+    //     payload: { playing: track, nextTracks, previousTracks },
+    //   });
   };
 
   useEffect(() => {
@@ -72,6 +72,7 @@ const QueueList = ({ currTab }: { currTab: string }) => {
       {checkedTracks.length > 0 && <CheckedTracksActions handleAddToPlaylist={handleAddToPlaylist} />}
       <Box
         sx={{
+          background: myColors.background,
           flexGrow: 1,
           overflowY: 'auto', // Make this box scrollable if content overflows
         }}>
@@ -82,8 +83,8 @@ const QueueList = ({ currTab }: { currTab: string }) => {
             square
             elevation={0}
             style={{
-              background: 'rgba(255,255,255,1)',
               borderRadius: '0px',
+              background:"transparent"
             }}
             component={Paper}>
             {properTracks.map((track: TrackShortV, index: number) => {
@@ -104,7 +105,7 @@ const QueueList = ({ currTab }: { currTab: string }) => {
                       display: 'flex',
                       flexDirection: 'row',
                       padding: '0',
-                      background: track.id === currentlyPlaying?.id ? 'lightgreen' : '',
+                      background: track.id === currentlyPlaying?.id ? myColors.secondary : '',
                     }}>
                     <ListItemButton
                       sx={{

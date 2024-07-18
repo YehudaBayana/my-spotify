@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 import { BrowserRouter as Router } from "react-router-dom";
 import ScrollToTop from "./ScrollToTop";
 import Home from "./pages/Home";
 import LandingPage from "./pages/landingPage";
 import useAuth from "./customHooks/useAuth";
+import { StoreContext } from './context/ContextProvider';
 
 export const code = new URLSearchParams(window.location.search).get("code");
 
@@ -18,7 +19,8 @@ export const Container = styled.div`
 `;
 
 function App() {
-  const accessToken = useAuth(code);
+  const {dispatch} = useContext(StoreContext);
+  const accessToken = useAuth(code, dispatch);
 
   return (
     <>

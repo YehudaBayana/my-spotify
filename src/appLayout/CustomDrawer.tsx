@@ -15,7 +15,8 @@ import SortIcon from '@mui/icons-material/Sort';
 import { Drawer, DrawerHeader } from './styledComponents';
 import LibrarySearch from './LibrarySearch';
 import LibraryList from './LibraryList';
-import { DRAWERHEIGHT, drawerWidth, MIN_OPEN_WIDTH, CLOSE_WIDTH, links } from '../constants';
+import { DRAWERHEIGHT, drawerWidth, MIN_OPEN_WIDTH, CLOSE_WIDTH, links, myColors } from '../constants';
+import CreatePlaylist from '../components/CreatePlaylist';
 
 interface CustomDrawerProps {
   open: boolean;
@@ -31,6 +32,7 @@ const CustomDrawer: React.FC<CustomDrawerProps> = ({ open, handleDrawerClose, dr
   const [sortBy, setSortBy] = useState('');
   const resizeRef = useRef<HTMLDivElement>(null);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [openNewPlaylist, setOpenNewPlaylist] = React.useState<boolean>(false);
   const openSort = Boolean(anchorEl);
   const handleSortClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -39,7 +41,6 @@ const CustomDrawer: React.FC<CustomDrawerProps> = ({ open, handleDrawerClose, dr
     setAnchorEl(null);
     setSortBy(sortByArg);
   };
-
 
   let mouseMoveListener: (event: MouseEvent) => void;
 
@@ -75,98 +76,109 @@ const CustomDrawer: React.FC<CustomDrawerProps> = ({ open, handleDrawerClose, dr
   };
 
   return (
-    <Drawer
-      sx={{
-        width: drawerWidthState,
-        flexShrink: 0,
-        '& .MuiDrawer-paper': {
-          whiteSpace: 'nowrap',
+    <>
+      <CreatePlaylist open={openNewPlaylist} setOpen={setOpenNewPlaylist} />
+      <Drawer
+        sx={{
           width: drawerWidthState,
-          transition: 'width 0s linear',
-        },
-        '& ::-webkit-scrollbar': {
-          display: 'none',
-        },
-        msOverflowStyle: 'none',
-        scrollbarWidth: 'none',
-      }}
-      variant="permanent"
-      open={open}>
-      <div style={{ height: '100vh', overflow: 'visible', padding: 0, margin: 0, boxSizing: 'border-box' }}>
-        <div ref={resizeRef} style={{ left: deltaXState, position: 'fixed', float: 'right', height: '100vh', width: 5, cursor: 'ew-resize', zIndex: 999999 }} onMouseDown={handleMouseDown} />
-        <DrawerHeader>
-          <h2>Yuda music</h2>
-          <IconButton onClick={handleDrawerClose}>
-            <ChevronLeftIcon />
-          </IconButton>
-        </DrawerHeader>
-        <Divider />
-        <List>
-          {links.map((obj) => (
-            <Link key={obj.text} style={{ textDecoration: 'none', color: 'black' }} to={obj.path}>
-              <ListItem disablePadding sx={{ display: 'block' }}>
-                <ListItemButton
-                  sx={{
-                    minHeight: 48,
-                    justifyContent: open ? 'initial' : 'center',
-                    px: 2.5,
-                  }}>
-                  <ListItemIcon
+          flexShrink: 0,
+          '& .MuiDrawer-paper': {
+            whiteSpace: 'nowrap',
+            width: drawerWidthState,
+            transition: 'width 0s linear',
+          },
+          '& ::-webkit-scrollbar': {
+            display: 'none',
+          },
+          msOverflowStyle: 'none',
+          scrollbarWidth: 'none',
+        }}
+        variant="permanent"
+        open={open}>
+        <div style={{ height: '100vh', overflow: 'visible', padding: 0, margin: 0, boxSizing: 'border-box', background: myColors.background }}>
+          <div ref={resizeRef} style={{ left: deltaXState, position: 'fixed', float: 'right', height: '100vh', width: 5, cursor: 'ew-resize', zIndex: 999999 }} onMouseDown={handleMouseDown} />
+          <DrawerHeader>
+            <h2>Yuda music</h2>
+            <IconButton onClick={handleDrawerClose}>
+              <ChevronLeftIcon />
+            </IconButton>
+          </DrawerHeader>
+          <Divider />
+          <List>
+            {links.map((obj) => (
+              <Link key={obj.text} style={{ textDecoration: 'none', color: 'black' }} to={obj.path}>
+                <ListItem disablePadding sx={{ display: 'block' }}>
+                  <ListItemButton
                     sx={{
-                      minWidth: 0,
-                      mr: open ? 3 : 'auto',
-                      justifyContent: 'center',
+                      minHeight: 48,
+                      justifyContent: open ? 'initial' : 'center',
+                      px: 2.5,
                     }}>
-                    {obj.icon}
-                  </ListItemIcon>
-                  <ListItemText primary={obj.text} sx={{ opacity: open ? 1 : 0 }} />
-                </ListItemButton>
-              </ListItem>
-            </Link>
-          ))}
-        </List>
-        <Divider />
-        <Grid container>
-          <Grid xs={10} md={9}>
-            <Typography bgcolor="lightgray" textAlign="center" variant="h6" gutterBottom>
-              Your Library
-            </Typography>
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : 'auto',
+                        justifyContent: 'center',
+                      }}>
+                      {obj.icon}
+                    </ListItemIcon>
+                    <ListItemText primary={obj.text} sx={{ opacity: open ? 1 : 0 }} />
+                  </ListItemButton>
+                </ListItem>
+              </Link>
+            ))}
+          </List>
+          <Divider />
+          <Grid justifyContent="space-between" container>
+            <Grid padding="3px 15px" xs={10} md={9}>
+              <Typography bgcolor={myColors.background} color="black" textAlign="start" variant="h6" gutterBottom>
+                Your Library
+              </Typography>
+            </Grid>
+            <Grid xs={2} md={3}>
+              <Button onClick={() => setOpenNewPlaylist(true)} sx={{ float: 'right' }} color="primary">
+                <AddIcon />
+              </Button>
+            </Grid>
           </Grid>
-          <Grid xs={2} md={3}>
-            <Button color="secondary">
-              <AddIcon />
-            </Button>
-          </Grid>
-        </Grid>
-        <Grid xs={10} md={8}>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <LibrarySearch setSearch={setSearch} search={search} />
+          <Grid xs={10} md={8}>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <LibrarySearch setSearch={setSearch} search={search} />
 
-            <Button id="basic-button"
-        aria-controls={openSort ? 'basic-menu' : undefined}
-        aria-haspopup="true"
-        aria-expanded={openSort ? 'true' : undefined}
-        onClick={handleSortClick} color="secondary">
-              <SortIcon />
-            </Button>
-            <Menu
-              id="basic-menu"
-              anchorEl={anchorEl}
-              open={openSort}
-              onClose={()=>handleSortClose(sortBy)}
-              MenuListProps={{
-                'aria-labelledby': 'basic-button',
-              }}>
-              <MenuItem sx={{background: sortBy === "" ? "lightgrey": "" }} onClick={()=>handleSortClose("")}>default</MenuItem>
-              <MenuItem sx={{background: sortBy === "A-Z" ? "lightgrey": "" }} onClick={()=>handleSortClose("A-Z")}>A-Z</MenuItem>
-              <MenuItem sx={{background: sortBy === "Z-A" ? "lightgrey": "" }} onClick={()=>handleSortClose("Z-A")}>Z-A</MenuItem>
-            </Menu>
-          </div>
-        </Grid>
-        <Divider />
-        <LibraryList search={search} sortBy={sortBy} open={open} />
-      </div>
-    </Drawer>
+              <Button
+                id="basic-button"
+                aria-controls={openSort ? 'basic-menu' : undefined}
+                aria-haspopup="true"
+                aria-expanded={openSort ? 'true' : undefined}
+                onClick={handleSortClick}
+                color="primary">
+                <SortIcon />
+              </Button>
+              <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={openSort}
+                onClose={() => handleSortClose(sortBy)}
+                MenuListProps={{
+                  'aria-labelledby': 'basic-button',
+                }}>
+                <MenuItem sx={{ background: sortBy === '' ? 'lightgrey' : '' }} onClick={() => handleSortClose('')}>
+                  default
+                </MenuItem>
+                <MenuItem sx={{ background: sortBy === 'A-Z' ? 'lightgrey' : '' }} onClick={() => handleSortClose('A-Z')}>
+                  A-Z
+                </MenuItem>
+                <MenuItem sx={{ background: sortBy === 'Z-A' ? 'lightgrey' : '' }} onClick={() => handleSortClose('Z-A')}>
+                  Z-A
+                </MenuItem>
+              </Menu>
+            </div>
+          </Grid>
+          <Divider />
+          <LibraryList search={search} sortBy={sortBy} open={open} />
+        </div>
+      </Drawer>
+    </>
   );
 };
 

@@ -41,26 +41,8 @@ interface SearchResTracksProps {
 }
 
 const SearchResTracks: React.FC<SearchResTracksProps> = ({ handlePlay, selectedRes, addToPlaylist, handleAddTrack, setSelectedRes, playlistTracks, setTracks }) => {
-  console.log('playlistTracks ', playlistTracks);
   const { state, dispatch} = useContext(StoreContext);
   const {checkedTracks} = state;
-  // const [checkedTracks, setCheckedTracks] = useState<{ uri: string }[]>([]);
-  // const handleCheckboxToggle = (e: React.MouseEvent<HTMLButtonElement>, track: Track, isCheckbox: boolean) => {
-  //   e.stopPropagation();
-  //   setCheckedTracks((oldValue) => {
-  //     if (e.target instanceof HTMLInputElement && e.target.checked) {
-  //       if (!oldValue.map((item) => item.uri).includes(track.uri)) {
-  //         return [...oldValue, { uri: track.uri }];
-  //       }
-  //       return oldValue;
-  //     } else {
-  //       if (oldValue.map((item) => item.uri).includes(track.uri)) {
-  //         return oldValue.filter((item) => item.uri !== track.uri);
-  //       }
-  //       return oldValue;
-  //     }
-  //   });
-  // };
 
   const handleAddToPlaylist = async (playlist: Playlist) => {
     const body = {
@@ -85,7 +67,7 @@ const SearchResTracks: React.FC<SearchResTracksProps> = ({ handlePlay, selectedR
   return (
     <>
       {checkedTracks.length > 0 && <CheckedTracksActions handleAddToPlaylist={handleAddToPlaylist} />}
-      <TableContainer component={Paper} sx={{ borderRadius: 0 }}>
+      <TableContainer elevation={0}  component={Paper} sx={{ borderRadius: 0, background:"transparent" }}>
         <Table sx={{ minWidth: 450 }} aria-label="caption table">
           <TableBody>
             {Array.isArray(selectedRes) &&

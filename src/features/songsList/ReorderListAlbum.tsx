@@ -8,7 +8,7 @@ import { reducerActionTypes } from '../../constants';
 import { fetchPlayableItems } from '../../customHooks/useFetchMusicInfo';
 import { makeArrayUnique, msToMinutesAndSeconds } from '../../utils';
 import AlbumHeader from '../../components/playlistHeader/AlbumHeader';
-import { Track } from 'src/types';
+import { Album, Track, TrackAlbum } from 'src/types';
 
 const StyledListItemNew = styled(ListItem)(({ theme }) => ({
   whiteSpace: 'nowrap',
@@ -23,18 +23,31 @@ const StyledListItemNew = styled(ListItem)(({ theme }) => ({
 //   duration_ms: number;
 // }
 
-interface Album {
-  images: { url: string }[];
-  release_date: string;
-  tracks: { items: Track[] };
-}
+// interface Album {
+//   images: { url: string }[];
+//   release_date: string;
+//   tracks: { items: Track[] };
+// }
 
 const ReorderListAlbum: React.FC = () => {
   const location = useLocation();
   const [type, playlistId] = location.pathname.split('/').filter((item) => item);
   const { dispatch, state } = useContext(StoreContext);
-  const [album, setAlbum] = useState<Album | undefined>();
-  const [items, setItems] = useState<Track[]>([]);
+  const [album, setAlbum] = useState<Album>({
+    artists: [],
+    images:[],
+    name:"",
+    popularity:0,
+    release_date:"",
+    total_tracks:0,
+    tracks: {
+        items: []
+    },
+    id:"",
+    uri:"",
+    type:""
+  });
+  const [items, setItems] = useState<TrackAlbum[]>([]);
 
   useEffect(() => {
     async function execute() {
@@ -47,7 +60,8 @@ const ReorderListAlbum: React.FC = () => {
     execute();
     return () => {};
   }, [playlistId, type, state.accessToken]);
-
+  console.log("album ",album);
+  
   return (
     <>
       <AlbumHeader album={album} />

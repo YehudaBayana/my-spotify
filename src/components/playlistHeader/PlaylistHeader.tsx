@@ -21,7 +21,9 @@ const Header = styled(AppBar)(({ theme }) => ({
 const ContentBox = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  padding: theme.spacing(3),
+  paddingLeft: theme.spacing(3),
+  paddingRight: theme.spacing(3),
+  height:"100%",
   backgroundColor: 'rgba(0, 0, 0, 0.5)',
   borderRadius: theme.shape.borderRadius,
 }));

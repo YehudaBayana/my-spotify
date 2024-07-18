@@ -1,3 +1,22 @@
 .dragging {
     background-color: grey !important;
 }
+/* Custom Scrollbar Styles */
+::-webkit-scrollbar {
+    width: 8px;  /* Width of the scrollbar */
+    height: 8px; /* Height of the scrollbar (for horizontal scrollbars) */
+}
+
+::-webkit-scrollbar-track {
+    background: #FFD2FC; /* Background of the scrollbar track */
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgb(156, 39, 176); /* Color of the scrollbar thumb */
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgb(126, 18, 145); /* Color of the scrollbar thumb when hovered */
+}

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { IconButton, InputBase, Paper } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
+import { myColors } from 'src/constants';
 
 interface LibrarySearchProps {
   search:string;
@@ -42,8 +43,9 @@ const LibrarySearch : React.FC<LibrarySearchProps> = ({search, setSearch}) => {
         width: expanded ? "100%" : "40px",
         // width: expanded ? '300px' : '40px',
         transition: "width 0.3s ease-in-out",
-        padding: "2px 4px",
+        padding: "2px 7px",
         boxShadow: expanded ? "0px 3px 5px rgba(0,0,0,0.2)" : "none",
+        background: myColors.background
       }}
     >
       <IconButton onClick={handleExpandClick}>

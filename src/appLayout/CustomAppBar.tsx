@@ -9,6 +9,7 @@ import AccountMenu from "../features/accountMenu/AccountMenu";
 import { DRAWERHEIGHT, drawerWidth } from "../constants";
 import { useTheme } from "@mui/material/styles";
 import { Link } from 'react-router-dom';
+import NavigationButtons from './NavigationButtons';
 
 interface CustomAppBarProps {
   open: boolean;
@@ -37,7 +38,7 @@ const CustomAppBar: React.FC<CustomAppBarProps> = ({ open, handleDrawerOpen, dra
   }));
 
   return (
-    <AppBar theme={theme} open={open} sx={{ height: DRAWERHEIGHT }} color="secondary">
+    <AppBar theme={theme} open={open} sx={{ height: DRAWERHEIGHT }} color="primary">
       <Toolbar sx={{ height: DRAWERHEIGHT }}>
         <IconButton
           color="inherit"
@@ -51,9 +52,10 @@ const CustomAppBar: React.FC<CustomAppBarProps> = ({ open, handleDrawerOpen, dra
         >
           <MenuIcon />
         </IconButton>
-        <Box display="flex" justifyContent="flex-end" alignItems="center" gap={4} width="100%">
+        <Box display="flex" justifyContent="end" alignItems="center" gap={4} width="100%">
           {/* <h2>Yuda music</h2> */}
-          <Link to={`/test`}>test</Link>
+          {/* <NavigationButtons/> */}
+          {/* <Link color='white' style={{textDecoration:"none"}} to={`/test`}>test</Link> */}
           <AccountMenu />
         </Box>
       </Toolbar>

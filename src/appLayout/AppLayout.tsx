@@ -4,7 +4,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
 import { StoreContext } from '../context/ContextProvider';
 import AppRouter from '../AppRouter';
-import { CLOSE_WIDTH, MIN_OPEN_WIDTH, links } from '../constants';
+import { CLOSE_WIDTH, MIN_OPEN_WIDTH, links, playerClasses } from '../constants';
 import Player from './Player';
 import CustomAppBar from './CustomAppBar';
 import CustomDrawer from './CustomDrawer';
@@ -52,7 +52,6 @@ const AppLayout: React.FC<AppLayoutProps> = ({ accessToken, divRef }) => {
     setDrawerWidthState(CLOSE_WIDTH);
     setDeltaXState(CLOSE_WIDTH);
   };
-  console.log("currentlyPlaying ",currentlyPlaying);
   
 
   return (
@@ -99,7 +98,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ accessToken, divRef }) => {
             }}
             id="yuda"
             onClick={(e:any) => {//_ContentRSWP
-              if (e.target.nodeName === "DIV") {
+              if (e.target.nodeName === "DIV" && hasAnyClass(e.target, playerClasses)) {//_WrapperRSWP
                 setOpenFullScreen((old) => !old);
               }
             }}>
@@ -117,3 +116,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ accessToken, divRef }) => {
 };
 
 export default AppLayout;
+
+function hasAnyClass(element:any, classNames:string[]) {
+  return classNames.some(className => element.classList.contains(className));
+}

@@ -12,7 +12,7 @@ import { StoreContext } from 'src/context/ContextProvider';
 import { reducerActionTypes } from 'src/constants';
 
 interface CreatePlaylistProps {
-  checkedTracks: { uri: string }[];
+  checkedTracks?: { uri: string }[];
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -23,6 +23,9 @@ const CreatePlaylist: React.FC<CreatePlaylistProps> = ({ open, setOpen, checkedT
   const [isPublic, setIsPublic] = React.useState(false);
 
   const handleClose = () => {
+    setName('');
+    setDescription('');
+    setIsPublic(false);
     setOpen(false);
   };
 
@@ -41,12 +44,16 @@ const CreatePlaylist: React.FC<CreatePlaylistProps> = ({ open, setOpen, checkedT
       if (addRes.status === 200 || addRes.status === 201) {
         console.log('add success ', addResJson);
         dispatch({
-            type: reducerActionTypes.SET_USER_PLAYLISTS,
-            payload: [addResJson, ...state.userPlaylists]
-        })
-        const addToPlaylistRes = await addTracksToPlaylist(state.accessToken, addResJson.id, { uris: checkedTracks.map((checked) => checked.uri) });
-        if (addToPlaylistRes.status === 200 || addToPlaylistRes.status === 201) {
-          console.log('addToPlaylistRes ', addToPlaylistRes);
+          type: reducerActionTypes.SET_USER_PLAYLISTS,
+          payload: [addResJson, ...state.userPlaylists],
+        });
+        if (checkedTracks) {
+          const addToPlaylistRes = await addTracksToPlaylist(state.accessToken, addResJson.id, { uris: checkedTracks.map((checked) => checked.uri) });
+          if (addToPlaylistRes.status === 200 || addToPlaylistRes.status === 201) {
+            console.log('addToPlaylistRes ', addToPlaylistRes);
+            handleClose();
+          }
+        } else {
           handleClose();
         }
       }
@@ -72,17 +79,7 @@ const CreatePlaylist: React.FC<CreatePlaylistProps> = ({ open, setOpen, checkedT
         <DialogTitle>New Playlist</DialogTitle>
         <DialogContent>
           <TextField value={name} onChange={(e) => setName(e.target.value)} autoFocus required margin="dense" name="name" label="Playlist name" type="text" fullWidth />
-          <TextField
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            rows={3}
-            multiline
-            margin="dense"
-            name="description"
-            label="Playlist description"
-            type="text"
-            fullWidth
-          />
+          <TextField value={description} onChange={(e) => setDescription(e.target.value)} rows={3} multiline margin="dense" name="description" label="Playlist description" type="text" fullWidth />
           <FormControlLabel control={<Checkbox checked={isPublic} onChange={() => setIsPublic((old) => !old)} />} label="Public" />
         </DialogContent>
         <DialogActions>

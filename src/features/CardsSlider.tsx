@@ -8,19 +8,19 @@ import { StoreContext } from 'src/context/ContextProvider';
 import { Track } from 'src/types';
 import { handlePlayTrack } from 'src/utils';
 
-interface CardSliderProps {
+interface CardsSliderProps {
   playlists: any[]; // Update with actual type
   containerRef: React.RefObject<HTMLDivElement>;
   currentIndex: number;
   cardWidth: number;
 }
 
-const CardSlider: React.FC<CardSliderProps> = ({ playlists, containerRef, currentIndex, cardWidth }) => {
+const CardsSlider: React.FC<CardsSliderProps> = ({ playlists, containerRef, currentIndex, cardWidth }) => {
   const {state, dispatch} = useContext(StoreContext);
   const {accessToken} = state;
   const handlePlay = async (playlistId:string, type: string)=>{
     const {tracks} = await fetchPlayableItems(accessToken, playlistId, type);
-    handlePlayTrack(tracks, dispatch);
+    handlePlayTrack(tracks, tracks[0], dispatch);
     // const targetCondition = (obj: Track) => obj.id === tracks[0].id;
     //   const targetIndex = tracks.findIndex(targetCondition);
     //   const previousTracks = targetIndex !== -1 ? tracks.slice(0, targetIndex) : tracks;
@@ -75,7 +75,7 @@ const CardSlider: React.FC<CardSliderProps> = ({ playlists, containerRef, curren
   );
 };
 
-export default CardSlider;
+export default CardsSlider;
 
 //-------------------------------
 // import React, { useState, useEffect } from 'react';

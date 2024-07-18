@@ -15,12 +15,6 @@ const Player: React.FC<PlayerProps> = ({ accessToken }) => {
   const { playingTrack, queue } = state;
 
   useEffect(() => {
-    const execute = async ()=>{
-      const dynamicQueue = await getUserQueue(accessToken);
-      console.log("dynamic queue", dynamicQueue);
-      
-    }
-    execute();
     return setPlay(true)
   }, [state?.playingTrack?.playing?.uri]);
 
@@ -30,44 +24,25 @@ const Player: React.FC<PlayerProps> = ({ accessToken }) => {
     <SpotifyPlayer
       token={accessToken}
       styles={{
-        activeColor: myColors.secondary,
+        activeColor: myColors.background,
         bgColor: myColors.main,
-        color: myColors.secondary,
-        loaderColor: myColors.secondary,
+        color: myColors.background,
+        loaderColor: myColors.background,
         sliderColor: myColors.slider,
-        trackArtistColor: myColors.secondary,
-        trackNameColor: myColors.secondary,
+        trackArtistColor: myColors.background,
+        trackNameColor: myColors.background,
+        sliderTrackColor:myColors.background
       }}
       showSaveIcon
       callback={(state) => {
         if (state.track.id) {
-          console.log("state ", state);
+          // console.log("state ", state);
           
           dispatch({
             type:reducerActionTypes.UPDATE_QUEUE,
             payload: {id: state.track.id, name: state.track.name}
           })
         }
-        // console.log('queue ', queue);
-        // if (playingTrack?.nextTracks.length > 0 && state.nextTracks.length > 0) {
-        //   if (state.nextTracks[0].id === playingTrack?.nextTracks[0]?.id && state.nextTracks[1]?.id === playingTrack?.nextTracks[1]?.id) {
-        //     console.log("if");
-            
-        //     state.previousTracks = playingTrack?.previousTracks;
-        //   } else {
-        //     console.log("else");
-        //     // if (state.previousTracks.length > 0) {
-        //       if (state.previousTracks[0]?.id === playingTrack.playing.id) {
-        //         console.log("dispatch");
-                
-        //         dispatch({
-        //           type: reducerActionTypes.SET_PLAYING_TRACK,
-        //           payload: { previousTracks: [...playingTrack.previousTracks, state.previousTracks[0]], playing: state.track, nextTracks: playingTrack.nextTracks.slice(1) },
-        //         });
-        //       }
-        //     // }
-        //   }
-        // }
         if (!state.isPlaying) setPlay(false);
       }}
       play={play}

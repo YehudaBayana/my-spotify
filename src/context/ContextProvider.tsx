@@ -1,7 +1,7 @@
 import React, { useReducer, createContext, ReactNode } from 'react';
 // import SpotifyWebApi from "spotify-web-api-node";
 import { reducerActionTypes, clientId } from '../constants';
-import { Playlist, Track, TrackShortV } from 'src/types';
+import { Album, Category, Playlist, Track, TrackShortV } from 'src/types';
 
 // Initialize Spotify Web API instance
 // const spotifyApi = new SpotifyWebApi({
@@ -16,20 +16,24 @@ interface InitialState {
   searchResults: any[]; // Adjust type as per your actual data structure
   playingTrack: { playing: TrackShortV; previousTracks: TrackShortV[]; nextTracks: TrackShortV[] }; // Adjust type as per your actual data structure
   isClicked: boolean;
-  userPlaylists: any[]; // Adjust type as per your actual data structure
-  userAlbums: any[]; // Adjust type as per your actual data structure
-  genres: string[]; // Adjust type as per your actual data structure
-  playlist: any; // Adjust type as per your actual data structure
-  album: any; // Adjust type as per your actual data structure
-  savedTracks: string;
+  userPlaylists: Playlist[]; // Adjust type as per your actual data structure
+  userAlbums: Album[]; // Adjust type as per your actual data structure
+  genres: {
+    id: string;
+    items: Playlist[];
+  } []; // Adjust type as per your actual data structure
+  playlist: Playlist; // Adjust type as per your actual data structure
+  album: Album; // Adjust type as per your actual data structure
+  savedTracks: Track[];
   detail: string;
-  categories: string;
+  categories: Category[];
   userName: { id: string };
   isLoading: boolean;
   playlistDes: any[]; // Adjust type as per your actual data structure
   isDragging: boolean;
   queue: TrackShortV[];
   checkedTracks: { uri: string }[];
+  listenAgainTracks: Track[],
 }
 
 // interface ActionType {
@@ -76,18 +80,46 @@ const initialState: InitialState = {
   isClicked: false,
   userPlaylists: [],
   userAlbums: [],
-  genres: [],
-  playlist: {},
-  album: {},
-  savedTracks: '',
+  genres: [{ id: '', items: [] }],
+  playlist: {
+    id: '',
+    name: '',
+    description: '',
+    owner: {
+      id: '',
+    },
+    images: [],
+    tracks: {
+      total: 0,
+    },
+    snapshot_id: '',
+    type: '',
+    public: false,
+  },
+  album: {
+    id: '',
+    uri: '',
+    type: '',
+    artists: [],
+    images: [],
+    name: '',
+    popularity: 0,
+    release_date: '',
+    total_tracks: 0,
+    tracks: {
+      items: [],
+    },
+  },
+  savedTracks: [],
   detail: '',
-  categories: '',
+  categories: [],
   userName: { id: '' },
   isLoading: false,
   playlistDes: [],
   isDragging: false,
   queue: [],
   checkedTracks: [],
+  listenAgainTracks:[]
 };
 
 // Action types for the reducer
@@ -111,7 +143,8 @@ type ActionType =
       payload: any | any[];
     }
   | { type: string; payload: Playlist[] }
-  | { type: string; payload: { uri: string }[] };
+  | { type: string; payload: { uri: string }[] }
+  | { type: string; payload: any[] };
 
 // Reducer function
 const reducer = (state: InitialState, action: ActionType): InitialState => {
@@ -157,7 +190,7 @@ const reducer = (state: InitialState, action: ActionType): InitialState => {
           nextTracks,
           playing,
         },
-        queue: [{...playing, currentlyPlaying:true}, ...nextTracks],//...previousTracks,
+        queue: [{ ...playing, currentlyPlaying: true }, ...nextTracks], //...previousTracks,
       };
     case reducerActionTypes.SET_IS_CLICKED:
       return { ...state, isClicked: !state.isClicked };
@@ -198,17 +231,22 @@ const reducer = (state: InitialState, action: ActionType): InitialState => {
     case reducerActionTypes.SET_QUEUE:
       return { ...state, queue: action.payload };
     case reducerActionTypes.UPDATE_QUEUE:
-      return { ...state, queue: state.queue.map(track=>{
-        // console.log("track id", track.id);
-        // console.log("action.payload.id", action.payload.id);
-        
-        if (track.id === action.payload.id || track.name === action.payload.name) {
-          return {...track, currentlyPlaying:true}
-        }
-        return {...track, currentlyPlaying:false}
-      }) };
+      return {
+        ...state,
+        queue: state.queue.map((track) => {
+          // console.log("track id", track.id);
+          // console.log("action.payload.id", action.payload.id);
+
+          if (track.id === action.payload.id || track.name === action.payload.name) {
+            return { ...track, currentlyPlaying: true };
+          }
+          return { ...track, currentlyPlaying: false };
+        }),
+      };
     case reducerActionTypes.SET_CHECKED_TRACKS:
       return { ...state, checkedTracks: action.payload };
+    case reducerActionTypes.SET_LISTEN_AGAIN_TRACKS:
+      return { ...state, listenAgainTracks: action.payload };
     default:
       throw new Error();
   }

@@ -43,72 +43,73 @@ const useFetchSearch: (
   setSelectedRes,
   bool
 ) => {
-  useEffect(() => {
-    if (!searchValue) return;
-    if (!accessToken) return () => {};
-    const fetchData = async () => {
-      const url = `https://api.spotify.com/v1/search?q=${searchValue}&type=artist%2Ctrack%2Cepisode%2Cshow%2Cplaylist`;
-      const data = await getRequest(url, accessToken);
-      setSearchRes(data);
-      setSelectedRes(data[type]?.items?.map((item: any) => item) || []);
-    };
-    fetchData();
-    return () => {};
-  }, [bool]);
-};
+    useEffect(() => {
+      if (!searchValue) return;
+      if (!accessToken) return () => { };
+      const fetchData = async () => {
+        const url = `https://api.spotify.com/v1/search?q=${searchValue}&type=artist%2Ctrack%2Cepisode%2Cshow%2Cplaylist`;
+        const data = await getRequest(url, accessToken);
+        setSearchRes(data);
+        setSelectedRes(data[type]?.items?.map((item: any) => item) || []);
+      };
+      fetchData();
+      return () => { };
+    }, [bool]);
+  };
 
 export const useGetHomePagePlaylists: (
   dispatch: any,
   accessToken: string
 ) => void = (dispatch, accessToken) => {
   useEffect(() => {
-    if (!accessToken) return () => {};
+    if (!accessToken) return () => { };
     const fetchData = async () => {
       const categories = await getCategories(accessToken, dispatch);
       let messages: string[] = [];
-      let playlistsArr: any[][] = [];
-    
-      // Create an array of promises
-      const promises = categories.categories.items.map(async (category: any) => {
-        const data = await getCategoryPlaylists(accessToken, category.id);
-        console.log("data.message ", data.message);
-        console.log("typeof ", typeof data.message);
-        messages.push(data.message);
-        playlistsArr.push(data.playlists.items);
-      });
-    
-      // Wait for all promises to resolve
-      await Promise.all(promises);
-    
-      // Now, messages and playlistsArr are populated
-      console.log("messages ", JSON.parse(JSON.stringify(messages)));
-    
-      dispatch({ type: "setPlaylistDes", payload: messages });
-      dispatch({
-        type: reducerActionTypes.SET_GENRES,
-        payload: playlistsArr,
-      });
+      let playlistsArr: any[] = [];
+
+      console.log("categories ", categories);
+      if (!categories?.error) {
+        const promises = categories.categories.items.map(async (category: any) => {
+          const data = await getCategoryPlaylists(accessToken, category.id);
+          messages.push(data.message);
+          playlistsArr.push({ items: data.playlists.items, id: category.id });
+        });
+
+        await Promise.all(promises);
+
+        dispatch({ type: "setPlaylistDes", payload: messages });
+        dispatch({
+          type: reducerActionTypes.SET_GENRES,
+          payload: playlistsArr,
+        });
+      }
     };
-    
+
     fetchData();
-    
-    return () => {};
+
+    return () => { };
   }, []);
 };
 
 async function getCategories(accessToken: string, dispatch: any) {
-  const url = "https://api.spotify.com/v1/browse/categories?locale=US&offset=0&limit=1";
+  if (!accessToken) { return new Promise(res => res(null)) }
+  const url = "https://api.spotify.com/v1/browse/categories?locale=US&offset=0&limit=10";
   const data = await getRequest(url, accessToken);
-  console.log("data ",data);
-  
-  dispatch({
-    type: "setCategories",
-    payload: data.categories.items.filter((item:any)=>item.length > 2),
-  });
+  if (!data?.error) {
+    console.log("data yudaaa", data);
+    dispatch({
+      type: "setCategories",
+      payload: data.categories.items.filter((item: any) => item.length > 2),
+    });
+  }
+
   return data;
+
 }
 
 async function getCategoryPlaylists(accessToken: string, categoryId: string) {
+  if (!accessToken) { return new Promise(res => res(null)) }
   const url = `https://api.spotify.com/v1/browse/categories/${categoryId}/playlists`;
   return getRequest(url, accessToken);
 }
@@ -133,7 +134,7 @@ const fetchInitialData = async (dispatch: any, accessToken: string) => {
   dispatch({
     type: reducerActionTypes.SET_SAVED_TRACKS,
     payload: {
-      items: userSavedData.items.map((item:any) => item.track),
+      items: userSavedData.items.map((item: any) => item.track),
     },
   });
 };
@@ -141,7 +142,7 @@ const fetchInitialData = async (dispatch: any, accessToken: string) => {
 const fetchPlayableItems = async (
   accessToken: string,
   id: string,
-  type:string
+  type: string
 ): Promise<any> => {
   if (type === "playlist") {
     const tracksRes = await getPlaylistTracks(accessToken, id);
@@ -159,6 +160,7 @@ export const fetchAlbumTracks = async (
   AlbumId: string,
   dispatch?: any
 ) => {
+  if (!accessToken) { return new Promise(res => res(null)) }
   const tracksRes = await getAlbumTracks(accessToken, AlbumId);
   return tracksRes;
   // Handle dispatch if provided
@@ -173,52 +175,66 @@ export const fetchAlbumTracks = async (
 };
 
 export function getUser(accessToken: string): Promise<any> {
+  if (!accessToken) { return new Promise(res => res(null)) }
   const url = "https://api.spotify.com/v1/me";
   return getRequest(url, accessToken);
 }
 
 export function getUserQueue(accessToken: string): Promise<any> {
+  if (!accessToken) { return new Promise(res => res(null)) }
   const url = "https://api.spotify.com/v1/me/player/queue";
   return getRequest(url, accessToken);
 }
 
 function getUserSavedTracks(accessToken: string): Promise<any> {
+  if (!accessToken) { return new Promise(res => res(null)) }
   const url = "https://api.spotify.com/v1/me/tracks";
   return getRequest(url, accessToken);
 }
 
 function getUserPlaylists(accessToken: string, user_id: string): Promise<any> {
+  if (!accessToken) { return new Promise(res => res(null)) }
   const url = `https://api.spotify.com/v1/users/${user_id}/playlists`;
   return getRequest(url, accessToken);
 }
 
+function getUserTopTracks(accessToken: string): Promise<any> {
+  if (!accessToken) { return new Promise(res => res(null)) }
+  const url = `https://api.spotify.com/v1/me/top/tracks?time_range=short_term`;
+  console.log("top tracks access ", accessToken);
+
+  return getRequest(url, accessToken);
+}
+
 async function getPlaylistTracks(accessToken: string, playlist_id: string) {
+  if (!accessToken) { return new Promise(res => res(null)) }
   let nextUrl = `https://api.spotify.com/v1/playlists/${playlist_id}?limit=1000`;
   const tracks: any[] = [];
   let playlistRes: any;
   let isFirst = true;
   if (accessToken) {
-    
+
     do {
       const data = await getRequest(nextUrl, accessToken);
       if (isFirst) {
-        tracks.push(...data.tracks.items.map((item:any) => item.track));
+        tracks.push(...data.tracks.items.map((item: any) => item.track));
         nextUrl = data.tracks.next;
         playlistRes = data;
       } else {
-        tracks.push(...data.items.map((item:any) => item.track));
+        tracks.push(...data.items.map((item: any) => item.track));
         nextUrl = data.next;
       }
       isFirst = false;
     } while (nextUrl);
-    
+
     return { tracks, playlistRes };
   }
-  return { tracks:[], playlistRes:[] };
-  
+  return { tracks: [], playlistRes: [] };
+
 }
 
 function getTrack(accessToken: string, id: string): Promise<any> {
+  if (!accessToken) { return new Promise(res => res(null)) }
   const url = `https://api.spotify.com/v1/tracks/${id}`;
   return getRequest(url, accessToken);
 }
@@ -226,7 +242,7 @@ function getTrack(accessToken: string, id: string): Promise<any> {
 function removeFromLibrary(
   accessToken: string,
   ids: string[],
-  type: "playlist" | "album" = "playlist"
+  type: string,
 ): Promise<any> {
   let requestPromise: Promise<any>;
 
@@ -258,7 +274,7 @@ function removeFromPlaylist(
     tracks: checkedTracks,
     snapshotId,
   };
-  return deleteRequest(url, accessToken, JSON.stringify(body));
+  return deleteRequest(url, accessToken, body);
 }
 
 function updatePlaylistOrder(
@@ -291,11 +307,11 @@ function addTracksToPlaylist(
 function addPlaylist(
   accessToken: string,
   user_id: string,
-  body: { 
+  body: {
     name: string,
     description: string,
     public: boolean,
-   }
+  }
 ): Promise<any> {
   const url = `https://api.spotify.com/v1/users/${user_id}/playlists`;
   return addRequest(url, accessToken, JSON.stringify(body));
@@ -351,7 +367,7 @@ async function deleteRequest(
     const response = await fetch(url, {
       method: "DELETE",
       headers,
-      body: body || {},
+      body: body ? JSON.stringify(body) : undefined,
     });
     // const data = await response.json();
     return response;
@@ -419,5 +435,6 @@ export {
   updatePlaylistDetails,
   addTracksToPlaylist,
   addPlaylist,
-  getTrack
+  getTrack,
+  getUserTopTracks
 };

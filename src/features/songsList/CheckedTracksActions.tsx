@@ -105,8 +105,8 @@ interface CheckedTracksActionsProps {
 
 export default function CheckedTracksActions({ handleDelete, handleAddToPlaylist, isPlaylistEditable }: CheckedTracksActionsProps) {
   const [openDialog, setOpenDialog] = React.useState(false);
-  const {dispatch, state} = useContext(StoreContext);
-  const {checkedTracks} = state;
+  const { dispatch, state } = useContext(StoreContext);
+  const { checkedTracks } = state;
 
   const handleClickOpenDialog = () => {
     setOpenDialog(true);
@@ -122,25 +122,28 @@ export default function CheckedTracksActions({ handleDelete, handleAddToPlaylist
         alignItems: 'center',
         justifyContent: 'space-around',
         padding: '10px',
-        background: myColors.background,
+        background: myColors.secondary,
         height: 80,
         width: '100%',
       }}
       direction={{ xs: 'column', sm: 'row' }}
       spacing={{ xs: 1, sm: 2, md: 4 }}>
       <Grid container spacing={2}>
-        <Grid item xs={4} md={4}>
+        <Grid justifyContent="center" alignContent="center" xs={4} md={4}>
           <Tooltip title="cancel" placement="top">
-            <IconButton onClick={() => dispatch({
-        type:reducerActionTypes.SET_CHECKED_TRACKS,
-        payload: []
-      })}>
+            <IconButton 
+              onClick={() =>
+                dispatch({
+                  type: reducerActionTypes.SET_CHECKED_TRACKS,
+                  payload: [],
+                })
+              }>
               <ClearIcon />
             </IconButton>
           </Tooltip>
         </Grid>
-        <Grid item justifyContent="center" alignContent="center" xs={6} md={6}>
-          <Typography variant="h6">{checkedTracks.length} selected</Typography>
+        <Grid justifyContent="center" alignContent="center" xs={6} md={6}>
+          <Typography textAlign="center" variant="h6">{checkedTracks.length} selected</Typography>
         </Grid>
       </Grid>
       <Stack direction="row" alignItems="center">
@@ -168,9 +171,9 @@ export default function CheckedTracksActions({ handleDelete, handleAddToPlaylist
       key={'bottom'}
       sx={{
         width: '350px',
-        marginBottom: '56px',
+        marginBottom: '76px',
         marginLeft: '120px',
-        backgroundColor: 'lightgrey',
+        // backgroundColor: 'lightgrey',
         display: openDialog ? 'none' : 'flex',
       }}>
       {content}

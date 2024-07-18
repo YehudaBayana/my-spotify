@@ -1,7 +1,7 @@
 //--------------------------- gpt correction
 import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-import { SERVER_DOMAIN } from '../constants';
+import { reducerActionTypes, SERVER_DOMAIN } from '../constants';
 import { getUser } from './useFetchMusicInfo';
 
 const getSessionItem = (key: string): string | null => {
@@ -9,7 +9,7 @@ const getSessionItem = (key: string): string | null => {
   return item === 'undefined' || item === 'NaN' ? null : item;
 };
 
-export default function useAuth(code: string | null) {
+export default function useAuth(code: string | null, dispatch:any) {
   const [accessToken, setAccessToken] = useState<string | null>(getSessionItem('access_token'));
   const [refreshToken, setRefreshToken] = useState<string | null>(getSessionItem('refresh_token'));
   const [expiresIn, setExpiresIn] = useState<number>(Number(getSessionItem('expires_in')));
@@ -43,6 +43,10 @@ export default function useAuth(code: string | null) {
       
       const { accessToken, expiresIn } = res.data;
 
+      dispatch({
+        type: reducerActionTypes.SET_ACCESS_TOKEN,
+        payload: accessToken
+      })
       setAccessToken(accessToken);
       setExpiresIn(expiresIn);
 

@@ -1,11 +1,11 @@
-import { useContext } from "react";
-import { Routes, Route } from "react-router-dom";
-import { StoreContext } from "./context/ContextProvider";
-import SearchPage from "./pages/search/SearchPage";
-import SongList from "./features/songsList/SongList";
-import Main from "./features/Main";
-import CurrentSongPlaying from './features/currentSongPlaying/CurrentSongPlaying';
-
+import { useContext } from 'react';
+import { Routes, Route } from 'react-router-dom';
+import { StoreContext } from './context/ContextProvider';
+import SearchPage from './pages/search/SearchPage';
+import SongList from './features/songsList/SongList';
+import Main from './features/Main';
+import { ListenAgainList } from './pages/home/ListenAgainList';
+import GenreList from './pages/genreList/GenreList';
 interface AppRouterProps {
   accessToken: string;
   drawerWidthState: number;
@@ -19,8 +19,9 @@ const AppRouter: React.FC<AppRouterProps> = ({ accessToken, drawerWidthState }) 
       <Route path="/search" element={<SearchPage addToPlaylist={false} handleAddTrack={() => {}} playlistTracks={[]} setTracks={() => {}} accessToken={accessToken} />} />
       <Route path="/savedTracks" element={<h1>Saved</h1>} />
       <Route path="/playlist/:id" element={<SongList />} />
+      <Route path="/genre/:id" element={<GenreList />} />
       <Route path="/album/:id" element={<SongList />} />
-      <Route path="/test" element={<CurrentSongPlaying open={true} drawerWidthState={drawerWidthState} />} />
+      <Route path="/test" element={<ListenAgainList />} />
     </Routes>
   );
 };

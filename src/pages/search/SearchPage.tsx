@@ -1,4 +1,4 @@
-import React, { useState, useContext, KeyboardEvent, MouseEvent } from 'react';
+import React, { useState, useContext, KeyboardEvent, MouseEvent, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -8,7 +8,7 @@ import { Container, TextField } from '@mui/material';
 import Grid2 from '@mui/material/Unstable_Grid2'; // Update this line
 import Blog from './Blog';
 import { StoreContext } from '../../context/ContextProvider';
-import { reducerActionTypes, searchMenu } from '../../constants';
+import { myColors, reducerActionTypes, searchMenu } from '../../constants';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Card from '../../components/card/Card';
 import { useFetchSearch } from '../../customHooks/useFetchMusicInfo';
@@ -38,20 +38,24 @@ export default function SearchPage({ accessToken, addToPlaylist = false, handleA
   const filteredSearchMenu = addToPlaylist ? searchMenu.filter((item) => item === 'tracks' || item === 'playlists') : searchMenu;
 
   function handlePlay(track: Track) {
-    handlePlayTrack(selectedRes, dispatch);  
-    // const targetCondition = (obj: Track) => obj.id === track.id;
-    // const targetIndex = selectedRes.findIndex(targetCondition);
-    // const previousTracks = targetIndex !== -1 ? selectedRes.slice(0, targetIndex) : selectedRes;
-    // const nextTracks = targetIndex !== -1 ? selectedRes.slice(targetIndex + 1) : [];
-    // dispatch({
-    //   type: reducerActionTypes.SET_PLAYING_TRACK,
-    //   payload: { playing: track, nextTracks, previousTracks },
-    // });
+    handlePlayTrack(selectedRes, track, dispatch);
   }
 
   useFetchSearch(searchValue || searchValueFromParam, setSearchRes, accessToken, filteredSearchMenu[selectedIndex], setSelectedRes, bool);
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      console.log('timeout handler');
+      // setDebouncedValue(searchValue);
+      const params = new URLSearchParams();
+      params.append('q', searchValue);
+      navigate(`?q=${searchValue}`);
+      setBool((old) => !old);
+    }, 500); // Adjust the delay time as needed
 
-  const handleListItemClick = (event: MouseEvent<HTMLDivElement>, index: number, itemMenu: string) => {
+    return () => clearTimeout(handler);
+  }, [searchValue]);
+
+  const handleListItemClick = (index: number) => {
     setSelectedIndex(index);
     if (Object.keys(searchRes).length > 0) {
       const selectedItems = searchRes[filteredSearchMenu[index]].items.map((item: any) => {
@@ -78,15 +82,15 @@ export default function SearchPage({ accessToken, addToPlaylist = false, handleA
             <TextField
               size="small"
               id="filled-search"
-              placeholder="Search field"
+              placeholder="Search Field"
               type="search"
               variant="outlined"
               value={searchValue}
-              onKeyDown={handleKeyDown}
+              // onKeyDown={handleKeyDown}
               onChange={(e) => setSearchValue(e.target.value)}
               fullWidth
               sx={{
-                backgroundColor: 'lightgray',
+                backgroundColor: 'white',
                 borderRadius: '4px',
               }}
             />
@@ -98,8 +102,8 @@ export default function SearchPage({ accessToken, addToPlaylist = false, handleA
                 <Divider />
                 {filteredSearchMenu.map((itemMenu, i) => (
                   <React.Fragment key={i}>
-                    <ListItemButton selected={selectedIndex === i} onClick={(event) => handleListItemClick(event, i, itemMenu)}>
-                      <ListItemText primary={itemMenu === 'playlists' ? itemMenu + '(undeveloped)' : itemMenu} />
+                    <ListItemButton selected={selectedIndex === i} onClick={(event) => handleListItemClick(i)}>
+                      <ListItemText primary={itemMenu !== 'playlists' && itemMenu !== 'tracks' ? itemMenu + '(undeveloped)' : itemMenu} />
                     </ListItemButton>
                     <Divider />
                   </React.Fragment>
@@ -108,15 +112,21 @@ export default function SearchPage({ accessToken, addToPlaylist = false, handleA
             </Grid2>
             <Grid2 container xs={6} md={9}>
               {selectedIndex === 0 ? (
-                <SearchResTracks
-                  setTracks={setTracks}
-                  playlistTracks={playlistTracks}
-                  handleAddTrack={handleAddTrack}
-                  addToPlaylist={addToPlaylist}
-                  selectedRes={selectedRes}
-                  setSelectedRes={setSelectedRes}
-                  handlePlay={handlePlay}
-                />
+                searchRes[filteredSearchMenu[selectedIndex]]?.items ? (
+                  <SearchResTracks
+                    setTracks={setTracks}
+                    playlistTracks={playlistTracks}
+                    handleAddTrack={handleAddTrack}
+                    addToPlaylist={addToPlaylist}
+                    selectedRes={selectedRes}
+                    setSelectedRes={setSelectedRes}
+                    handlePlay={handlePlay}
+                  />
+                ) : (
+                  <Box width="100%" height="200px" alignContent="center">
+                    <h1 style={{ textAlign: 'center' }}>start typing in the search input...</h1>
+                  </Box>
+                )
               ) : selectedIndex === 1 ? (
                 <Grid2 container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
                   {searchRes &&
