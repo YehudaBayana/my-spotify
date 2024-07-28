@@ -137,21 +137,21 @@ const Footer = () => {
                 target='_blank'
                 rel='noreferrer'
               >
-                <i class='fab fa-instagram'></i>
+                <i className='fab fa-instagram'></i>
               </a>
               <a
                 href='https://www.spotify.com/us/'
                 target='_blank'
                 rel='noreferrer'
               >
-                <i class='fab fa-twitter'></i>
+                <i className='fab fa-twitter'></i>
               </a>
               <a
                 href='https://www.spotify.com/us/'
                 target='_blank'
                 rel='noreferrer'
               >
-                <i class='fab fa-facebook'></i>
+                <i className='fab fa-facebook'></i>
               </a>
             </div>
           </div>

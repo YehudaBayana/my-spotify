@@ -3,8 +3,12 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
-import SearchPage from "../../pages/search/SearchPage";
-import { StoreContext } from "../../context/ContextProvider";
+import { StoreContext } from '../../../context/ContextProvider';
+import SearchPage from '../../search/SearchPage';
+// import { StoreContext } from 'src/context/ContextProvider';
+// import SearchPage from 'src/pages/search/SearchPage';
+// import SearchPage from "../../pages/search/SearchPage";
+// import { StoreContext } from "../../context/ContextProvider";
 
 const style = {
   position: "absolute",

@@ -1,10 +1,22 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
-import "../index.css";
-import { StoreContext } from "../context/ContextProvider";
-import useFetchAllMusic from "../customHooks/useFetchAllMusic";
-import AppLayout from "../appLayout/AppLayout";
-import { useGetHomePagePlaylists } from "../customHooks/useFetchMusicInfo";
-import { reducerActionTypes } from "../constants";
+import "../../index.css";
+import { StoreContext } from '../../context/ContextProvider';
+import { reducerActionTypes } from '../../constants';
+import useFetchAllMusic from '../../customHooks/useFetchAllMusic';
+import { useGetHomePagePlaylists } from '../../customHooks/useFetchMusicInfo';
+import AppLayout from '../../appLayout/AppLayout';
+// import { StoreContext } from 'src/context/ContextProvider';
+// import { reducerActionTypes } from 'src/constants';
+// import useFetchAllMusic from 'src/customHooks/useFetchAllMusic';
+// import { useGetHomePagePlaylists } from 'src/customHooks/useFetchMusicInfo';
+// import AppLayout from 'src/appLayout/AppLayout';
+// import useFetchAllMusic from 'src/customHooks/useFetchAllMusic';
+// import { useGetHomePagePlaylists } from 'src/customHooks/useFetchMusicInfo';
+// import { StoreContext } from "../context/ContextProvider";
+// import useFetchAllMusic from "../customHooks/useFetchAllMusic";
+// import AppLayout from "../appLayout/AppLayout";
+// import { useGetHomePagePlaylists } from "../customHooks/useFetchMusicInfo";
+// import { reducerActionTypes } from "../constants";
 
 interface HomeProps {
   accessToken: string;

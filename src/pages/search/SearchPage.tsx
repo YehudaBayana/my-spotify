@@ -13,8 +13,10 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import Card from '../../components/card/Card';
 import { useFetchSearch } from '../../customHooks/useFetchMusicInfo';
 import SearchResTracks from './SearchResTracks';
-import { Track } from 'src/types';
-import { handlePlayTrack } from 'src/utils';
+import { Track } from '../../types';
+import { handlePlayTrack } from '../../utils';
+// import { Track } from 'src/types';
+// import { handlePlayTrack } from 'src/utils';
 
 interface SearchPageProps {
   accessToken: string;

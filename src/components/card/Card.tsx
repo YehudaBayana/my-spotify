@@ -5,7 +5,8 @@ import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { CardActionArea } from "@mui/material";
 import { Link } from "react-router-dom";
-import { Playlist } from 'src/types';
+import { Playlist } from '../../types';
+// import { Playlist } from 'src/types';
 
 // interface Playlist {
 //   id: string;

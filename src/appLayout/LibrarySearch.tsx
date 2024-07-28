@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { IconButton, InputBase, Paper } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
-import { myColors } from 'src/constants';
+import { myColors } from '../constants';
+// import { myColors } from 'src/constants';
 
 interface LibrarySearchProps {
   search:string;

@@ -4,9 +4,10 @@ import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import ButtonBase from "@mui/material/ButtonBase";
-import { isIncludeHtml } from "../../utils";
-import { Album } from 'src/types';
+// import { isIncludeHtml } from "../../utils";
+// import { Album } from 'src/types';
 import { AppBar, Avatar, Box } from '@mui/material';
+import { Album } from '../../../types';
 
 const Img = styled("img")({
   margin: "auto",

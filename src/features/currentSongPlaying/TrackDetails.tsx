@@ -1,9 +1,11 @@
 import { Card, CardMedia, CardContent, Chip, Box } from '@mui/material';
 import { ListItemAvatar, ListItemText, ListItemSecondaryAction, Typography } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
-import { myColors } from 'src/constants';
-import { StoreContext } from 'src/context/ContextProvider';
-import { getTrack } from 'src/customHooks/useFetchMusicInfo';
+import { StoreContext } from '../../context/ContextProvider';
+import { getTrack } from '../../customHooks/useFetchMusicInfo';
+// import { myColors } from 'src/constants';
+// import { StoreContext } from 'src/context/ContextProvider';
+// import { getTrack } from 'src/customHooks/useFetchMusicInfo';
 
 const TrackDetails: React.FC = () => {
   const { state, dispatch } = useContext(StoreContext);

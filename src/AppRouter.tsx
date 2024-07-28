@@ -2,10 +2,11 @@ import { useContext } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { StoreContext } from './context/ContextProvider';
 import SearchPage from './pages/search/SearchPage';
-import SongList from './features/songsList/SongList';
-import Main from './features/Main';
+// import SongList from './features/songsList/SongList';
+import Main from './pages/home/Main';
 import { ListenAgainList } from './pages/home/ListenAgainList';
 import GenreList from './pages/genreList/GenreList';
+import SongList from './pages/playlist/songsList/SongList';
 interface AppRouterProps {
   accessToken: string;
   drawerWidthState: number;

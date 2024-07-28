@@ -4,9 +4,12 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import { Avatar, Container, Divider, List, ListItem, ListItemButton, Typography } from '@mui/material';
 import { myColors, reducerActionTypes } from '../../constants';
-import { getUserTopTracks } from 'src/customHooks/useFetchMusicInfo';
-import { Track } from 'src/types';
-import { handlePlayTrack, msToMinutesAndSeconds } from 'src/utils';
+import { Track } from '../../types';
+import { handlePlayTrack, msToMinutesAndSeconds } from '../../utils';
+import { getUserTopTracks } from '../../customHooks/useFetchMusicInfo';
+// import { getUserTopTracks } from 'src/customHooks/useFetchMusicInfo';
+// import { Track } from 'src/types';
+// import { handlePlayTrack, msToMinutesAndSeconds } from 'src/utils';
 
 const TrackItem = ({ track, tracks, dispatch }: { track: Track; tracks: Track[]; dispatch: any }) => {
   return (

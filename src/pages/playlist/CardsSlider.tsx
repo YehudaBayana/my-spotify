@@ -2,11 +2,15 @@ import React, { useContext } from 'react';
 import { Card, CardContent, CardMedia, Typography, Box, CardActions, Button, IconButton } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { Link } from 'react-router-dom';
-import { myColors, reducerActionTypes } from 'src/constants';
-import { fetchPlayableItems } from 'src/customHooks/useFetchMusicInfo';
-import { StoreContext } from 'src/context/ContextProvider';
-import { Track } from 'src/types';
-import { handlePlayTrack } from 'src/utils';
+import { StoreContext } from '../../context/ContextProvider';
+import { fetchPlayableItems } from '../../customHooks/useFetchMusicInfo';
+import { handlePlayTrack } from '../../utils';
+import { myColors } from '../../constants';
+// import { myColors, reducerActionTypes } from 'src/constants';
+// import { fetchPlayableItems } from 'src/customHooks/useFetchMusicInfo';
+// import { StoreContext } from 'src/context/ContextProvider';
+// import { Track } from 'src/types';
+// import { handlePlayTrack } from 'src/utils';
 
 interface CardsSliderProps {
   playlists: any[]; // Update with actual type

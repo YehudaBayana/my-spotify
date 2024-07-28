@@ -1,12 +1,18 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./eachSlider.css";
-import { Container } from "../../App";
+// import { Container } from "../../App";
 import { Link } from "react-router-dom";
 import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
 import ArrowCircleLeftIcon from "@mui/icons-material/ArrowCircleLeft";
 import { Box, Button, IconButton, Typography } from "@mui/material";
-import CardsSlider from "../CardsSlider";
-import { PLAYLIST_CARD_WIDTH } from "../../constants";
+import { PLAYLIST_CARD_WIDTH } from '../../../constants';
+import { Container } from '../../../App';
+import CardsSlider from '../../playlist/CardsSlider';
+// import { PLAYLIST_CARD_WIDTH } from 'src/constants';
+// import { Container } from 'src/App';
+// import CardsSlider from 'src/pages/playlist/CardsSlider';
+// import CardsSlider from "../CardsSlider";
+// import { PLAYLIST_CARD_WIDTH } from "../../constants";
 
 interface EachSliderProps {
   playlists: any[]; // Update with actual type

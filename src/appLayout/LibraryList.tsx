@@ -12,7 +12,8 @@ import AreYouSurePrompt from '../components/AreYouSurePrompt';
 import { removeFromLibrary } from '../customHooks/useFetchMusicInfo';
 import { makeArrayUnique } from '../utils';
 import { Avatar, ListItemAvatar } from '@mui/material';
-import { Album, Playlist } from 'src/types';
+import { Album, Playlist } from '../types';
+// import { Album, Playlist } from 'src/types';
 
 interface LibraryListProps {
   open: boolean;

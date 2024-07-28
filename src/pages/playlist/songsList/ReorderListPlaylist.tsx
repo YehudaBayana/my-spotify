@@ -1,53 +1,30 @@
-import React, { useContext, useEffect, useState } from "react";
-import Paper from "@mui/material/Paper";
-import { StoreContext } from "../../context/ContextProvider";
-import PlaylistHeader from "../../components/playlistHeader/PlaylistHeader";
-import { useLocation } from "react-router-dom";
-import List from "@mui/material/List";
-import { styled } from "@mui/material/styles";
-import SearchToAdd from "./SearchToAdd";
-import { ListItem, Avatar, ListItemButton, Checkbox, Box, Divider } from "@mui/material";
-import { reducerActionTypes } from "../../constants";
-import { addTracksToPlaylist, fetchPlayableItems, removeFromPlaylist, updatePlaylistOrder } from "../../customHooks/useFetchMusicInfo";
-import { handleCheckboxToggle, handlePlayTrack, makeArrayUnique, msToMinutesAndSeconds } from "../../utils";
-import { DragDropContext, Droppable, Draggable, DropResult } from "react-beautiful-dnd";
-import CheckedTracksActions from "./CheckedTracksActions";
-import "./songsList.css";
-import { Playlist, Track } from 'src/types';
+import React, { useContext, useEffect, useState } from 'react';
+import Paper from '@mui/material/Paper';
+import { useLocation } from 'react-router-dom';
+import List from '@mui/material/List';
+import { styled } from '@mui/material/styles';
+import SearchToAdd from './SearchToAdd';
+import { ListItem, Avatar, ListItemButton, Checkbox, Box, Divider, Typography } from '@mui/material';
+import CheckedTracksActions from './CheckedTracksActions';
+import './songsList.css';
+import PlaylistHeader from '../playlistHeader/PlaylistHeader';
+import { StoreContext } from '../../../context/ContextProvider';
+import { Artist, Playlist, Track } from '../../../types';
+import { addTracksToPlaylist, fetchPlayableItems, removeFromPlaylist, updatePlaylistOrder } from '../../../customHooks/useFetchMusicInfo';
+import { reducerActionTypes } from '../../../constants';
+import { handleCheckboxToggle, handlePlayTrack, msToMinutesAndSeconds } from '../../../utils';
 
-const StyledListItemNew = styled(ListItem)(({ theme }) => ({
-  whiteSpace: "nowrap",
-  overflow: "hidden",
-  textOverflow: "ellipsis",
-  padding: "10px",
-}));
+// const StyledListItemNew = styled(ListItem)(({ theme }) => ({
+//   whiteSpace: 'nowrap',
+//   overflow: 'hidden',
+//   textOverflow: 'ellipsis',
+//   padding: '10px',
+// }));
 
 interface Item {
   id: string;
   content: string;
 }
-
-// interface Track {
-//   uri: string;
-//   id: string;
-//   name: string;
-//   album: {
-//     images: { url: string }[];
-//     release_date: string;
-//   };
-//   duration_ms: number;
-// }
-
-// interface Playlist {
-//   id: string;
-//   name: string;
-//   description: string;
-//   owner: { id: string };
-//   images: { url: string }[];
-//   tracks: { total: number };
-//   snapshot_id: string;
-//   public: boolean;
-// }
 
 interface ReorderListPlaylistProps {
   edit: boolean;
@@ -56,7 +33,7 @@ interface ReorderListPlaylistProps {
 
 const ReorderListPlaylist: React.FC<ReorderListPlaylistProps> = ({ edit, setEdit }) => {
   const location = useLocation();
-  const [type, playlistId] = location.pathname.split("/").filter((item) => item);
+  const [type, playlistId] = location.pathname.split('/').filter((item) => item);
   const { dispatch, state } = useContext(StoreContext);
   const { accessToken, checkedTracks } = state;
   const [draggedItem, setDraggedItem] = useState<Track | null>(null);
@@ -65,21 +42,20 @@ const ReorderListPlaylist: React.FC<ReorderListPlaylistProps> = ({ edit, setEdit
   const [isPlaylistEditable, setIsPlaylistEditable] = useState(false);
   const [sourceIndex, setSourceIndex] = useState<number>(0);
   const [destinationIndex, setDestinationIndex] = useState<number>(0);
-  const properTracks = tracks?.filter(item=>item);
-
+  const properTracks = tracks?.filter((item) => item);
 
   const [playlist, setPlaylist] = useState<Playlist>({
-    id: "",
-    name: "",
-    description: "",
-    owner: { id: "" },
-    images: [{ url: "" }],
+    id: '',
+    name: '',
+    description: '',
+    owner: { id: '' },
+    images: [{ url: '' }],
     tracks: { total: 0 },
-    snapshot_id: "",
+    snapshot_id: '',
     public: false,
-    type:"",
+    type: '',
   });
-  const [rgb, setRgb] = useState<string>("");
+  const [rgb, setRgb] = useState<string>('');
 
   useEffect(() => {
     if (playlist?.owner?.id === state?.userName?.id) {
@@ -105,31 +81,31 @@ const ReorderListPlaylist: React.FC<ReorderListPlaylistProps> = ({ edit, setEdit
     execute(playlistId);
     dispatch({
       type: reducerActionTypes.SET_CHECKED_TRACKS,
-      payload: []
-    })
+      payload: [],
+    });
     // setEdit(false);
   }, [playlistId, type, accessToken]);
 
   const handleTrackClick = (track: Track) => {
-    handlePlayTrack(tracks, track, dispatch);  
+    handlePlayTrack(tracks, track, dispatch);
   };
 
   const handleDelete = async () => {
     try {
-      console.log("playlist.id ",playlist.id);
-      console.log("playlist.snapshot_id ",playlist.snapshot_id);
+      console.log('playlist.id ', playlist.id);
+      console.log('playlist.snapshot_id ', playlist.snapshot_id);
       // console.log("playlist.snapshot_id ",playlist.snapshot_id);
       const removed = await removeFromPlaylist(accessToken, playlist.id, checkedTracks, playlist.snapshot_id);
-      console.log("removed ",removed);
-      
+      console.log('removed ', removed);
+
       await execute(playlistId);
       setEdit(false);
       dispatch({
-        type:reducerActionTypes.SET_CHECKED_TRACKS,
-        payload: []
-      })
+        type: reducerActionTypes.SET_CHECKED_TRACKS,
+        payload: [],
+      });
     } catch (error) {
-      console.log("yuda error ", error);
+      console.log('yuda error ', error);
     }
   };
 
@@ -145,12 +121,12 @@ const ReorderListPlaylist: React.FC<ReorderListPlaylistProps> = ({ edit, setEdit
       if (res?.snapshot_id) {
         setEdit(false);
         dispatch({
-          type:reducerActionTypes.SET_CHECKED_TRACKS,
-          payload: []
-        })
+          type: reducerActionTypes.SET_CHECKED_TRACKS,
+          payload: [],
+        });
       }
     } catch (error) {
-      console.log("yuda error ", error);
+      console.log('yuda error ', error);
     }
   };
 
@@ -173,11 +149,11 @@ const ReorderListPlaylist: React.FC<ReorderListPlaylistProps> = ({ edit, setEdit
       type: reducerActionTypes.SET_IS_DRAGGING,
       payload: true,
     });
-    e.dataTransfer.effectAllowed = "move";
-    e.dataTransfer.setData("text/html", e.currentTarget.parentNode?.toString() || "");
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/html', e.currentTarget.parentNode?.toString() || '');
     setTimeout(() => {
       if (e?.currentTarget?.classList) {
-        e.currentTarget.classList.add("dragging");
+        e.currentTarget.classList.add('dragging');
       }
     }, 0);
   };
@@ -204,15 +180,15 @@ const ReorderListPlaylist: React.FC<ReorderListPlaylistProps> = ({ edit, setEdit
       insert_before: sourceIndex < destinationIndex ? destinationIndex + 1 : destinationIndex,
       range_length: 1,
     };
-    console.log("body ", body);
+    console.log('body ', body);
 
     setIsUpdating(true);
     updatePlaylistOrder(accessToken, playlistId, body)
       .then((res) => {
-        console.log("res ", res);
+        console.log('res ', res);
       })
       .catch((err) => {
-        console.log("err ", err);
+        console.log('err ', err);
       })
       .finally(() => {
         setIsUpdating(false);
@@ -222,37 +198,27 @@ const ReorderListPlaylist: React.FC<ReorderListPlaylistProps> = ({ edit, setEdit
       payload: false,
     });
   };
-  
-
 
   return (
     <>
-      <PlaylistHeader total={properTracks.length} setPlaylist={setPlaylist} rgb={rgb} isPlaylistEditable={isPlaylistEditable} edit={edit} setEdit={setEdit} playlist={playlist}/>
+      <PlaylistHeader total={properTracks.length} setPlaylist={setPlaylist} rgb={rgb} isPlaylistEditable={isPlaylistEditable} edit={edit} setEdit={setEdit} playlist={playlist} />
       <Paper
         elevation={0}
         square
         sx={{
-          minHeight: "90vh",
-          background: rgb ? `linear-gradient(to bottom, ${rgb}, 0.5) 0%, ${rgb}, 0) 10%)` : "transparent",
-        }}
-      >
-        {checkedTracks.length > 0 && (
-          <CheckedTracksActions
-            isPlaylistEditable={isPlaylistEditable}
-            handleDelete={handleDelete}
-            handleAddToPlaylist={handleAddToPlaylist}
-          />
-        )}
+          minHeight: '90vh',
+          background: 'transparent',
+        }}>
+        {checkedTracks.length > 0 && <CheckedTracksActions isPlaylistEditable={isPlaylistEditable} handleDelete={handleDelete} handleAddToPlaylist={handleAddToPlaylist} />}
 
         <List
           square
           elevation={0}
           style={{
-            background: "transparent",
-            borderRadius: "0px",
+            background: 'transparent',
+            borderRadius: '0px',
           }}
-          component={Paper}
-        >
+          component={Paper}>
           {properTracks.map((track, index) => {
             const isChecked = !!checkedTracks.find((item) => item.uri === track.uri);
             return (
@@ -266,56 +232,61 @@ const ReorderListPlaylist: React.FC<ReorderListPlaylistProps> = ({ edit, setEdit
                     onDrop();
                   }}
                   className="list-item"
-                  onClick={(e: React.MouseEvent<HTMLUListElement>) => {
+                  onClick={() => {
                     handleTrackClick(track);
                   }}
                   key={track?.id}
                   sx={{
-                    height: "50px",
-                    display: "flex",
-                    flexDirection: "row",
-                    padding: "0",
-                  }}
-                >
+                    height: '50px',
+                    display: 'flex',
+                    flexDirection: 'row',
+                    padding: '0',
+                  }}>
                   <ListItemButton
                     sx={{
-                      position: "relative",
-                      "&:hover .MuiCheckbox-root": {
-                        visibility: "visible",
+                      position: 'relative',
+                      '&:hover .MuiCheckbox-root': {
+                        visibility: 'visible',
                       },
                     }}
                     draggable={isPlaylistEditable}
                     onDragStart={(e) => onDragStart(e, index)}
                     className="draggable"
-                    disableRipple
-                  >
-                    <StyledListItemNew sx={{ flex: 1 }} role="none">
+                    disableRipple>
+                    <ListItem sx={{ flex: 1 }} role="none">
                       {index + 1}
-                    </StyledListItemNew>
+                    </ListItem>
                     {track?.album?.images[0]?.url && (
-                      <StyledListItemNew sx={{ flex: 2 }} role="none">
+                      <ListItem sx={{ flex: 2 }} role="none">
                         <Avatar src={track?.album?.images[0]?.url} />
-                      </StyledListItemNew>
+                      </ListItem>
                     )}
-
-                    <StyledListItemNew sx={{ flex: 25 }} role="none">
-                      {track?.name}
-                    </StyledListItemNew>
-                    <StyledListItemNew sx={{ flex: 6 }} role="none">
+                    <ListItem sx={{ flex: 20, display: 'flex', flexDirection: 'column', alignItems:"start"}} role="none">
+                      <Typography>{track?.name}</Typography>
+                      <Typography variant="body2" gutterBottom>
+                        {track?.artists.map((artist: Artist) => artist.name).join(', ')}
+                      </Typography>
+                    </ListItem>
+                    {/* <ListItem sx={{ flex: 20 }} role="none">
+                     <Typography> {track?.name}</Typography>
+                    </ListItem> */}
+                    <ListItem sx={{ flex: 12 }} role="none">
+                      album
+                    </ListItem>
+                    <ListItem sx={{ flex: 6 }} role="none">
                       {track?.album.release_date}
-                    </StyledListItemNew>
-                    <StyledListItemNew sx={{ flex: 1 }} role="none">
+                    </ListItem>
+                    <ListItem sx={{ flex: 3 }} role="none">
                       {msToMinutesAndSeconds(track?.duration_ms)}
-                    </StyledListItemNew>
-                    <StyledListItemNew
+                    </ListItem>
+                    <ListItem
                       sx={{
-                        flex: 1,
-                        visibility: isChecked ? "visible" : "hidden",
+                        flex: 3,
+                        visibility: isChecked ? 'visible' : 'hidden',
                       }}
-                      role="none"
-                    >
+                      role="none">
                       <Checkbox checked={isChecked} onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleCheckboxToggle(e, track, dispatch, checkedTracks)} />
-                    </StyledListItemNew>
+                    </ListItem>
                   </ListItemButton>
                 </List>
                 <Divider />
@@ -324,7 +295,7 @@ const ReorderListPlaylist: React.FC<ReorderListPlaylistProps> = ({ edit, setEdit
           })}
         </List>
 
-        <Box margin={"auto"} height={200} width={500} my={4} display="flex" alignItems="center" justifyContent="center" gap={4} p={2}>
+        <Box margin={'auto'} height={200} width={500} my={4} display="flex" alignItems="center" justifyContent="center" gap={4} p={2}>
           <SearchToAdd playlistTracks={tracks} handleAddTrack={handleAddTrack} setTracks={setTracks} />
         </Box>
       </Paper>

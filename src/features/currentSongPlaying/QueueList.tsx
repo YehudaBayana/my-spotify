@@ -1,11 +1,18 @@
 import { Avatar, Box, Checkbox, Divider, List, ListItem, ListItemButton, Paper } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { myColors, reducerActionTypes, SERVER_DOMAIN } from 'src/constants';
-import { StoreContext } from 'src/context/ContextProvider';
-import { addTracksToPlaylist } from 'src/customHooks/useFetchMusicInfo';
-import { Playlist, Track, TrackShortV } from 'src/types';
-import { handleCheckboxToggle, handlePlayTrack, msToMinutesAndSeconds } from 'src/utils';
-import CheckedTracksActions from '../songsList/CheckedTracksActions';
+import { StoreContext } from '../../context/ContextProvider';
+import { Playlist, TrackShortV } from '../../types';
+import { handleCheckboxToggle, handlePlayTrack, msToMinutesAndSeconds } from '../../utils';
+import { myColors, reducerActionTypes, SERVER_DOMAIN } from '../../constants';
+import { addTracksToPlaylist } from '../../customHooks/useFetchMusicInfo';
+import CheckedTracksActions from '../../pages/playlist/songsList/CheckedTracksActions';
+// import { myColors, reducerActionTypes, SERVER_DOMAIN } from 'src/constants';
+// import { StoreContext } from 'src/context/ContextProvider';
+// import { addTracksToPlaylist } from 'src/customHooks/useFetchMusicInfo';
+// import CheckedTracksActions from 'src/pages/playlist/songsList/CheckedTracksActions';
+// import { Playlist, Track, TrackShortV } from 'src/types';
+// import { handleCheckboxToggle, handlePlayTrack, msToMinutesAndSeconds } from 'src/utils';
+// import CheckedTracksActions from '../songsList/CheckedTracksActions';
 
 const QueueList = ({ currTab }: { currTab: string }) => {
   const { state, dispatch } = React.useContext(StoreContext);

@@ -105,3 +105,339 @@
 //       </Box>
 //     );
 //   };
+
+// [
+//     {
+//       "booking": {
+//         "bookedEntity": {
+//           "schedule": {
+//             "location": {
+//               "name": "Location 1",
+//               "locationType": "OWNER_BUSINESS",
+//             },
+//             "timezone": "Europe/Dublin",
+//             "firstSessionStart": "2024-07-22T17:30:00.000+01:00",
+//             "lastSessionEnd": "2024-09-26T19:00:00.000+01:00"
+//           },
+//           "title": "G1",
+//           "tags": [
+//             "COURSE"
+//           ]
+//         },
+//         "contactDetails": {
+//           "firstName": "yuda",
+//           "lastName": "test",
+//           "email": "test@gamil.com",
+//           "phone": "1234123412"
+//         },
+//         "additionalFields": [],
+//         "numberOfParticipants": 1,
+//         "status": "CONFIRMED",
+//         "selectedPaymentOption": "OFFLINE",
+//         "bookingSource": {
+//           "platform": "WEB",
+//           "actor": "BUSINESS",
+//           "appName": "Wix Bookings"
+//         },
+//         "participantNotification": {
+//           "notifyParticipants": false
+//         },
+//         "revision": "4",
+//         "createdBy": {
+//         },
+//         "startDate": "2024-07-22T16:30:00.000Z",
+//         "endDate": "2024-09-26T18:00:00.000Z",
+//         "flowControlSettings": {
+//           "ignoreBookingWindow": true,
+//           "skipBusinessConfirmation": true,
+//           "withRefund": false
+//         },
+//         "totalParticipants": 1,
+//         "v2Availability": false,
+//         "_createdDate": "2024-07-24T11:11:36.924Z",
+//         "_updatedDate": "2024-07-24T11:11:43.629Z"
+//       },
+//       "attendance": {
+//         "status": "NOT_SET",
+//         "numberOfAttendees": 0
+//       }
+//     }]
+//     {
+//       "booking": {
+//         "bookedEntity": {
+//           "schedule": {
+//             "location": {
+//               "formattedAddress": "Zoom",
+//               "locationType": "OWNER_CUSTOM"
+//             },
+//             "timezone": "Europe/Dublin",
+//             "firstSessionStart": "2024-07-22T17:30:00.000+01:00",
+//             "lastSessionEnd": "2024-09-26T19:00:00.000+01:00"
+//           },
+//           "title": "G2 Online",
+//           "tags": [
+//             "COURSE"
+//           ]
+//         },
+//         "contactDetails": {
+//           "firstName": "yuda",
+//           "lastName": "test",
+//           "email": "test@gamil.com",
+//           "phone": "1234123412"
+//         },
+//         "additionalFields": [],
+//         "numberOfParticipants": 1,
+//         "status": "CONFIRMED",
+//         "selectedPaymentOption": "OFFLINE",
+//         "bookingSource": {
+//           "platform": "WEB",
+//           "actor": "BUSINESS",
+//           "appName": "Wix Bookings"
+//         },
+//         "participantNotification": {
+//           "notifyParticipants": false
+//         },
+//         "revision": "4",
+//         "createdBy": {
+//         },
+//         "startDate": "2024-07-22T16:30:00.000Z",
+//         "endDate": "2024-09-26T18:00:00.000Z",
+//         "flowControlSettings": {
+//           "ignoreBookingWindow": true,
+//           "skipBusinessConfirmation": true,
+//           "withRefund": false
+//         },
+//         "totalParticipants": 1,
+//         "v2Availability": false,
+//         "_createdDate": "2024-07-24T11:14:45.586Z",
+//         "_updatedDate": "2024-07-24T11:14:50.348Z"
+//       },
+//       "attendance": {
+//         "status": "NOT_SET",
+//         "numberOfAttendees": 0
+//       }
+//     },
+//     {
+//       "booking": {
+//         "bookedEntity": {
+//           "schedule": {
+//             "location": {
+//               "name": "Location 1",
+//               "locationType": "OWNER_BUSINESS",
+//             },
+//             "timezone": "Europe/Dublin",
+//             "firstSessionStart": "2024-07-22T17:30:00.000+01:00",
+//             "lastSessionEnd": "2024-09-26T19:00:00.000+01:00"
+//           },
+//           "title": "G1",
+//           "tags": [
+//             "COURSE"
+//           ]
+//         },
+//         "contactDetails": {
+//           "firstName": "Yehuda Bayana",
+//           "lastName": "",
+//           "email": "yehudaba@wix.com",
+//           "phone": " "
+//         },
+//         "additionalFields": [],
+//         "numberOfParticipants": 1,
+//         "status": "CONFIRMED",
+//         "selectedPaymentOption": "OFFLINE",
+//         "bookingSource": {
+//           "platform": "WEB",
+//           "actor": "BUSINESS",
+//           "appName": "Wix Bookings"
+//         },
+//         "participantNotification": {
+//           "notifyParticipants": false
+//         },
+//         "revision": "4",
+//         "createdBy": {
+//         },
+//         "startDate": "2024-07-22T16:30:00.000Z",
+//         "endDate": "2024-09-26T18:00:00.000Z",
+//         "flowControlSettings": {
+//           "ignoreBookingWindow": true,
+//           "skipBusinessConfirmation": true,
+//           "withRefund": false
+//         },
+//         "totalParticipants": 1,
+//         "v2Availability": false,
+//         "_createdDate": "2024-07-24T11:13:24.507Z",
+//         "_updatedDate": "2024-07-24T11:13:30.538Z"
+//       },
+//       "attendance": {
+//         "status": "NOT_SET",
+//         "numberOfAttendees": 0
+//       }
+//     },
+//     {
+//       "booking": {
+//         "bookedEntity": {
+//           "schedule": {
+//             "location": {
+//               "formattedAddress": "Zoom",
+//               "locationType": "OWNER_CUSTOM"
+//             },
+//             "timezone": "Europe/Dublin",
+//             "firstSessionStart": "2024-07-22T17:30:00.000+01:00",
+//             "lastSessionEnd": "2024-09-26T19:00:00.000+01:00"
+//           },
+//           "title": "G2 Online",
+//           "tags": [
+//             "COURSE"
+//           ]
+//         },
+//         "contactDetails": {
+//           "firstName": "Yehuda Bayana",
+//           "lastName": "",
+//           "email": "yehudaba@wix.com",
+//           "phone": " "
+//         },
+//         "additionalFields": [],
+//         "numberOfParticipants": 1,
+//         "status": "CONFIRMED",
+//         "selectedPaymentOption": "OFFLINE",
+//         "bookingSource": {
+//           "platform": "WEB",
+//           "actor": "BUSINESS",
+//           "appName": "Wix Bookings"
+//         },
+//         "participantNotification": {
+//           "notifyParticipants": false
+//         },
+//         "revision": "4",
+//         "createdBy": {
+//         },
+//         "startDate": "2024-07-22T16:30:00.000Z",
+//         "endDate": "2024-09-26T18:00:00.000Z",
+//         "flowControlSettings": {
+//           "ignoreBookingWindow": true,
+//           "skipBusinessConfirmation": true,
+//           "withRefund": false
+//         },
+//         "totalParticipants": 1,
+//         "v2Availability": false,
+//         "_createdDate": "2024-07-24T11:11:25.342Z",
+//         "_updatedDate": "2024-07-24T11:11:30.136Z"
+//       },
+//       "attendance": {
+//         "status": "NOT_SET",
+//         "numberOfAttendees": 0
+//       }
+//     },
+//     {
+//       "booking": {
+//         "bookedEntity": {
+//           "schedule": {
+//             "location": {
+//               "name": "Location 1",
+//               "locationType": "OWNER_BUSINESS",
+//             },
+//             "timezone": "Europe/Dublin",
+//             "firstSessionStart": "2024-07-21T17:30:00.000+01:00",
+//             "lastSessionEnd": "2024-09-25T19:00:00.000+01:00"
+//           },
+//           "title": "D1",
+//           "tags": [
+//             "COURSE"
+//           ]
+//         },
+//         "contactDetails": {
+//           "firstName": "Yehuda Bayana",
+//           "lastName": "",
+//           "email": "yehudaba@wix.com",
+//           "phone": " "
+//         },
+//         "additionalFields": [],
+//         "numberOfParticipants": 1,
+//         "status": "CONFIRMED",
+//         "selectedPaymentOption": "OFFLINE",
+//         "bookingSource": {
+//           "platform": "WEB",
+//           "actor": "BUSINESS",
+//           "appName": "Wix Bookings"
+//         },
+//         "participantNotification": {
+//           "notifyParticipants": false
+//         },
+//         "revision": "4",
+//         "createdBy": {
+//         },
+//         "startDate": "2024-07-21T16:30:00.000Z",
+//         "endDate": "2024-09-25T18:00:00.000Z",
+//         "flowControlSettings": {
+//           "ignoreBookingWindow": true,
+//           "skipBusinessConfirmation": true,
+//           "withRefund": false
+//         },
+//         "totalParticipants": 1,
+//         "v2Availability": false,
+//         "_createdDate": "2024-07-24T11:11:09.253Z",
+//         "_updatedDate": "2024-07-24T11:11:15.342Z"
+//       },
+//       "attendance": {
+//         "status": "NOT_SET",
+//         "numberOfAttendees": 0
+//       }
+//     },
+//     {
+//       "booking": {
+//         "bookedEntity": {
+//           "schedule": {
+//             "location": {
+//               "name": "Location 1",
+//               "locationType": "OWNER_BUSINESS",
+//             },
+//             "timezone": "Europe/Dublin",
+//             "firstSessionStart": "2024-07-21T17:30:00.000+01:00",
+//             "lastSessionEnd": "2024-09-25T19:00:00.000+01:00"
+//           },
+//           "title": "D1",
+//           "tags": [
+//             "COURSE"
+//           ]
+//         },
+//         "contactDetails": {
+//           "firstName": "yuda",
+//           "lastName": "test",
+//           "email": "test@gamil.com",
+//           "phone": "1234123412"
+//         },
+//         "additionalFields": [],
+//         "numberOfParticipants": 1,
+//         "status": "CONFIRMED",
+//         "selectedPaymentOption": "OFFLINE",
+//         "bookingSource": {
+//           "platform": "WEB",
+//           "actor": "BUSINESS",
+//           "appName": "Wix Bookings"
+//         },
+//         "participantNotification": {
+//           "notifyParticipants": false
+//         },
+//         "revision": "4",
+//         "createdBy": {
+//         },
+//         "startDate": "2024-07-21T16:30:00.000Z",
+//         "endDate": "2024-09-25T18:00:00.000Z",
+//         "flowControlSettings": {
+//           "ignoreBookingWindow": true,
+//           "skipAvailabilityValidation": true,
+//           "skipBusinessConfirmation": true,
+//           "skipSelectedPaymentOptionValidation": true,
+//           "withRefund": false
+//         },
+//         "totalParticipants": 1,
+//         "v2Availability": false,
+//         "_id": "9a4b0502-41ff-4e3c-9137-9e6684e60baf",
+//         "_createdDate": "2024-07-24T11:13:43.469Z",
+//         "_updatedDate": "2024-07-24T11:13:51.780Z"
+//       },
+//       "attendance": {
+//         "status": "NOT_SET",
+//         "numberOfAttendees": 0
+//       }
+//     }
+//   ]

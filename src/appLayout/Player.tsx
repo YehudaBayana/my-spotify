@@ -1,9 +1,11 @@
 import { useState, useEffect, useContext } from 'react';
 import SpotifyPlayer from 'react-spotify-web-playback';
 import { StoreContext } from '../context/ContextProvider';
-import { TrackShortV } from 'src/types';
-import { myColors, reducerActionTypes } from 'src/constants';
-import { getUserQueue } from 'src/customHooks/useFetchMusicInfo';
+import { myColors, reducerActionTypes } from '../constants';
+import { TrackShortV } from '../types';
+// import { TrackShortV } from 'src/types';
+// import { myColors, reducerActionTypes } from 'src/constants';
+// import { getUserQueue } from 'src/customHooks/useFetchMusicInfo';
 
 interface PlayerProps {
   accessToken: string;

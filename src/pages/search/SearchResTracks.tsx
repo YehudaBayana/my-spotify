@@ -2,11 +2,16 @@ import React, { useContext, useState } from 'react';
 import { Button, Checkbox, Paper, Table, TableBody, TableCell, TableContainer, TableRow } from '@mui/material';
 import { handleCheckboxToggle, msToMinutesAndSeconds } from '../../utils';
 import AddIcon from '@mui/icons-material/Add';
-import { addTracksToPlaylist } from 'src/customHooks/useFetchMusicInfo';
-import { StoreContext } from 'src/context/ContextProvider';
-import CheckedTracksActions from 'src/features/songsList/CheckedTracksActions';
-import { Playlist, Track } from 'src/types';
-import { reducerActionTypes } from 'src/constants';
+// import { addTracksToPlaylist } from 'src/customHooks/useFetchMusicInfo';
+// import { StoreContext } from 'src/context/ContextProvider';
+// import CheckedTracksActions from 'src/features/songsList/CheckedTracksActions';
+// import { Playlist, Track } from 'src/types';
+// import { reducerActionTypes } from 'src/constants';
+import CheckedTracksActions from '../playlist/songsList/CheckedTracksActions';
+import { Playlist, Track } from '../../types';
+import { StoreContext } from '../../context/ContextProvider';
+import { addTracksToPlaylist } from '../../customHooks/useFetchMusicInfo';
+import { reducerActionTypes } from '../../constants';
 
 // interface Track {
 //   id: string;

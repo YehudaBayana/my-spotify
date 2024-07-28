@@ -5,29 +5,6 @@ interface SearchResult {
   // Add properties based on the actual response from the API
 }
 
-// interface PlaylistTracksResponse {
-//   tracks: { items: { track: any }[] };
-//   playlistRes?: any;
-// }
-
-// Replace `dynamicGetRequest` with appropriate library (e.g., Axios)
-// type GetRequest = (url: string, accessToken: string) => Promise<any>;
-// type DeleteRequest = (
-//   url: string,
-//   accessToken: string,
-//   body?: any
-// ) => Promise<any>;
-// type UpdateRequest = (
-//   url: string,
-//   accessToken: string,
-//   body?: any
-// ) => Promise<any>;
-// type AddRequest = (
-//   url: string,
-//   accessToken: string,
-//   body?: any
-// ) => Promise<any>;
-
 const useFetchSearch: (
   searchValue: string,
   setSearchRes: (data: SearchResult[]) => void,
@@ -163,15 +140,6 @@ export const fetchAlbumTracks = async (
   if (!accessToken) { return new Promise(res => res(null)) }
   const tracksRes = await getAlbumTracks(accessToken, AlbumId);
   return tracksRes;
-  // Handle dispatch if provided
-  // if (dispatch) {
-  //   dispatch({
-  //     type: reducerActionTypes.SET_ALBUM,
-  //     payload: {
-  //       items: tracksRes.items.map((item) => item),
-  //     },
-  //   });
-  // }
 };
 
 export function getUser(accessToken: string): Promise<any> {

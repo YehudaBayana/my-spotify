@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Box } from '@mui/material';
 import { useNavigate, useLocation } from 'react-router-dom';
-import useHistoryNavigation from 'src/customHooks/useHistoryNavigation';
+import useHistoryNavigation from '../customHooks/useHistoryNavigation';
+// import useHistoryNavigation from 'src/customHooks/useHistoryNavigation';
 
 
 const NavigationButtons = () => {

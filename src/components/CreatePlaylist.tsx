@@ -6,10 +6,13 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import { addPlaylist, addTracksToPlaylist } from 'src/customHooks/useFetchMusicInfo';
+// import { addPlaylist, addTracksToPlaylist } from 'src/customHooks/useFetchMusicInfo';
 import { Checkbox, FormControlLabel } from '@mui/material';
-import { StoreContext } from 'src/context/ContextProvider';
-import { reducerActionTypes } from 'src/constants';
+import { StoreContext } from '../context/ContextProvider';
+import { addPlaylist, addTracksToPlaylist } from '../customHooks/useFetchMusicInfo';
+import { reducerActionTypes } from '../constants';
+// import { StoreContext } from 'src/context/ContextProvider';
+// import { reducerActionTypes } from 'src/constants';
 
 interface CreatePlaylistProps {
   checkedTracks?: { uri: string }[];

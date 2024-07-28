@@ -1,7 +1,8 @@
 import React, { useReducer, createContext, ReactNode } from 'react';
 // import SpotifyWebApi from "spotify-web-api-node";
 import { reducerActionTypes, clientId } from '../constants';
-import { Album, Category, Playlist, Track, TrackShortV } from 'src/types';
+import { Album, Category, Playlist, Track, TrackShortV } from '../types';
+// import { Album, Category, Playlist, Track, TrackShortV } from 'src/types';
 
 // Initialize Spotify Web API instance
 // const spotifyApi = new SpotifyWebApi({

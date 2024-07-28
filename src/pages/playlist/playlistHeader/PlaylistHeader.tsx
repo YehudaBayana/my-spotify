@@ -3,10 +3,14 @@ import Grid from '@mui/material/Grid';
 import { Button, Checkbox, FormControlLabel, TextField } from '@mui/material';
 import { AppBar, Typography, Avatar, Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { updatePlaylistDetails } from 'src/customHooks/useFetchMusicInfo';
-import { StoreContext } from 'src/context/ContextProvider';
-import { reducerActionTypes } from 'src/constants';
-import { Playlist } from 'src/types';
+import { Playlist } from '../../../types';
+import { StoreContext } from '../../../context/ContextProvider';
+import { updatePlaylistDetails } from '../../../customHooks/useFetchMusicInfo';
+import { reducerActionTypes } from '../../../constants';
+// import { updatePlaylistDetails } from 'src/customHooks/useFetchMusicInfo';
+// import { StoreContext } from 'src/context/ContextProvider';
+// import { reducerActionTypes } from 'src/constants';
+// import { Playlist } from 'src/types';
 
 const Header = styled(AppBar)(({ theme }) => ({
   backgroundSize: 'cover',

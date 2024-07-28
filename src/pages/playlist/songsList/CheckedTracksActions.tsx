@@ -14,11 +14,10 @@ import Dialog from '@mui/material/Dialog';
 import AddIcon from '@mui/icons-material/Add';
 import { blue } from '@mui/material/colors';
 import { useContext } from 'react';
-import { StoreContext } from '../../context/ContextProvider';
-import CreatePlaylist from '../../components/CreatePlaylist';
-import { Playlist } from 'src/types';
-import { myColors, reducerActionTypes } from 'src/constants';
-// import CreatePlaylist from '@components/CreatePlaylist';
+import CreatePlaylist from '../../../components/CreatePlaylist';
+import { Playlist } from '../../../types';
+import { StoreContext } from '../../../context/ContextProvider';
+import { myColors, reducerActionTypes } from '../../../constants';
 
 const emails: string[] = ['username@gmail.com', 'user02@gmail.com'];
 

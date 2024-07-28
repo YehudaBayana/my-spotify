@@ -1,7 +1,8 @@
 import React, { useContext } from "react";
-import { StoreContext } from "../context/ContextProvider";
+import { StoreContext } from "../../context/ContextProvider";
 import EachSlider from "./eachSlider/EachSlider";
-import { ListenAgainList } from 'src/pages/home/ListenAgainList';
+import { ListenAgainList } from './ListenAgainList';
+// import { ListenAgainList } from 'src/pages/home/ListenAgainList';
 
 interface MainProps {
   drawerWidthState: number;

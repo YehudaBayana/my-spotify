@@ -4,8 +4,10 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 import {Link } from 'react-router-dom';
 import { Grid, Card, CardActionArea, CardMedia, CardContent, Typography, makeStyles, Box } from '@mui/material';
 import { styled } from '@mui/system';
-import { StoreContext } from 'src/context/ContextProvider';
-import { Playlist } from 'src/types';
+import { StoreContext } from '../../context/ContextProvider';
+import { Playlist } from '../../types';
+// import { StoreContext } from 'src/context/ContextProvider';
+// import { Playlist } from 'src/types';
 
 const StyledCardMedia = styled(CardMedia)({
   // width: 200,

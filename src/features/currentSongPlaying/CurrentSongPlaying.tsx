@@ -6,16 +6,19 @@ import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Avatar, Box, Checkbox, Divider, List, ListItem, ListItemButton } from '@mui/material';
-import { handleCheckboxToggle, msToMinutesAndSeconds } from 'src/utils';
-import { StoreContext } from 'src/context/ContextProvider';
-import { Track, TrackShortV } from 'src/types';
+// import { handleCheckboxToggle, msToMinutesAndSeconds } from 'src/utils';
+// import { StoreContext } from 'src/context/ContextProvider';
+// import { Track, TrackShortV } from 'src/types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import TrackDetails from './TrackDetails';
 import { Card, CardMedia, CardContent, Chip } from '@mui/material';
 import { ListItemAvatar, ListItemText, ListItemSecondaryAction, Typography } from '@mui/material';
 import QueueList from './QueueList';
-import { myColors } from 'src/constants';
+import { StoreContext } from '../../context/ContextProvider';
+import { TrackShortV } from '../../types';
+import { myColors } from '../../constants';
+// import { myColors } from 'src/constants';
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
