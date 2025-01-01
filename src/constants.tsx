@@ -56,15 +56,11 @@ export const MIN_OPEN_WIDTH: number = 210;
 export const CLOSE_WIDTH: number = 70;
 
 export const myColors = {
-  main:"rgb(156, 39, 176)",
-  background:"#DDFFF7",
-  slider:"#B96AC9",
-  secondary:"#FFD2FC",
+  main: "#A06BAF",
+  background: "#555353",
+  backgroundLP: "#191818",
+  slider: "#B96AC9",
+  secondary: "#A3A3A3",
 };
 
-export const playerClasses = [
-  "_ContentRSWP",
-  "_ControlsButtonsRSWP",
-  "_WrapperRSWP",
-  "_ContentWrapperRSWP",
-]
+export const playerClasses = ["_ContentRSWP", "_ControlsButtonsRSWP", "_WrapperRSWP", "_ContentWrapperRSWP"];

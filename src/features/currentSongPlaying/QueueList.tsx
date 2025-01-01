@@ -1,11 +1,11 @@
-import { Avatar, Box, Checkbox, Divider, List, ListItem, ListItemButton, Paper } from '@mui/material';
-import React, { useEffect, useState } from 'react';
-import { StoreContext } from '../../context/ContextProvider';
-import { Playlist, TrackShortV } from '../../types';
-import { handleCheckboxToggle, handlePlayTrack, msToMinutesAndSeconds } from '../../utils';
-import { myColors, reducerActionTypes, SERVER_DOMAIN } from '../../constants';
-import { addTracksToPlaylist } from '../../customHooks/useFetchMusicInfo';
-import CheckedTracksActions from '../../pages/playlist/songsList/CheckedTracksActions';
+import { Avatar, Box, Checkbox, Divider, List, ListItem, ListItemButton, Paper } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { StoreContext } from "../../context/ContextProvider";
+import { Playlist, TrackShortV } from "../../types";
+import { handleCheckboxToggle, handlePlayTrack, msToMinutesAndSeconds } from "../../utils";
+import { myColors, reducerActionTypes, SERVER_DOMAIN } from "../../constants";
+// import { addTracksToPlaylist } from "../../customHooks/useFetchMusicInfo";
+import CheckedTracksActions from "../../pages/playlist/songsList/CheckedTracksActions";
 // import { myColors, reducerActionTypes, SERVER_DOMAIN } from 'src/constants';
 // import { StoreContext } from 'src/context/ContextProvider';
 // import { addTracksToPlaylist } from 'src/customHooks/useFetchMusicInfo';
@@ -16,14 +16,14 @@ import CheckedTracksActions from '../../pages/playlist/songsList/CheckedTracksAc
 
 const QueueList = ({ currTab }: { currTab: string }) => {
   const { state, dispatch } = React.useContext(StoreContext);
-  const [lyrics, setLyrics] = useState('');
+  const [lyrics, setLyrics] = useState("");
   const { checkedTracks, playingTrack, queue } = state;
   const properTracks = queue.filter((item: TrackShortV) => item);
   const currentlyPlaying = queue.find((track) => track.currentlyPlaying);
   //   const properTracks = [...playingTrack?.previousTracks, playingTrack.playing, ...playingTrack?.nextTracks].filter((item: TrackShortV) => item);
 
   const handleTrackClick = (track: TrackShortV) => {
-    handlePlayTrack(properTracks, track, dispatch);  
+    handlePlayTrack(properTracks, track, dispatch);
     // const targetCondition = (obj: TrackShortV) => obj.id === track.id;
     //   const targetIndex = properTracks.findIndex(targetCondition);
     //   const previousTracks = targetIndex !== -1 ? properTracks.slice(0, targetIndex) : properTracks;
@@ -38,13 +38,13 @@ const QueueList = ({ currTab }: { currTab: string }) => {
     const execute = async () => {
       fetch(`${SERVER_DOMAIN}lyrics?artist=${currentlyPlaying?.artists[0]}&track=${currentlyPlaying?.name}`)
         .then((res) => {
-          return res.json()
+          return res.json();
         })
         .then((res) => {
-          console.log('lyrics res ', res);
+          console.log("lyrics res ", res);
         })
         .catch((err) => {
-          console.log('err lyrics ', err);
+          console.log("err lyrics ", err);
         });
     };
     if (currTab === "lyrics") {
@@ -60,17 +60,17 @@ const QueueList = ({ currTab }: { currTab: string }) => {
     };
 
     try {
-      const added = await addTracksToPlaylist(state.accessToken, playlist.id, body);
-      const res = await added.json();
-      if (res?.snapshot_id) {
-        // setEdit(false);
-        dispatch({
-          type: reducerActionTypes.SET_CHECKED_TRACKS,
-          payload: [],
-        });
-      }
+      // const added = await addTracksToPlaylist(playlist.id, body);
+      // const res = await added.json();
+      // if (res?.snapshot_id) {
+      //   // setEdit(false);
+      //   dispatch({
+      //     type: reducerActionTypes.SET_CHECKED_TRACKS,
+      //     payload: [],
+      //   });
+      // }
     } catch (error) {
-      console.log('yuda error ', error);
+      console.log("yuda error ", error);
     }
   };
 
@@ -81,19 +81,21 @@ const QueueList = ({ currTab }: { currTab: string }) => {
         sx={{
           background: myColors.background,
           flexGrow: 1,
-          overflowY: 'auto', // Make this box scrollable if content overflows
-        }}>
-        {currTab === 'lyrics' ? (
+          overflowY: "auto", // Make this box scrollable if content overflows
+        }}
+      >
+        {currTab === "lyrics" ? (
           <p>lyrics</p>
         ) : (
           <List
             square
             elevation={0}
             style={{
-              borderRadius: '0px',
-              background:"transparent"
+              borderRadius: "0px",
+              background: "transparent",
             }}
-            component={Paper}>
+            component={Paper}
+          >
             {properTracks.map((track: TrackShortV, index: number) => {
               if (!track?.id) {
                 // console.log("track?.id ",track);
@@ -108,66 +110,73 @@ const QueueList = ({ currTab }: { currTab: string }) => {
                     }}
                     key={track?.id}
                     sx={{
-                      height: '50px',
-                      display: 'flex',
-                      flexDirection: 'row',
-                      padding: '0',
-                      background: track.id === currentlyPlaying?.id ? myColors.secondary : '',
-                    }}>
+                      height: "50px",
+                      display: "flex",
+                      flexDirection: "row",
+                      padding: "0",
+                      background: track.id === currentlyPlaying?.id ? myColors.secondary : "",
+                    }}
+                  >
                     <ListItemButton
                       sx={{
-                        position: 'relative',
+                        position: "relative",
                         padding: 0,
                       }}
-                      disableRipple>
+                      disableRipple
+                    >
                       {track.image && (
                         <ListItem
                           sx={{
-                            padding: '5px 10px',
+                            padding: "5px 10px",
                             flex: 2,
                           }}
-                          role="none">
+                          role="none"
+                        >
                           <Avatar variant="square" src={track.image} />
                         </ListItem>
                       )}
 
                       <ListItem
                         sx={{
-                          padding: '5px 10px',
+                          padding: "5px 10px",
                           flex: 25,
-                          whiteSpace: 'nowrap',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
                           minWidth: 0, // Ensure it can shrink properly
                         }}
-                        role="none">
+                        role="none"
+                      >
                         <Box
                           sx={{
-                            whiteSpace: 'nowrap',
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            width: '100%',
-                          }}>
+                            whiteSpace: "nowrap",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            width: "100%",
+                          }}
+                        >
                           {track?.name}
                         </Box>
                       </ListItem>
 
                       <ListItem
                         sx={{
-                          padding: '5px 10px',
+                          padding: "5px 10px",
                           flex: 2,
                         }}
-                        role="none">
+                        role="none"
+                      >
                         {msToMinutesAndSeconds(track.durationMs)}
                       </ListItem>
 
                       <ListItem
                         sx={{
-                          padding: '5px 10px',
+                          padding: "5px 10px",
                           flex: 1,
-                          visibility: 'visible',
+                          visibility: "visible",
                         }}
-                        role="none">
+                        role="none"
+                      >
                         <Checkbox checked={isChecked} onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleCheckboxToggle(e, track, dispatch, checkedTracks)} />
                       </ListItem>
                     </ListItemButton>

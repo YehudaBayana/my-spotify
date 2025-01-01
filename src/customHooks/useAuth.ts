@@ -1,18 +1,21 @@
 //--------------------------- gpt correction
-import { useState, useEffect, useCallback } from 'react';
-import axios from 'axios';
-import { reducerActionTypes, SERVER_DOMAIN } from '../constants';
-import { getUser } from './useFetchMusicInfo';
+import { useState, useEffect, useCallback } from "react";
+import axios from "axios";
+import { SERVER_DOMAIN } from "../constants";
+import { useGetRequest } from "../api/CRUD/useGetRequest";
+import { SpotifyApiUrlsGet } from "../api/utils";
+
+// import { getUser } from "./useFetchMusicInfo";
 
 const getSessionItem = (key: string): string | null => {
   const item = window.localStorage.getItem(key);
-  return item === 'undefined' || item === 'NaN' ? null : item;
+  return item === "undefined" || item === "NaN" ? null : item;
 };
 
-export default function useAuth(code: string | null, dispatch:any) {
-  const [accessToken, setAccessToken] = useState<string | null>(getSessionItem('access_token'));
-  const [refreshToken, setRefreshToken] = useState<string | null>(getSessionItem('refresh_token'));
-  const [expiresIn, setExpiresIn] = useState<number>(Number(getSessionItem('expires_in')));
+export default function useAuth(code: string | null, setAccessToken: (token: string | null) => void) {
+  const [refreshToken, setRefreshToken] = useState<string | null>(getSessionItem("refresh_token"));
+  const [expiresIn, setExpiresIn] = useState<number>(Number(getSessionItem("expires_in")));
+  const { isError, get } = useGetRequest(SpotifyApiUrlsGet.GET_USER);
 
   const login = useCallback(async () => {
     try {
@@ -23,57 +26,52 @@ export default function useAuth(code: string | null, dispatch:any) {
       setRefreshToken(refreshToken);
       setExpiresIn(expiresIn);
 
-      window.localStorage.setItem('access_token', accessToken);
-      window.localStorage.setItem('refresh_token', refreshToken);
-      window.localStorage.setItem('expires_in', expiresIn.toString());
+      window.localStorage.setItem("access_token", accessToken);
+      window.localStorage.setItem("refresh_token", refreshToken);
+      window.localStorage.setItem("expires_in", expiresIn.toString());
 
-      window.history.pushState({}, "", '/');
+      window.history.pushState({}, "", "/");
     } catch (error) {
-      console.error('Login error:', error);
-      window.location.href = '/';
+      console.error("Login error:", error);
+      window.location.href = "/";
     }
-  }, [code]);
+  }, [code, setAccessToken]);
 
   const refreshAccessToken = useCallback(async () => {
     if (!refreshToken) return;
+    console.log("refresh access", refreshToken);
 
     try {
       const res = await axios.post<{ accessToken: string; expiresIn: number }>(`${SERVER_DOMAIN}refresh`, { refreshToken });
-      console.log("res ",res);
-      
       const { accessToken, expiresIn } = res.data;
+      console.log("aaa yuda ", accessToken);
+      // console.log("aaa yuda ",accessToken);
 
-      dispatch({
-        type: reducerActionTypes.SET_ACCESS_TOKEN,
-        payload: accessToken
-      })
       setAccessToken(accessToken);
       setExpiresIn(expiresIn);
 
-      window.localStorage.setItem('access_token', accessToken);
-      window.localStorage.setItem('expires_in', expiresIn.toString());
+      window.localStorage.setItem("access_token", accessToken);
+      window.localStorage.setItem("expires_in", expiresIn.toString());
     } catch (error) {
-      console.error('Refresh token error:', error);
-      window.location.href = '/';
+      console.error("Refresh token error:", error);
+      window.location.href = "/";
     }
-  }, [refreshToken]);
+  }, [refreshToken, setAccessToken]);
 
   useEffect(() => {
     if (code) {
       login();
     } else {
       async function verify() {
-        if (accessToken) { 
-          const userRes = await getUser(accessToken);
-          if (userRes.error) {
-            refreshAccessToken();
-          }
+        const res = await get();
+
+        if (!res || res?.error) {
+          refreshAccessToken();
         }
       }
       verify();
     }
-    return () => {};
-  }, [accessToken, code, login, refreshAccessToken]);
+  }, [code, login, refreshAccessToken]);
 
   useEffect(() => {
     if (!expiresIn) return;
@@ -84,6 +82,4 @@ export default function useAuth(code: string | null, dispatch:any) {
 
     return () => clearInterval(refreshTokenTimeout);
   }, [expiresIn, refreshAccessToken]);
-
-  return accessToken;
 }

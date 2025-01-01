@@ -91,3 +91,6 @@ export interface Category {
     name: string
   }
 
+export interface PlaylistUeryRes{
+  tracks: Track[];
+}

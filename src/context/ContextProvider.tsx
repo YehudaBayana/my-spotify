@@ -1,7 +1,7 @@
-import React, { useReducer, createContext, ReactNode } from 'react';
+import React, { useReducer, createContext, ReactNode } from "react";
 // import SpotifyWebApi from "spotify-web-api-node";
-import { reducerActionTypes, clientId } from '../constants';
-import { Album, Category, Playlist, Track, TrackShortV } from '../types';
+import { reducerActionTypes, clientId } from "../constants";
+import { Album, Category, Playlist, Track, TrackShortV } from "../types";
 // import { Album, Category, Playlist, Track, TrackShortV } from 'src/types';
 
 // Initialize Spotify Web API instance
@@ -22,7 +22,7 @@ interface InitialState {
   genres: {
     id: string;
     items: Playlist[];
-  } []; // Adjust type as per your actual data structure
+  }[]; // Adjust type as per your actual data structure
   playlist: Playlist; // Adjust type as per your actual data structure
   album: Album; // Adjust type as per your actual data structure
   savedTracks: Track[];
@@ -34,7 +34,7 @@ interface InitialState {
   isDragging: boolean;
   queue: TrackShortV[];
   checkedTracks: { uri: string }[];
-  listenAgainTracks: Track[],
+  listenAgainTracks: Track[];
 }
 
 // interface ActionType {
@@ -45,82 +45,82 @@ interface InitialState {
 // Initial state
 const initialState: InitialState = {
   // spotifyApi,
-  accessToken: '',
-  search: '',
+  accessToken: "",
+  search: "",
   searchResults: [],
   playingTrack: {
     playing: {
       artists: [],
       durationMs: 0,
-      id: '',
-      image: '',
-      name: '',
-      uri: '',
+      id: "",
+      image: "",
+      name: "",
+      uri: "",
     },
     previousTracks: [
       {
         artists: [],
         durationMs: 0,
-        id: '',
-        image: '',
-        name: '',
-        uri: '',
+        id: "",
+        image: "",
+        name: "",
+        uri: "",
       },
     ],
     nextTracks: [
       {
         artists: [],
         durationMs: 0,
-        id: '',
-        image: '',
-        name: '',
-        uri: '',
+        id: "",
+        image: "",
+        name: "",
+        uri: "",
       },
     ],
   },
   isClicked: false,
   userPlaylists: [],
   userAlbums: [],
-  genres: [{ id: '', items: [] }],
+  genres: [{ id: "", items: [] }],
   playlist: {
-    id: '',
-    name: '',
-    description: '',
+    id: "",
+    name: "",
+    description: "",
     owner: {
-      id: '',
+      id: "",
     },
     images: [],
     tracks: {
       total: 0,
     },
-    snapshot_id: '',
-    type: '',
+    snapshot_id: "",
+    type: "",
     public: false,
   },
   album: {
-    id: '',
-    uri: '',
-    type: '',
+    id: "",
+    uri: "",
+    type: "",
     artists: [],
     images: [],
-    name: '',
+    name: "",
     popularity: 0,
-    release_date: '',
+    release_date: "",
     total_tracks: 0,
     tracks: {
       items: [],
     },
   },
   savedTracks: [],
-  detail: '',
+  detail: "",
   categories: [],
-  userName: { id: '' },
+  userName: { id: "" },
   isLoading: false,
   playlistDes: [],
   isDragging: false,
   queue: [],
   checkedTracks: [],
-  listenAgainTracks:[]
+  listenAgainTracks: [],
 };
 
 // Action types for the reducer
@@ -162,26 +162,26 @@ const reducer = (state: InitialState, action: ActionType): InitialState => {
       const previousTracks = action.payload.previousTracks.map((track: Track | TrackShortV) => ({
         id: track.id,
         name: track.name,
-        image: ('album' in track && track.album?.images[0]?.url) || ('image' in track && track.image),
+        image: ("album" in track && track.album?.images[0]?.url) || ("image" in track && track.image),
         uri: track.uri,
-        durationMs: ('duration_ms' in track ? track.duration_ms : 0) || ('durationMs' in track && track.durationMs),
+        durationMs: ("duration_ms" in track ? track.duration_ms : 0) || ("durationMs" in track && track.durationMs),
         artists: track.artists,
       }));
       const nextTracks = action.payload.nextTracks.map((track: Track) => ({
         id: track.id,
         name: track.name,
-        image: ('album' in track && track.album?.images[0]?.url) || ('image' in track && track.image),
+        image: ("album" in track && track.album?.images[0]?.url) || ("image" in track && track.image),
         uri: track.uri,
-        durationMs: ('duration_ms' in track ? track.duration_ms : 0) || ('durationMs' in track && track.durationMs),
+        durationMs: ("duration_ms" in track ? track.duration_ms : 0) || ("durationMs" in track && track.durationMs),
         artists: track.artists,
       }));
       const { playing: payPlaying } = action.payload;
       const playing = {
         id: payPlaying.id,
         name: payPlaying.name,
-        image: ('album' in payPlaying && payPlaying.album?.images[0]?.url) || ('image' in payPlaying && payPlaying.image),
+        image: ("album" in payPlaying && payPlaying.album?.images[0]?.url) || ("image" in payPlaying && payPlaying.image),
         uri: payPlaying.uri,
-        durationMs: ('duration_ms' in payPlaying ? payPlaying.duration_ms : 0) || ('durationMs' in payPlaying && payPlaying.durationMs),
+        durationMs: ("duration_ms" in payPlaying ? payPlaying.duration_ms : 0) || ("durationMs" in payPlaying && payPlaying.durationMs),
         artists: payPlaying.artists,
       };
       return {
@@ -219,7 +219,7 @@ const reducer = (state: InitialState, action: ActionType): InitialState => {
     case reducerActionTypes.SET_IS_LOADING:
       return { ...state, isLoading: action.payload };
     case reducerActionTypes.SET_PLAYLIST_DES:
-      console.log('action.payload ', action.payload);
+      console.log("action.payload ", action.payload);
       // console.log("Array.isArray(action.payload) ",Array.isArray(action.payload));
 
       if (Array.isArray(action.payload)) {

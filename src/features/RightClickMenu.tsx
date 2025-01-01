@@ -12,8 +12,14 @@ interface RightClickMenuProps {
   menuOptions: MenuOption[];
 }
 
-const RightClickMenu: React.FC<RightClickMenuProps> = ({ children, menuOptions }) => {
-  const [contextMenu, setContextMenu] = useState<{ mouseX: number; mouseY: number } | null>(null);
+const RightClickMenu: React.FC<RightClickMenuProps> = ({
+  children,
+  menuOptions,
+}) => {
+  const [contextMenu, setContextMenu] = useState<{
+    mouseX: number;
+    mouseY: number;
+  } | null>(null);
 
   const handleContextMenu = (event: MouseEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -38,7 +44,11 @@ const RightClickMenu: React.FC<RightClickMenuProps> = ({ children, menuOptions }
         open={contextMenu !== null}
         onClose={handleClose}
         anchorReference="anchorPosition"
-        anchorPosition={contextMenu !== null ? { top: contextMenu.mouseY, left: contextMenu.mouseX } : undefined}
+        anchorPosition={
+          contextMenu !== null
+            ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
+            : undefined
+        }
       >
         {menuOptions.map((option, index) => (
           <MenuItem

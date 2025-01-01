@@ -1,17 +1,17 @@
-import { reducerActionTypes } from './constants';
-import { addTracksToPlaylist } from './customHooks/useFetchMusicInfo';
-import { Playlist, Track, TrackShortV } from './types';
+import { reducerActionTypes } from "./constants";
+// import { addTracksToPlaylist } from "./customHooks/useFetchMusicInfo";
+import { Playlist, Track, TrackShortV } from "./types";
 
 export function formatNumberShortcut(num: number): string {
   if (num >= 1000000000) {
     // Billion
-    return (num / 1000000000).toFixed(1).replace(/\.0$/, '') + 'B';
+    return (num / 1000000000).toFixed(1).replace(/\.0$/, "") + "B";
   } else if (num >= 1000000) {
     // Million
-    return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+    return (num / 1000000).toFixed(1).replace(/\.0$/, "") + "M";
   } else if (num >= 1000) {
     // Thousand
-    return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
+    return (num / 1000).toFixed(1).replace(/\.0$/, "") + "K";
   } else {
     return num.toString();
   }
@@ -20,11 +20,11 @@ export function formatNumberShortcut(num: number): string {
 export function msToMinutesAndSeconds(ms: number): string {
   const minutes = Math.floor(ms / 60000);
   const seconds = ((ms % 60000) / 1000).toFixed(0);
-  return minutes + ':' + (Number(seconds) < 10 ? '0' : '') + seconds;
+  return minutes + ":" + (Number(seconds) < 10 ? "0" : "") + seconds;
 }
 
 export function isIncludeHtml(string: string): boolean {
-  if (typeof string !== 'string') {
+  if (typeof string !== "string") {
     return false;
   }
 
@@ -33,14 +33,13 @@ export function isIncludeHtml(string: string): boolean {
   return !!isIncludeHtmlTag && isIncludeHtmlTag.length > 0;
 }
 
-
 export function makeArrayUnique<T extends { id: string | number }>(items: T[]): T[] {
-  return [...new Map(items.map(item => [item.id, item])).values()];
+  return [...new Map(items.map((item) => [item.id, item])).values()];
 }
 
 export const handleCheckboxToggle = (e: React.MouseEvent<HTMLButtonElement>, track: Track | TrackShortV, dispatch: any, checkedTracks: { uri: string }[]) => {
   e.stopPropagation();
-  let res = []
+  let res = [];
   if (e.target instanceof HTMLInputElement && e.target.checked) {
     if (!checkedTracks.map((item) => item.uri).includes(track.uri)) {
       res = [...checkedTracks, { uri: track.uri }];
@@ -53,12 +52,11 @@ export const handleCheckboxToggle = (e: React.MouseEvent<HTMLButtonElement>, tra
     } else {
       res = checkedTracks;
     }
-
   }
   dispatch({
     type: reducerActionTypes.SET_CHECKED_TRACKS,
-    payload: res
-  })
+    payload: res,
+  });
   // setCheckedTracks((oldValue) => {
   //   if (e.target instanceof HTMLInputElement && e.target.checked) {
   //     if (!oldValue.map((item) => item.uri).includes(track.uri)) {
@@ -81,16 +79,18 @@ export const handleAddToPlaylist = async (playlist: Playlist, accessToken: strin
   };
 
   try {
-    const added = await addTracksToPlaylist(accessToken, playlist.id, body);
-    const res = await added.json();
-    if (res?.snapshot_id) {
-      setEdit(false);
-      // setCheckedTracks([]);
-      dispatch({
-        type: reducerActionTypes.SET_CHECKED_TRACKS,
-        payload: []
-      })
-    }
+    // const added = await addTracksToPlaylist(playlist.id, body);
+    // const { data, post } = usePostRequest(SpotifyApiUrlsPost.ADD_TRACKS_TO_PLAYLIST, { playlist_id: playlist.id }, body);
+    // await post();
+    // const res = await data.json();
+    // if (res?.snapshot_id) {
+    //   setEdit(false);
+    //   // setCheckedTracks([]);
+    //   dispatch({
+    //     type: reducerActionTypes.SET_CHECKED_TRACKS,
+    //     payload: [],
+    //   });
+    // }
   } catch (error) {
     console.log("yuda error ", error);
   }
@@ -105,4 +105,4 @@ export const handlePlayTrack = (tracks: any[], clickedTrack: Track | TrackShortV
     type: reducerActionTypes.SET_PLAYING_TRACK,
     payload: { playing: clickedTrack, nextTracks, previousTracks },
   });
-}
+};

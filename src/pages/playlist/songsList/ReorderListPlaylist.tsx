@@ -1,18 +1,23 @@
-import React, { useContext, useEffect, useState } from 'react';
-import Paper from '@mui/material/Paper';
-import { useLocation } from 'react-router-dom';
-import List from '@mui/material/List';
-import { styled } from '@mui/material/styles';
-import SearchToAdd from './SearchToAdd';
-import { ListItem, Avatar, ListItemButton, Checkbox, Box, Divider, Typography } from '@mui/material';
-import CheckedTracksActions from './CheckedTracksActions';
-import './songsList.css';
-import PlaylistHeader from '../playlistHeader/PlaylistHeader';
-import { StoreContext } from '../../../context/ContextProvider';
-import { Artist, Playlist, Track } from '../../../types';
-import { addTracksToPlaylist, fetchPlayableItems, removeFromPlaylist, updatePlaylistOrder } from '../../../customHooks/useFetchMusicInfo';
-import { reducerActionTypes } from '../../../constants';
-import { handleCheckboxToggle, handlePlayTrack, msToMinutesAndSeconds } from '../../../utils';
+import React, { useContext, useEffect, useState } from "react";
+import Paper from "@mui/material/Paper";
+import { useLocation } from "react-router-dom";
+import List from "@mui/material/List";
+import { styled } from "@mui/material/styles";
+import SearchToAdd from "./SearchToAdd";
+import { ListItem, Avatar, ListItemButton, Checkbox, Box, Divider, Typography } from "@mui/material";
+import CheckedTracksActions from "./CheckedTracksActions";
+import "./songsList.css";
+import PlaylistHeader from "../playlistHeader/PlaylistHeader";
+import { StoreContext } from "../../../context/ContextProvider";
+import { Artist, Playlist, PlaylistUeryRes, Track } from "../../../types";
+// import { addTracksToPlaylist, fetchPlayableItems, getPlaylistTracks, removeFromPlaylist, updatePlaylistOrder } from "../../../customHooks/useFetchMusicInfo";
+import { reducerActionTypes } from "../../../constants";
+import { handleCheckboxToggle, handlePlayTrack, msToMinutesAndSeconds } from "../../../utils";
+import { useQuery } from "@tanstack/react-query";
+import { useGetRequest } from "../../../api/CRUD/useGetRequest";
+import { SpotifyApiUrlsDelete, SpotifyApiUrlsGet, SpotifyApiUrlsPost } from "../../../api/utils";
+import { usePostRequest } from "../../../api/CRUD/usePostRequest";
+import { useDeleteRequest } from "../../../api/CRUD/useDeleteRequest";
 
 // const StyledListItemNew = styled(ListItem)(({ theme }) => ({
 //   whiteSpace: 'nowrap',
@@ -21,10 +26,10 @@ import { handleCheckboxToggle, handlePlayTrack, msToMinutesAndSeconds } from '..
 //   padding: '10px',
 // }));
 
-interface Item {
-  id: string;
-  content: string;
-}
+// interface Item {
+//   id: string;
+//   content: string;
+// }
 
 interface ReorderListPlaylistProps {
   edit: boolean;
@@ -33,30 +38,44 @@ interface ReorderListPlaylistProps {
 
 const ReorderListPlaylist: React.FC<ReorderListPlaylistProps> = ({ edit, setEdit }) => {
   const location = useLocation();
-  const [type, playlistId] = location.pathname.split('/').filter((item) => item);
+  const [type, playlistId] = location.pathname.split("/").filter((item) => item);
   const { dispatch, state } = useContext(StoreContext);
-  const { accessToken, checkedTracks } = state;
+  const { checkedTracks } = state;
   const [draggedItem, setDraggedItem] = useState<Track | null>(null);
   const [tracks, setTracks] = useState<Track[]>([]);
   const [isUpdating, setIsUpdating] = useState(false);
   const [isPlaylistEditable, setIsPlaylistEditable] = useState(false);
   const [sourceIndex, setSourceIndex] = useState<number>(0);
   const [destinationIndex, setDestinationIndex] = useState<number>(0);
-  const properTracks = tracks?.filter((item) => item);
+  const { get: getPlaylist } = useGetRequest(SpotifyApiUrlsGet.GET_PLAYLIST_TRACKS);
+  const playlistQuery = useQuery({ queryKey: ["playlist", playlistId], queryFn: () => getPlaylist({ playlist_id: playlistId }) });
+  // const playlistQuery = { data: { data: [] }, isLoading: true, isError: true };
+  const { del } = useDeleteRequest(SpotifyApiUrlsDelete.REMOVE_FROM_LIBRARY_PLAYLIST);
+  const { data, post } = usePostRequest(SpotifyApiUrlsPost.ADD_TRACKS_TO_PLAYLIST);
 
   const [playlist, setPlaylist] = useState<Playlist>({
-    id: '',
-    name: '',
-    description: '',
-    owner: { id: '' },
-    images: [{ url: '' }],
+    id: "",
+    name: "",
+    description: "",
+    owner: { id: "" },
+    images: [{ url: "" }],
     tracks: { total: 0 },
-    snapshot_id: '',
+    snapshot_id: "",
     public: false,
-    type: '',
+    type: "",
   });
-  const [rgb, setRgb] = useState<string>('');
-
+  const [rgb, setRgb] = useState<string>("");
+  async function execute(playlistId: string) {
+    // if (accessToken) {
+    //   const { playlistRes, tracks } = await fetchPlayableItems(accessToken, playlistId, type);
+    //   setPlaylist(playlistRes);
+    //   if (tracks.length > 0) {
+    //     setTracks(tracks);
+    //   } else {
+    //     setTracks([]);
+    //   }
+    // }
+  }
   useEffect(() => {
     if (playlist?.owner?.id === state?.userName?.id) {
       setIsPlaylistEditable(true);
@@ -65,18 +84,6 @@ const ReorderListPlaylist: React.FC<ReorderListPlaylistProps> = ({ edit, setEdit
     }
   }, [state.userName, playlist]);
 
-  async function execute(playlistId: string) {
-    if (accessToken) {
-      const { playlistRes, tracks } = await fetchPlayableItems(accessToken, playlistId, type);
-      setPlaylist(playlistRes);
-      if (tracks.length > 0) {
-        setTracks(tracks);
-      } else {
-        setTracks([]);
-      }
-    }
-  }
-
   useEffect(() => {
     execute(playlistId);
     dispatch({
@@ -84,7 +91,17 @@ const ReorderListPlaylist: React.FC<ReorderListPlaylistProps> = ({ edit, setEdit
       payload: [],
     });
     // setEdit(false);
-  }, [playlistId, type, accessToken]);
+  }, [playlistId, type]);
+  // getPlaylistTracks(accessToken, id)
+  if (playlistQuery.isLoading) {
+    return <p>loading....</p>;
+  }
+  if (playlistQuery.isError) {
+    return <p>error....</p>;
+  }
+  console.log("playlistQuery ", playlistQuery);
+
+  const properTracks: any[] = playlistQuery.data?.tracks?.items.filter((item: any) => item).map((item: any) => item.track);
 
   const handleTrackClick = (track: Track) => {
     handlePlayTrack(tracks, track, dispatch);
@@ -92,11 +109,16 @@ const ReorderListPlaylist: React.FC<ReorderListPlaylistProps> = ({ edit, setEdit
 
   const handleDelete = async () => {
     try {
-      console.log('playlist.id ', playlist.id);
-      console.log('playlist.snapshot_id ', playlist.snapshot_id);
+      console.log("playlist.id ", playlist.id);
+      console.log("playlist.snapshot_id ", playlist.snapshot_id);
       // console.log("playlist.snapshot_id ",playlist.snapshot_id);
-      const removed = await removeFromPlaylist(accessToken, playlist.id, checkedTracks, playlist.snapshot_id);
-      console.log('removed ', removed);
+      // const removed = await removeFromPlaylist(playlist.id, checkedTracks, playlist.snapshot_id);
+      const body = {
+        tracks: checkedTracks,
+        snapshotId: playlist.snapshot_id,
+      };
+      const removed = await del({ playlist_id: [playlist.id] }, body);
+      console.log("removed ", removed);
 
       await execute(playlistId);
       setEdit(false);
@@ -105,7 +127,7 @@ const ReorderListPlaylist: React.FC<ReorderListPlaylistProps> = ({ edit, setEdit
         payload: [],
       });
     } catch (error) {
-      console.log('yuda error ', error);
+      console.log("yuda error ", error);
     }
   };
 
@@ -116,8 +138,10 @@ const ReorderListPlaylist: React.FC<ReorderListPlaylistProps> = ({ edit, setEdit
     };
 
     try {
-      const added = await addTracksToPlaylist(accessToken, playlist.id, body);
-      const res = await added.json();
+      // const added = await addTracksToPlaylist(playlist.id, body);
+      // const res = await added.json();
+      await post({ playlist_id: playlist.id }, { uris: checkedTracks.map((checked) => checked.uri) });
+      const res = await data.json();
       if (res?.snapshot_id) {
         setEdit(false);
         dispatch({
@@ -126,7 +150,7 @@ const ReorderListPlaylist: React.FC<ReorderListPlaylistProps> = ({ edit, setEdit
         });
       }
     } catch (error) {
-      console.log('yuda error ', error);
+      console.log("yuda error ", error);
     }
   };
 
@@ -135,7 +159,8 @@ const ReorderListPlaylist: React.FC<ReorderListPlaylistProps> = ({ edit, setEdit
       uris: [track.uri],
       position: 0,
     };
-    const addToPlaylistRes = await addTracksToPlaylist(accessToken, playlistId, body);
+    // const addToPlaylistRes = await addTracksToPlaylist(playlistId, body);
+    const addToPlaylistRes = await post({ playlist_id: playlistId }, body);
     if (addToPlaylistRes.status === 200) {
       execute(playlistId);
     }
@@ -149,11 +174,11 @@ const ReorderListPlaylist: React.FC<ReorderListPlaylistProps> = ({ edit, setEdit
       type: reducerActionTypes.SET_IS_DRAGGING,
       payload: true,
     });
-    e.dataTransfer.effectAllowed = 'move';
-    e.dataTransfer.setData('text/html', e.currentTarget.parentNode?.toString() || '');
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/html", e.currentTarget.parentNode?.toString() || "");
     setTimeout(() => {
       if (e?.currentTarget?.classList) {
-        e.currentTarget.classList.add('dragging');
+        e.currentTarget.classList.add("dragging");
       }
     }, 0);
   };
@@ -180,19 +205,19 @@ const ReorderListPlaylist: React.FC<ReorderListPlaylistProps> = ({ edit, setEdit
       insert_before: sourceIndex < destinationIndex ? destinationIndex + 1 : destinationIndex,
       range_length: 1,
     };
-    console.log('body ', body);
+    console.log("body ", body);
 
     setIsUpdating(true);
-    updatePlaylistOrder(accessToken, playlistId, body)
-      .then((res) => {
-        console.log('res ', res);
-      })
-      .catch((err) => {
-        console.log('err ', err);
-      })
-      .finally(() => {
-        setIsUpdating(false);
-      });
+    // updatePlaylistOrder(playlistId, body)
+    //   .then((res) => {
+    //     console.log("res ", res);
+    //   })
+    //   .catch((err) => {
+    //     console.log("err ", err);
+    //   })
+    //   .finally(() => {
+    //     setIsUpdating(false);
+    //   });
     dispatch({
       type: reducerActionTypes.SET_IS_DRAGGING,
       payload: false,
@@ -201,25 +226,29 @@ const ReorderListPlaylist: React.FC<ReorderListPlaylistProps> = ({ edit, setEdit
 
   return (
     <>
-      <PlaylistHeader total={properTracks.length} setPlaylist={setPlaylist} rgb={rgb} isPlaylistEditable={isPlaylistEditable} edit={edit} setEdit={setEdit} playlist={playlist} />
+      <PlaylistHeader total={properTracks?.length} setPlaylist={setPlaylist} rgb={rgb} isPlaylistEditable={isPlaylistEditable} edit={edit} setEdit={setEdit} playlist={playlist} />
       <Paper
         elevation={0}
         square
         sx={{
-          minHeight: '90vh',
-          background: 'transparent',
-        }}>
+          minHeight: "90vh",
+          background: "transparent",
+        }}
+      >
         {checkedTracks.length > 0 && <CheckedTracksActions isPlaylistEditable={isPlaylistEditable} handleDelete={handleDelete} handleAddToPlaylist={handleAddToPlaylist} />}
 
         <List
           square
           elevation={0}
           style={{
-            background: 'transparent',
-            borderRadius: '0px',
+            background: "transparent",
+            borderRadius: "0px",
           }}
-          component={Paper}>
+          component={Paper}
+        >
           {properTracks.map((track, index) => {
+            console.log("track ", track);
+
             const isChecked = !!checkedTracks.find((item) => item.uri === track.uri);
             return (
               <React.Fragment key={index}>
@@ -237,22 +266,24 @@ const ReorderListPlaylist: React.FC<ReorderListPlaylistProps> = ({ edit, setEdit
                   }}
                   key={track?.id}
                   sx={{
-                    height: '50px',
-                    display: 'flex',
-                    flexDirection: 'row',
-                    padding: '0',
-                  }}>
+                    height: "50px",
+                    display: "flex",
+                    flexDirection: "row",
+                    padding: "0",
+                  }}
+                >
                   <ListItemButton
                     sx={{
-                      position: 'relative',
-                      '&:hover .MuiCheckbox-root': {
-                        visibility: 'visible',
+                      position: "relative",
+                      "&:hover .MuiCheckbox-root": {
+                        visibility: "visible",
                       },
                     }}
                     draggable={isPlaylistEditable}
                     onDragStart={(e) => onDragStart(e, index)}
                     className="draggable"
-                    disableRipple>
+                    disableRipple
+                  >
                     <ListItem sx={{ flex: 1 }} role="none">
                       {index + 1}
                     </ListItem>
@@ -261,10 +292,10 @@ const ReorderListPlaylist: React.FC<ReorderListPlaylistProps> = ({ edit, setEdit
                         <Avatar src={track?.album?.images[0]?.url} />
                       </ListItem>
                     )}
-                    <ListItem sx={{ flex: 20, display: 'flex', flexDirection: 'column', alignItems:"start"}} role="none">
+                    <ListItem sx={{ flex: 20, display: "flex", flexDirection: "column", alignItems: "start" }} role="none">
                       <Typography>{track?.name}</Typography>
                       <Typography variant="body2" gutterBottom>
-                        {track?.artists.map((artist: Artist) => artist.name).join(', ')}
+                        {track?.artists.map((artist: Artist) => artist.name).join(", ")}
                       </Typography>
                     </ListItem>
                     {/* <ListItem sx={{ flex: 20 }} role="none">
@@ -282,9 +313,10 @@ const ReorderListPlaylist: React.FC<ReorderListPlaylistProps> = ({ edit, setEdit
                     <ListItem
                       sx={{
                         flex: 3,
-                        visibility: isChecked ? 'visible' : 'hidden',
+                        visibility: isChecked ? "visible" : "hidden",
                       }}
-                      role="none">
+                      role="none"
+                    >
                       <Checkbox checked={isChecked} onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleCheckboxToggle(e, track, dispatch, checkedTracks)} />
                     </ListItem>
                   </ListItemButton>
@@ -295,7 +327,7 @@ const ReorderListPlaylist: React.FC<ReorderListPlaylistProps> = ({ edit, setEdit
           })}
         </List>
 
-        <Box margin={'auto'} height={200} width={500} my={4} display="flex" alignItems="center" justifyContent="center" gap={4} p={2}>
+        <Box margin={"auto"} height={200} width={500} my={4} display="flex" alignItems="center" justifyContent="center" gap={4} p={2}>
           <SearchToAdd playlistTracks={tracks} handleAddTrack={handleAddTrack} setTracks={setTracks} />
         </Box>
       </Paper>

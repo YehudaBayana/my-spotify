@@ -7,7 +7,7 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "baseUrl": "src",
+    "baseUrl": "./",
     "paths": {
       "@components/*": ["src/components/*"],
       "@/*": ["src/*"]

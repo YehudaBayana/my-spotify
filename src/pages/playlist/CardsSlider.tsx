@@ -1,11 +1,13 @@
-import React, { useContext } from 'react';
-import { Card, CardContent, CardMedia, Typography, Box, CardActions, Button, IconButton } from '@mui/material';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { Link } from 'react-router-dom';
-import { StoreContext } from '../../context/ContextProvider';
-import { fetchPlayableItems } from '../../customHooks/useFetchMusicInfo';
-import { handlePlayTrack } from '../../utils';
-import { myColors } from '../../constants';
+import React, { useContext } from "react";
+import { Card, CardContent, CardMedia, Typography, Box, CardActions, Button, IconButton } from "@mui/material";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { Link } from "react-router-dom";
+import { StoreContext } from "../../context/ContextProvider";
+// import { fetchPlayableItems, getCategoryPlaylists } from "../../customHooks/useFetchMusicInfo";
+import { handlePlayTrack } from "../../utils";
+import { myColors } from "../../constants";
+import { useQueries, useQuery } from "@tanstack/react-query";
+import { Playlist } from "../../types";
 // import { myColors, reducerActionTypes } from 'src/constants';
 // import { fetchPlayableItems } from 'src/customHooks/useFetchMusicInfo';
 // import { StoreContext } from 'src/context/ContextProvider';
@@ -13,18 +15,35 @@ import { myColors } from '../../constants';
 // import { handlePlayTrack } from 'src/utils';
 
 interface CardsSliderProps {
-  playlists: any[]; // Update with actual type
   containerRef: React.RefObject<HTMLDivElement>;
   currentIndex: number;
   cardWidth: number;
+  playlists: Playlist[];
 }
 
-const CardsSlider: React.FC<CardsSliderProps> = ({ playlists, containerRef, currentIndex, cardWidth }) => {
-  const {state, dispatch} = useContext(StoreContext);
-  const {accessToken} = state;
-  const handlePlay = async (playlistId:string, type: string)=>{
-    const {tracks} = await fetchPlayableItems(accessToken, playlistId, type);
-    handlePlayTrack(tracks, tracks[0], dispatch);
+const CardsSlider: React.FC<CardsSliderProps> = ({ containerRef, currentIndex, cardWidth, playlists }) => {
+  const { state, dispatch } = useContext(StoreContext);
+  const { accessToken } = state;
+  // const PlaylistsQuery = useQuery({ queryKey: ["category", category.id], queryFn: () => getCategoryPlaylists(state.accessToken, category.id) });
+  // if (PlaylistsQuery.isLoading) {
+  //   return <p>loading....</p>;
+  // }
+  // if (PlaylistsQuery.isError) {
+  //   return <p>err....</p>;
+  // }
+  // console.log("PlaylistsQuery ", PlaylistsQuery);
+
+  // useQueries({
+  //   queries: (categories ?? []).map((category: any) => {
+  //     return {
+  //       queryKey: ["category", category.id],
+  //       queryFn: () => getCategoryPlaylists(state.accessToken, category.id),
+  //     };
+  //   }),
+  // });
+  const handlePlay = async (playlistId: string, type: string) => {
+    // const { tracks } = await fetchPlayableItems(playlistId, type);
+    // handlePlayTrack(tracks, tracks[0], dispatch);
     // const targetCondition = (obj: Track) => obj.id === tracks[0].id;
     //   const targetIndex = tracks.findIndex(targetCondition);
     //   const previousTracks = targetIndex !== -1 ? tracks.slice(0, targetIndex) : tracks;
@@ -33,40 +52,44 @@ const CardsSlider: React.FC<CardsSliderProps> = ({ playlists, containerRef, curr
     //     type: reducerActionTypes.SET_PLAYING_TRACK,
     //     payload: { playing: tracks[0], nextTracks, previousTracks },
     //   });
-  }
+  };
   return (
-    <Box sx={{ margin: '0 auto', position: 'relative' }} ref={containerRef}>
-      <Box sx={{ display: 'flex', overflow: 'hidden', width: '100%' }}>
+    <Box sx={{ margin: "0 auto", position: "relative" }} ref={containerRef}>
+      <Box sx={{ display: "flex", overflow: "hidden", width: "100%" }}>
         <Box
           sx={{
-            display: 'flex',
-            transition: 'transform 0.5s ease-in-out',
+            display: "flex",
+            transition: "transform 0.5s ease-in-out",
             transform: `translateX(-${currentIndex * cardWidth}px)`,
             width: `${playlists.length * cardWidth}px`,
-          }}>
-          {playlists.map((playlist) => (
-            <Card variant="elevation" key={playlist.id} sx={{ height: 'max-content', width: cardWidth, margin: '10px 10px', boxShadow: 'unset', background: myColors.secondary }}>
-              <Link style={{ textDecoration: 'none', color: 'inherit' }} to={`/playlist/${playlist.id}`} key={playlist.id}>
+          }}
+        >
+          {playlists.map((playlist: Playlist) => (
+            <Card variant="elevation" key={playlist.id} sx={{ height: "max-content", width: cardWidth, margin: "10px 10px", boxShadow: "unset", background: myColors.secondary }}>
+              <Link style={{ textDecoration: "none", color: "inherit" }} to={`/playlist/${playlist.id}`} key={playlist.id}>
                 <CardMedia component="img" height="194" image={playlist?.images[0]?.url} alt="Paella dish" />
                 <CardContent>
                   <Typography
-                  fontSize="20px"
+                    fontSize="20px"
                     sx={{
-                      display: '-webkit-box',
-                      WebkitBoxOrient: 'vertical',
+                      display: "-webkit-box",
+                      WebkitBoxOrient: "vertical",
                       WebkitLineClamp: 1,
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
                       // height: '3em', // Assuming line-height is 1.5em
                     }}
                     variant="h5"
-                    color="text.secondary">
+                    color="text.secondary"
+                  >
                     {playlist.name}
                   </Typography>
                 </CardContent>
               </Link>
-              <CardActions sx={{ display: 'flex', justifyContent: 'space-between' }} disableSpacing>
-                <Button onClick={()=> handlePlay(playlist.id, playlist.type)} size="small">Play</Button>
+              <CardActions sx={{ display: "flex", justifyContent: "space-between" }} disableSpacing>
+                <Button onClick={() => handlePlay(playlist.id, playlist.type)} size="small">
+                  Play
+                </Button>
                 <IconButton aria-label="add to favorites">
                   <MoreVertIcon />
                 </IconButton>

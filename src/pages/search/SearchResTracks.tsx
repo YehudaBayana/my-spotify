@@ -1,17 +1,17 @@
-import React, { useContext, useState } from 'react';
-import { Button, Checkbox, Paper, Table, TableBody, TableCell, TableContainer, TableRow } from '@mui/material';
-import { handleCheckboxToggle, msToMinutesAndSeconds } from '../../utils';
-import AddIcon from '@mui/icons-material/Add';
+import React, { useContext, useState } from "react";
+import { Button, Checkbox, Paper, Table, TableBody, TableCell, TableContainer, TableRow } from "@mui/material";
+import { handleCheckboxToggle, msToMinutesAndSeconds } from "../../utils";
+import AddIcon from "@mui/icons-material/Add";
 // import { addTracksToPlaylist } from 'src/customHooks/useFetchMusicInfo';
 // import { StoreContext } from 'src/context/ContextProvider';
 // import CheckedTracksActions from 'src/features/songsList/CheckedTracksActions';
 // import { Playlist, Track } from 'src/types';
 // import { reducerActionTypes } from 'src/constants';
-import CheckedTracksActions from '../playlist/songsList/CheckedTracksActions';
-import { Playlist, Track } from '../../types';
-import { StoreContext } from '../../context/ContextProvider';
-import { addTracksToPlaylist } from '../../customHooks/useFetchMusicInfo';
-import { reducerActionTypes } from '../../constants';
+import CheckedTracksActions from "../playlist/songsList/CheckedTracksActions";
+import { Playlist, Track } from "../../types";
+import { StoreContext } from "../../context/ContextProvider";
+// import { addTracksToPlaylist } from "../../customHooks/useFetchMusicInfo";
+import { reducerActionTypes } from "../../constants";
 
 // interface Track {
 //   id: string;
@@ -46,8 +46,8 @@ interface SearchResTracksProps {
 }
 
 const SearchResTracks: React.FC<SearchResTracksProps> = ({ handlePlay, selectedRes, addToPlaylist, handleAddTrack, setSelectedRes, playlistTracks, setTracks }) => {
-  const { state, dispatch} = useContext(StoreContext);
-  const {checkedTracks} = state;
+  const { state, dispatch } = useContext(StoreContext);
+  const { checkedTracks } = state;
 
   const handleAddToPlaylist = async (playlist: Playlist) => {
     const body = {
@@ -56,23 +56,25 @@ const SearchResTracks: React.FC<SearchResTracksProps> = ({ handlePlay, selectedR
     };
 
     try {
-      const added = await addTracksToPlaylist(state.accessToken, playlist.id, body);
-      const res = await added.json();
-      if (res?.snapshot_id) {
-        // setEdit(false);
-        dispatch({
-          type:reducerActionTypes.SET_CHECKED_TRACKS,
-          payload: []
-        })
-      }
+      // const added = await addTracksToPlaylist(playlist.id, body);
+      // const { data, post } = usePostRequest(SpotifyApiUrlsPost.ADD_TRACKS_TO_PLAYLIST, { playlist_id: playlist.id }, { uris: checkedTracks.map((checked) => checked.uri) });
+      // await post();
+      // const res = await data.json();
+      // if (res?.snapshot_id) {
+      //   // setEdit(false);
+      //   dispatch({
+      //     type: reducerActionTypes.SET_CHECKED_TRACKS,
+      //     payload: [],
+      //   });
+      // }
     } catch (error) {
-      console.log('yuda error ', error);
+      console.log("yuda error ", error);
     }
   };
   return (
     <>
       {checkedTracks.length > 0 && <CheckedTracksActions handleAddToPlaylist={handleAddToPlaylist} />}
-      <TableContainer elevation={0}  component={Paper} sx={{ borderRadius: 0, background:"transparent" }}>
+      <TableContainer elevation={0} component={Paper} sx={{ borderRadius: 0, background: "transparent" }}>
         <Table sx={{ minWidth: 450 }} aria-label="caption table">
           <TableBody>
             {Array.isArray(selectedRes) &&
@@ -87,35 +89,38 @@ const SearchResTracks: React.FC<SearchResTracksProps> = ({ handlePlay, selectedR
                       }}
                       key={track.id}
                       sx={{
-                        position: 'relative',
-                        '&:hover .MuiCheckbox-root, &:hover .custom-checkbox': {
-                          visibility: 'visible',
+                        position: "relative",
+                        "&:hover .MuiCheckbox-root, &:hover .custom-checkbox": {
+                          visibility: "visible",
                         },
-                      }}>
+                      }}
+                    >
                       <TableCell width="10%" align="left" component="th" scope="row">
                         <img src={track.album.images[2].url} loading="lazy" alt="mashu" width={60} height={50} />
                       </TableCell>
                       <TableCell
                         width="30%"
                         sx={{
-                          whiteSpace: 'nowrap',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
                           maxWidth: 0,
                         }}
                         align="left"
-                        scope="row">
+                        scope="row"
+                      >
                         {track.name}
                       </TableCell>
                       <TableCell
                         width="30%"
                         sx={{
-                          whiteSpace: 'nowrap',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
                           maxWidth: 0,
                         }}
-                        align="left">
+                        align="left"
+                      >
                         {track.album.name}
                       </TableCell>
                       {addToPlaylist ? (
@@ -124,14 +129,15 @@ const SearchResTracks: React.FC<SearchResTracksProps> = ({ handlePlay, selectedR
                             onClick={async (e) => {
                               e.stopPropagation();
                               let mashu = await handleAddTrack(track);
-                              console.log('mashu ', mashu);
+                              console.log("mashu ", mashu);
                               if (mashu.status === 200 || mashu.status === 201) {
                                 setSelectedRes((old) => old.filter((item) => item.uri !== track.uri));
                                 setTracks((old) => [track, ...old]);
                               }
                             }}
                             variant="contained"
-                            endIcon={<AddIcon />}>
+                            endIcon={<AddIcon />}
+                          >
                             Add
                           </Button>
                         </TableCell>
@@ -145,7 +151,7 @@ const SearchResTracks: React.FC<SearchResTracksProps> = ({ handlePlay, selectedR
                           </TableCell>
                           <TableCell className="custom-checkbox">
                             <Checkbox
-                              sx={{ visibility: isChecked ? 'visible' : 'hidden' }}
+                              sx={{ visibility: isChecked ? "visible" : "hidden" }}
                               checked={isChecked}
                               onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleCheckboxToggle(e, track, dispatch, checkedTracks)}
                             />

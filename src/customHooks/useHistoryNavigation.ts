@@ -1,11 +1,10 @@
-import { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const useHistoryNavigation = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  console.log("location ", location);
-  
+
   const [historyStack, setHistoryStack] = useState([location.pathname]);
   const [currentIndex, setCurrentIndex] = useState(0);
 

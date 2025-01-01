@@ -3,8 +3,8 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
-import { StoreContext } from '../../../context/ContextProvider';
-import SearchPage from '../../search/SearchPage';
+import { StoreContext } from "../../../context/ContextProvider";
+import SearchPage from "../../search/SearchPage";
 // import { StoreContext } from 'src/context/ContextProvider';
 // import SearchPage from 'src/pages/search/SearchPage';
 // import SearchPage from "../../pages/search/SearchPage";
@@ -41,7 +41,7 @@ const SearchToAdd: React.FC<SearchToAddProps> = ({ handleAddTrack, playlistTrack
       <Modal sx={{ overflow: "auto" }} open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
         <Box sx={style}>
           <div style={{ width: "100%" }}>
-            <SearchPage setTracks={setTracks} playlistTracks={playlistTracks} handleAddTrack={handleAddTrack} addToPlaylist={true} accessToken={accessToken} />
+            <SearchPage setTracks={setTracks} playlistTracks={playlistTracks} handleAddTrack={handleAddTrack} addToPlaylist={true} />
           </div>
         </Box>
       </Modal>

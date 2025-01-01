@@ -1,23 +1,21 @@
-import { useState, useEffect, useContext } from 'react';
-import SpotifyPlayer from 'react-spotify-web-playback';
-import { StoreContext } from '../context/ContextProvider';
-import { myColors, reducerActionTypes } from '../constants';
-import { TrackShortV } from '../types';
+import { useState, useEffect, useContext } from "react";
+import SpotifyPlayer from "react-spotify-web-playback";
+import { StoreContext } from "../context/ContextProvider";
+import { myColors, reducerActionTypes } from "../constants";
+import { TrackShortV } from "../types";
+import { useAuthContext } from "../context/AuthContextProvider";
 // import { TrackShortV } from 'src/types';
 // import { myColors, reducerActionTypes } from 'src/constants';
 // import { getUserQueue } from 'src/customHooks/useFetchMusicInfo';
 
-interface PlayerProps {
-  accessToken: string;
-}
-
-const Player: React.FC<PlayerProps> = ({ accessToken }) => {
+const Player: React.FC = () => {
   const [play, setPlay] = useState(false);
   const { state, dispatch } = useContext(StoreContext);
+  const { accessToken } = useAuthContext();
   const { playingTrack, queue } = state;
 
   useEffect(() => {
-    return setPlay(true)
+    return setPlay(true);
   }, [state?.playingTrack?.playing?.uri]);
 
   if (!accessToken) return null;
@@ -33,17 +31,17 @@ const Player: React.FC<PlayerProps> = ({ accessToken }) => {
         sliderColor: myColors.slider,
         trackArtistColor: myColors.background,
         trackNameColor: myColors.background,
-        sliderTrackColor:myColors.background
+        sliderTrackColor: myColors.background,
       }}
       showSaveIcon
       callback={(state) => {
         if (state.track.id) {
           // console.log("state ", state);
-          
+
           dispatch({
-            type:reducerActionTypes.UPDATE_QUEUE,
-            payload: {id: state.track.id, name: state.track.name}
-          })
+            type: reducerActionTypes.UPDATE_QUEUE,
+            payload: { id: state.track.id, name: state.track.name },
+          });
         }
         if (!state.isPlaying) setPlay(false);
       }}
