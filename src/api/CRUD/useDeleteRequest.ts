@@ -1,44 +1,32 @@
+// useDeleteRequest.ts
 import { useState } from "react";
-import { buildUrl, ParamsForUrl, SpotifyApiUrlsDelete } from "../utils";
+import { buildUrl, SpotifyApiUrls } from "../utils";
 import { useAuthContext } from "../../context/AuthContextProvider";
 
-export function useDeleteRequest<T>(url: SpotifyApiUrlsDelete) {
+export function useDeleteRequest<T>(url: SpotifyApiUrls, params?: Record<string, any>, body?: any): { del: () => Promise<T> }  {
   const [data, setData] = useState<T | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
-  const accessToken = useAuthContext();
+  const { accessToken } = useAuthContext();
 
-  const del = async (params: ParamsForUrl<typeof url>, body?: any) => {
+  const del = async (): Promise<T> => {
     setLoading(true);
-    setError(null);
-
-    try {
-      if (!accessToken) throw new Error("Access token is not available");
-
-      const finalUrl = buildUrl(url, params);
+    const finalUrl = buildUrl(url, params||{});
 
       const headers = {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json'
       };
-
       const response = await fetch(finalUrl, {
-        method: "DELETE",
+        method: 'DELETE',
         headers,
-        body: body ? JSON.stringify(body) : undefined, // Only include body if provided
+        body: JSON.stringify(body)
       });
-
       if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-
-      const result = await response.json();
-      setData(result);
-      return result;
-    } catch (err) {
-      setError(err as Error);
-    } finally {
-      setLoading(false);
-    }
+      return response.json();
+      // setData(result);
+    
   };
 
-  return { data, loading, error, del };
+  return { del };
 }

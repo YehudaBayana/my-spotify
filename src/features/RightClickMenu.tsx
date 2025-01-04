@@ -10,16 +10,17 @@ interface MenuOption {
 interface RightClickMenuProps {
   children: ReactNode;
   menuOptions: MenuOption[];
+  contextMenu: { mouseX: number; mouseY: number } | null;  // New prop for context menu state
+  setContextMenu: React.Dispatch<React.SetStateAction<{ mouseX: number; mouseY: number } | null>>; // New prop for context menu setter
 }
 
 const RightClickMenu: React.FC<RightClickMenuProps> = ({
   children,
   menuOptions,
+  contextMenu,
+  setContextMenu,
 }) => {
-  const [contextMenu, setContextMenu] = useState<{
-    mouseX: number;
-    mouseY: number;
-  } | null>(null);
+  
 
   const handleContextMenu = (event: MouseEvent<HTMLDivElement>) => {
     event.preventDefault();

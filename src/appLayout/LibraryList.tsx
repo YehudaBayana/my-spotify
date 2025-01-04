@@ -26,6 +26,10 @@ interface LibraryListProps {
 const LibraryList: React.FC<LibraryListProps> = ({ open, search, sortBy }) => {
   const { state, dispatch } = useContext(StoreContext);
   const { userName } = state;
+  const [contextMenu, setContextMenu] = useState<{
+    mouseX: number;
+    mouseY: number;
+  } | null>(null);
   // const userAlbumsQuery = useQuery({ queryKey: ["userAlbums"], queryFn: () => useGetRequest(SpotifyApiUrlsGet.GET_USER_ALBUMS) });
   const userPlaylistsQuery = useQuery({
     queryKey: ["userPlaylists", userName.id],
@@ -99,8 +103,8 @@ const LibraryList: React.FC<LibraryListProps> = ({ open, search, sortBy }) => {
 
   return (
     <List sx={{ background: myColors.background }}>
-      <AreYouSurePrompt open={openDialog} onClose={handleDialogClose} onConfirm={handleDeleteConfirm} />
-      <RightClickMenu menuOptions={menuOptions}>
+      {/* <AreYouSurePrompt open={openDialog} onClose={handleDialogClose} onConfirm={handleDeleteConfirm} /> */}
+      <RightClickMenu menuOptions={menuOptions} contextMenu={contextMenu} setContextMenu={setContextMenu}>
         {handleSortBy(filteredPlaylists).map((item, i) => {
           return item ? (
             <Link key={item.id} style={{ textDecoration: "none", color: "black" }} to={`/${item.type}/${item.id}`}>

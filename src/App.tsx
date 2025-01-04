@@ -15,6 +15,8 @@ import {
 } from "@mui/material";
 import AppLayout from "./appLayout/AppLayout";
 import { useRef } from "react";
+import NewLandingPage from './pages/landingPage/LandingPage';
+import { useAuthContext } from './context/AuthContextProvider';
 // import { makeStyles } from '@mui/styles';
 //
 
@@ -30,27 +32,25 @@ export const Container = styled.div`
 `;
 
 function App() {
-  // const { accessToken, setAccessToken } = useAuthContext();
-  // useAuth(code, setAccessToken);
+  const { accessToken, setAccessToken } = useAuthContext();
+  useAuth(code);
   const iframeRef = useRef<HTMLDivElement>(null);
 
   return (
     <>
       <Router>
         {/* <ScrollToTop /> */}
-        {/* {accessToken ? (
+         {accessToken ? (
           <Container>
-            <Home />
-          </Container>
-        ) : (
-          <> */}
-        <Container>
           <AppLayout divRef={iframeRef} />
         </Container>
-        {/* <NewLandingPage /> */}
+        ) : (
+          <> 
+       
+        <NewLandingPage />
         {/* <LandingPage /> */}
-        {/* </>
-        )} */}
+         </>
+        )} 
       </Router>
     </>
   );

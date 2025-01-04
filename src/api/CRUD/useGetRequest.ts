@@ -1,46 +1,31 @@
-import { useState, useEffect } from "react";
-import { buildUrl, ParamsForUrl, SpotifyApiUrlsGet } from "../utils";
+// useGetRequest.ts
+import { useState } from "react";
+import { buildUrl, SpotifyApiUrls } from "../utils";
 import { useAuthContext } from "../../context/AuthContextProvider";
 
-export function useGetRequest<
-  T extends SpotifyApiUrlsGet,
-  U extends ParamsForUrl<T>,
-  R // Define a generic type for the response data
->(url: T) {
-  const [data, setData] = useState<any>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<Error | null>(null);
+export function useGetRequest<T>(
+  url: SpotifyApiUrls,
+  params?: Record<string, string | string[]>
+): { get: () => Promise<T> } {
   const { accessToken } = useAuthContext();
 
-  const get = async (params?: U) => {
-    setLoading(true);
-    setError(null);
+  const get = async (): Promise<T> => {
+    if (!accessToken) throw new Error('Access token is not available');
+console.log("url ",url);
+console.log("params ",params);
 
-    try {
-      if (!accessToken) throw new Error("Access token is not available");
+    const finalUrl = buildUrl(url, params || {});
+    console.log("finalUrl ",finalUrl);
+    
+    const headers = {
+      Authorization: `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
+    };
 
-      const finalUrl = buildUrl(url, params || {});
-
-      const headers = {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      };
-
-      const response = await fetch(finalUrl, { method: "GET", headers });
-
-      if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-
-      const result = await response.json();
-      setData(result);
-      return result;
-    } catch (err) {
-      console.log("Err ", err);
-
-      setError(err as Error);
-    } finally {
-      setLoading(false);
-    }
+    const response = await fetch(finalUrl, { method: 'GET', headers });
+    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+    return response.json();
   };
 
-  return { data, isLoading: loading, isError: error, get };
+  return { get };
 }

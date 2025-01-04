@@ -6,7 +6,7 @@ import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import Box from "@mui/material/Box";
 import AccountMenu from "../features/accountMenu/AccountMenu";
-import { DRAWERHEIGHT, drawerWidth } from "../constants";
+import { DRAWER_HEIGHT, drawerWidth } from "../constants";
 import { useTheme } from "@mui/material/styles";
 import { Link } from 'react-router-dom';
 import NavigationButtons from './NavigationButtons';
@@ -38,8 +38,8 @@ const CustomAppBar: React.FC<CustomAppBarProps> = ({ open, handleDrawerOpen, dra
   }));
 
   return (
-    <AppBar theme={theme} open={open} sx={{ height: DRAWERHEIGHT }} color="primary">
-      <Toolbar sx={{ height: DRAWERHEIGHT }}>
+    <AppBar theme={theme} open={open} sx={{ height: DRAWER_HEIGHT }} color="primary">
+      <Toolbar sx={{ height: DRAWER_HEIGHT }}>
         <IconButton
           color="inherit"
           aria-label="open drawer"

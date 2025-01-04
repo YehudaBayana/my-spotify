@@ -13,12 +13,12 @@ import { useNavigate, useLocation } from "react-router-dom";
 import Card from "../../components/card/Card";
 // import { getSearch } from "../../customHooks/useFetchMusicInfo";
 import SearchResTracks from "./SearchResTracks";
-import { Track } from "../../types";
 import { handlePlayTrack } from "../../utils";
 import { useQuery } from "@tanstack/react-query";
 import { useDebounce } from "../../customHooks/useDebounce";
 import { useGetRequest } from "../../api/CRUD/useGetRequest";
-import { SpotifyApiUrlsGet } from "../../api/utils";
+import { Track } from '../../types/spotifyResponses';
+import { SpotifyApiUrls } from '../../api/utils';
 // import { useDebounce } from "./useDebounce"; // Import the debounce hook
 
 interface SearchPageProps {
@@ -38,7 +38,7 @@ export default function SearchPage({ addToPlaylist = false, handleAddTrack, play
   const [searchRes, setSearchRes] = useState<Record<string, any>>({});
   const [selectedRes, setSelectedRes] = useState<any[]>([]);
   const debouncedSearchValue = useDebounce(searchValue, 500); // Debounce the search value
-  const { get: getSearch } = useGetRequest(SpotifyApiUrlsGet.GET_SEARCH);
+  const { get: getSearch } = useGetRequest(SpotifyApiUrls.GET_SEARCH);
   const filteredSearchMenu = addToPlaylist ? searchMenu.filter((item) => item === "tracks" || item === "playlists") : searchMenu;
 
   function handlePlay(track: Track) {
@@ -47,7 +47,7 @@ export default function SearchPage({ addToPlaylist = false, handleAddTrack, play
 
   const searchQuery = useQuery({
     queryKey: ["search", debouncedSearchValue],
-    queryFn: () => getSearch({ searchValue: debouncedSearchValue }),
+    queryFn: () => { },//getSearch(SpotifyApiUrlsGet.GET_SEARCH + "?q=" + debouncedSearchValue + "&type=playlist"),
     enabled: !!debouncedSearchValue, // Only run the query if the debounced search value is not empty
   });
   console.log("searchQuery ", searchQuery);
@@ -57,8 +57,8 @@ export default function SearchPage({ addToPlaylist = false, handleAddTrack, play
     params.append("q", debouncedSearchValue);
     navigate(`?q=${debouncedSearchValue}`);
     if (!searchQuery.isPending && searchQuery.data) {
-      setSearchRes(searchQuery.data);
-      setSelectedRes(searchQuery.data[filteredSearchMenu[selectedIndex]]?.items?.map((item: any) => item) || []);
+      // setSearchRes(searchQuery.data);
+      // setSelectedRes(searchQuery.data[filteredSearchMenu[selectedIndex]]?.items?.map((item: any) => item) || []);
     }
   }, [debouncedSearchValue, searchQuery.isPending, searchQuery.data]);
 

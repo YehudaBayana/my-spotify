@@ -1,6 +1,7 @@
 import { reducerActionTypes } from "./constants";
 // import { addTracksToPlaylist } from "./customHooks/useFetchMusicInfo";
-import { Playlist, Track, TrackShortV } from "./types";
+import { Playlist, Track as Track2, TrackShortV } from "./types";
+import { Track } from './types/spotifyResponses';
 
 export function formatNumberShortcut(num: number): string {
   if (num >= 1000000000) {

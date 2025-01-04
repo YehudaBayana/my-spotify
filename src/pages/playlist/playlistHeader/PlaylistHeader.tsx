@@ -3,10 +3,13 @@ import Grid from "@mui/material/Grid";
 import { Button, Checkbox, FormControlLabel, TextField } from "@mui/material";
 import { AppBar, Typography, Avatar, Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { Playlist } from "../../../types";
+// import { Playlist } from "../../../types";
 import { StoreContext } from "../../../context/ContextProvider";
 // import { updatePlaylistDetails } from "../../../customHooks/useFetchMusicInfo";
 import { reducerActionTypes } from "../../../constants";
+import { useUpdatePlaylistDetails } from '../../../api/spotifyApi';
+import { GetPlaylistTracksResponse, Playlist } from '../../../types/spotifyResponses';
+// import { useUpdatePlaylistDetails } from '../../../api/spotifyApi';
 // import { updatePlaylistDetails } from 'src/customHooks/useFetchMusicInfo';
 // import { StoreContext } from 'src/context/ContextProvider';
 // import { reducerActionTypes } from 'src/constants';
@@ -44,12 +47,12 @@ const ContentBox = styled(Box)(({ theme }) => ({
 // }
 
 interface PlaylistHeaderProps {
-  playlist: Playlist;
+  playlist: GetPlaylistTracksResponse;
   edit: boolean;
   setEdit: React.Dispatch<React.SetStateAction<boolean>>;
   isPlaylistEditable: boolean;
   rgb: string;
-  setPlaylist: React.Dispatch<React.SetStateAction<Playlist>>; // New function prop to update playlist
+  setPlaylist: React.Dispatch<React.SetStateAction<GetPlaylistTracksResponse | null>>
   total: number;
 }
 
@@ -58,6 +61,8 @@ const PlaylistHeader: React.FC<PlaylistHeaderProps> = ({ total, playlist, edit, 
   const [description, setDescription] = useState<string>(playlist?.description || "");
   const [isPublic, setIsPublic] = useState<boolean>(playlist?.public);
   const { state, dispatch } = useContext(StoreContext);
+  const { mutate: updateDetails, isError, error } = useUpdatePlaylistDetails(playlist.id);
+  console.log("playlist ", playlist);
 
   useEffect(() => {
     setName(playlist?.name || "");
@@ -67,13 +72,14 @@ const PlaylistHeader: React.FC<PlaylistHeaderProps> = ({ total, playlist, edit, 
   const toggleEdit = async (operation: string) => {
     if (operation === "Save") {
       if (name) {
-        // const body = {
-        //   name,
-        //   description,
-        //   public: isPublic,
-        // };
-        // const updated = await updatePlaylistDetails(playlist.id, body);
-        // console.log("updated ", updated);
+        const body = {
+          name,
+          description,
+          public: isPublic,
+        };
+        updateDetails({ name, description, public: isPublic });        // const updated = await updatePlaylistDetails(playlist.id, body);
+        // console.log("data ", data);
+        console.log("error ", error);
         // if (updated) {
         //   setPlaylist((old) => {
         //     dispatch({

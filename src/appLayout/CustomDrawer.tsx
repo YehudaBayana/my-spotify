@@ -15,7 +15,7 @@ import SortIcon from '@mui/icons-material/Sort';
 import { Drawer, DrawerHeader } from './styledComponents';
 import LibrarySearch from './LibrarySearch';
 import LibraryList from './LibraryList';
-import { DRAWERHEIGHT, drawerWidth, MIN_OPEN_WIDTH, CLOSE_WIDTH, links, myColors } from '../constants';
+import { DRAWER_HEIGHT, drawerWidth, MIN_OPEN_WIDTH, CLOSE_WIDTH, links, myColors } from '../constants';
 import CreatePlaylist from '../components/CreatePlaylist';
 
 interface CustomDrawerProps {

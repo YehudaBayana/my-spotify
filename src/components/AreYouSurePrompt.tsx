@@ -5,32 +5,25 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-
 interface AreYouSurePromptProps {
   open: boolean;
+  title: string;
+  description: string;
   onClose: () => void;
   onConfirm: () => void;
 }
 
-const AreYouSurePrompt: React.FC<AreYouSurePromptProps> = ({ open, onClose, onConfirm }) => {
-  return (
-    <React.Fragment>
-      <Dialog open={open} onClose={onClose} aria-labelledby="alert-dialog-title" aria-describedby="alert-dialog-description">
-        <DialogTitle id="alert-dialog-title">{"Are you sure?"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">Are you sure you want to delete this playlist from the library?</DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={onClose} color="primary">
-            No
-          </Button>
-          <Button onClick={onConfirm} color="primary" autoFocus>
-            Yes
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </React.Fragment>
-  );
-};
+const AreYouSurePrompt: React.FC<AreYouSurePromptProps> = ({ open, title, description, onClose, onConfirm }) => (
+  <Dialog open={open} onClose={onClose} aria-labelledby="dialog-title" aria-describedby="dialog-description">
+    <DialogTitle id="dialog-title">{title}</DialogTitle>
+    <DialogContent>
+      <DialogContentText id="dialog-description">{description}</DialogContentText>
+    </DialogContent>
+    <DialogActions>
+      <Button onClick={onClose} color="primary">No</Button>
+      <Button onClick={onConfirm} color="primary" autoFocus>Yes</Button>
+    </DialogActions>
+  </Dialog>
+);
 
 export default AreYouSurePrompt;

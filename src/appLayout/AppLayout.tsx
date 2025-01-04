@@ -13,9 +13,10 @@ import {
 // import Player from "./Player";
 import CustomAppBar from "./CustomAppBar";
 import CustomDrawer from "./CustomDrawer";
-import { DRAWERHEIGHT, drawerWidth } from "../constants";
+import { DRAWER_HEIGHT, drawerWidth } from "../constants";
 import CurrentSongPlaying from "../features/currentSongPlaying/CurrentSongPlaying";
 import { useLocation } from "react-router-dom";
+import Player from './Player';
 
 interface AppLayoutProps {
   divRef: React.RefObject<HTMLDivElement>;
@@ -70,14 +71,14 @@ const AppLayout: React.FC<AppLayoutProps> = ({ divRef }) => {
           setDrawerWidthState={setDrawerWidthState}
           open={open}
           handleDrawerClose={handleDrawerClose}
-          // links={links}
-          // userPlaylists={userPlaylists}
-          // userAlbums={userAlbums}
+        // links={links}
+        // userPlaylists={userPlaylists}
+        // userAlbums={userAlbums}
         />
         <Box
           component="main"
           sx={{
-            marginTop: `${DRAWERHEIGHT}px`,
+            marginTop: `${DRAWER_HEIGHT}px`,
             marginLeft: "-23px",
             marginRight: "-23px",
             flexGrow: 1,
@@ -85,10 +86,6 @@ const AppLayout: React.FC<AppLayoutProps> = ({ divRef }) => {
             position: "relative",
           }}
         >
-          <Grid>
-            <div ref={divRef}></div>
-            <AppRouter drawerWidthState={drawerWidthState} />
-          </Grid>
           <Grid
             position="fixed"
             width={`calc(100% - ${open ? drawerWidthState : CLOSE_WIDTH}px)`}
@@ -100,9 +97,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ divRef }) => {
               transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
               display: state.isDragging
                 ? "none"
-                : currentlyPlaying
-                ? "block"
-                : "none",
+                : "block"
             }}
             id="yuda"
             onClick={(e: any) => {
@@ -116,12 +111,17 @@ const AppLayout: React.FC<AppLayoutProps> = ({ divRef }) => {
               }
             }}
           >
-            {/* <div className="playerBackground">
+            <div className="playerBackground">
               <div className="playerSticky">
                 <Player />
               </div>
-            </div> */}
+            </div>
           </Grid>
+          <Grid>
+            <div ref={divRef}></div>
+            <AppRouter drawerWidthState={drawerWidthState} />
+          </Grid>
+
         </Box>
       </Box>
       <CurrentSongPlaying

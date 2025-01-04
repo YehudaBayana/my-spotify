@@ -50,7 +50,7 @@ export const links: Link[] = [
 ];
 
 export const drawerWidth: number = 240;
-export const DRAWERHEIGHT: number = 65;
+export const DRAWER_HEIGHT: number = 80;
 export const PLAYLIST_CARD_WIDTH: number = 200;
 export const MIN_OPEN_WIDTH: number = 210;
 export const CLOSE_WIDTH: number = 70;

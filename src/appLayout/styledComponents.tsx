@@ -1,6 +1,6 @@
 import { styled, Theme } from "@mui/material/styles";
 import MuiDrawer from "@mui/material/Drawer";
-import { drawerWidth, DRAWERHEIGHT } from "../constants";
+import { drawerWidth, DRAWER_HEIGHT } from "../constants";
 import ListItemIcon from "@mui/material/ListItemIcon";
 
 export const DrawerHeader = styled("div")(({ theme }) => ({
@@ -10,7 +10,7 @@ export const DrawerHeader = styled("div")(({ theme }) => ({
   padding: theme.spacing(0, 1),
   ...theme.mixins.toolbar,
   ["@media (min-width:600px)"]: {
-    minHeight: DRAWERHEIGHT,
+    minHeight: DRAWER_HEIGHT,
   },
 }));
 

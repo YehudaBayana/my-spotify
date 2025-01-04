@@ -9,15 +9,19 @@ import CheckedTracksActions from "./CheckedTracksActions";
 import "./songsList.css";
 import PlaylistHeader from "../playlistHeader/PlaylistHeader";
 import { StoreContext } from "../../../context/ContextProvider";
-import { Artist, Playlist, PlaylistUeryRes, Track } from "../../../types";
+import { Playlist, PlaylistUeryRes } from "../../../types";
 // import { addTracksToPlaylist, fetchPlayableItems, getPlaylistTracks, removeFromPlaylist, updatePlaylistOrder } from "../../../customHooks/useFetchMusicInfo";
 import { reducerActionTypes } from "../../../constants";
 import { handleCheckboxToggle, handlePlayTrack, msToMinutesAndSeconds } from "../../../utils";
 import { useQuery } from "@tanstack/react-query";
 import { useGetRequest } from "../../../api/CRUD/useGetRequest";
-import { SpotifyApiUrlsDelete, SpotifyApiUrlsGet, SpotifyApiUrlsPost } from "../../../api/utils";
+// import { SpotifyApiUrlsDelete, SpotifyApiUrlsGet, SpotifyApiUrlsPost } from "../../../api/utils";
 import { usePostRequest } from "../../../api/CRUD/usePostRequest";
 import { useDeleteRequest } from "../../../api/CRUD/useDeleteRequest";
+import { Artist, GetPlaylistTracksResponse, Track } from '../../../types/spotifyResponses';
+import { useGetPlaylistTracks } from '../../../api/spotifyApi';
+import Spinner from '../../../components/Spinner';
+import ErrorMessage from '../../../components/ErrorMessage';
 
 // const StyledListItemNew = styled(ListItem)(({ theme }) => ({
 //   whiteSpace: 'nowrap',
@@ -47,35 +51,12 @@ const ReorderListPlaylist: React.FC<ReorderListPlaylistProps> = ({ edit, setEdit
   const [isPlaylistEditable, setIsPlaylistEditable] = useState(false);
   const [sourceIndex, setSourceIndex] = useState<number>(0);
   const [destinationIndex, setDestinationIndex] = useState<number>(0);
-  const { get: getPlaylist } = useGetRequest(SpotifyApiUrlsGet.GET_PLAYLIST_TRACKS);
-  const playlistQuery = useQuery({ queryKey: ["playlist", playlistId], queryFn: () => getPlaylist({ playlist_id: playlistId }) });
-  // const playlistQuery = { data: { data: [] }, isLoading: true, isError: true };
-  const { del } = useDeleteRequest(SpotifyApiUrlsDelete.REMOVE_FROM_LIBRARY_PLAYLIST);
-  const { data, post } = usePostRequest(SpotifyApiUrlsPost.ADD_TRACKS_TO_PLAYLIST);
+  const res = useGetPlaylistTracks(playlistId);
+  const { data: playlistRes
+    , isLoading, isError, error } = res
+  console.log("res ", res);
+  const [playlist, setPlaylist] = useState<GetPlaylistTracksResponse | null>(null);
 
-  const [playlist, setPlaylist] = useState<Playlist>({
-    id: "",
-    name: "",
-    description: "",
-    owner: { id: "" },
-    images: [{ url: "" }],
-    tracks: { total: 0 },
-    snapshot_id: "",
-    public: false,
-    type: "",
-  });
-  const [rgb, setRgb] = useState<string>("");
-  async function execute(playlistId: string) {
-    // if (accessToken) {
-    //   const { playlistRes, tracks } = await fetchPlayableItems(accessToken, playlistId, type);
-    //   setPlaylist(playlistRes);
-    //   if (tracks.length > 0) {
-    //     setTracks(tracks);
-    //   } else {
-    //     setTracks([]);
-    //   }
-    // }
-  }
   useEffect(() => {
     if (playlist?.owner?.id === state?.userName?.id) {
       setIsPlaylistEditable(true);
@@ -83,25 +64,19 @@ const ReorderListPlaylist: React.FC<ReorderListPlaylistProps> = ({ edit, setEdit
       setIsPlaylistEditable(false);
     }
   }, [state.userName, playlist]);
-
   useEffect(() => {
-    execute(playlistId);
-    dispatch({
-      type: reducerActionTypes.SET_CHECKED_TRACKS,
-      payload: [],
-    });
-    // setEdit(false);
-  }, [playlistId, type]);
-  // getPlaylistTracks(accessToken, id)
-  if (playlistQuery.isLoading) {
-    return <p>loading....</p>;
+    (() => {
+      if (playlistRes?.tracks) {
+        setTracks((playlistRes as GetPlaylistTracksResponse).tracks.items?.map(item => item.track));
+      }
+    })();
+  }, [playlistRes])
+  if (isLoading) {
+    return <Spinner />
   }
-  if (playlistQuery.isError) {
-    return <p>error....</p>;
+  if (isError) {
+    return <ErrorMessage message={error.message} />
   }
-  console.log("playlistQuery ", playlistQuery);
-
-  const properTracks: any[] = playlistQuery.data?.tracks?.items.filter((item: any) => item).map((item: any) => item.track);
 
   const handleTrackClick = (track: Track) => {
     handlePlayTrack(tracks, track, dispatch);
@@ -109,18 +84,15 @@ const ReorderListPlaylist: React.FC<ReorderListPlaylistProps> = ({ edit, setEdit
 
   const handleDelete = async () => {
     try {
-      console.log("playlist.id ", playlist.id);
-      console.log("playlist.snapshot_id ", playlist.snapshot_id);
+      console.log("playlist.id ", playlist!.id);
+      console.log("playlist.snapshot_id ", playlist!.snapshot_id);
       // console.log("playlist.snapshot_id ",playlist.snapshot_id);
       // const removed = await removeFromPlaylist(playlist.id, checkedTracks, playlist.snapshot_id);
       const body = {
         tracks: checkedTracks,
-        snapshotId: playlist.snapshot_id,
+        snapshotId: playlist!.snapshot_id,
       };
-      const removed = await del({ playlist_id: [playlist.id] }, body);
-      console.log("removed ", removed);
 
-      await execute(playlistId);
       setEdit(false);
       dispatch({
         type: reducerActionTypes.SET_CHECKED_TRACKS,
@@ -140,15 +112,12 @@ const ReorderListPlaylist: React.FC<ReorderListPlaylistProps> = ({ edit, setEdit
     try {
       // const added = await addTracksToPlaylist(playlist.id, body);
       // const res = await added.json();
-      await post({ playlist_id: playlist.id }, { uris: checkedTracks.map((checked) => checked.uri) });
-      const res = await data.json();
-      if (res?.snapshot_id) {
-        setEdit(false);
-        dispatch({
-          type: reducerActionTypes.SET_CHECKED_TRACKS,
-          payload: [],
-        });
-      }
+
+      setEdit(false);
+      dispatch({
+        type: reducerActionTypes.SET_CHECKED_TRACKS,
+        payload: [],
+      });
     } catch (error) {
       console.log("yuda error ", error);
     }
@@ -160,11 +129,7 @@ const ReorderListPlaylist: React.FC<ReorderListPlaylistProps> = ({ edit, setEdit
       position: 0,
     };
     // const addToPlaylistRes = await addTracksToPlaylist(playlistId, body);
-    const addToPlaylistRes = await post({ playlist_id: playlistId }, body);
-    if (addToPlaylistRes.status === 200) {
-      execute(playlistId);
-    }
-    return addToPlaylistRes;
+
   }
 
   const onDragStart = (e: React.DragEvent<HTMLDivElement>, index: number) => {
@@ -226,7 +191,7 @@ const ReorderListPlaylist: React.FC<ReorderListPlaylistProps> = ({ edit, setEdit
 
   return (
     <>
-      <PlaylistHeader total={properTracks?.length} setPlaylist={setPlaylist} rgb={rgb} isPlaylistEditable={isPlaylistEditable} edit={edit} setEdit={setEdit} playlist={playlist} />
+      <PlaylistHeader total={tracks?.length} setPlaylist={setPlaylist} rgb={"0,0,0,0"} isPlaylistEditable={isPlaylistEditable} edit={edit} setEdit={setEdit} playlist={playlistRes!} />
       <Paper
         elevation={0}
         square
@@ -246,8 +211,7 @@ const ReorderListPlaylist: React.FC<ReorderListPlaylistProps> = ({ edit, setEdit
           }}
           component={Paper}
         >
-          {properTracks.map((track, index) => {
-            console.log("track ", track);
+          {tracks.map((track, index) => {
 
             const isChecked = !!checkedTracks.find((item) => item.uri === track.uri);
             return (
@@ -295,7 +259,7 @@ const ReorderListPlaylist: React.FC<ReorderListPlaylistProps> = ({ edit, setEdit
                     <ListItem sx={{ flex: 20, display: "flex", flexDirection: "column", alignItems: "start" }} role="none">
                       <Typography>{track?.name}</Typography>
                       <Typography variant="body2" gutterBottom>
-                        {track?.artists.map((artist: Artist) => artist.name).join(", ")}
+                        {track?.artists.map((artist: any) => artist.name).join(", ")}
                       </Typography>
                     </ListItem>
                     {/* <ListItem sx={{ flex: 20 }} role="none">
