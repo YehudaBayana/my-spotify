@@ -71,6 +71,13 @@ export const useGetUserProfile = () =>
     SpotifyApiUrls.GET_USER
   );
 
+  export const useGetCurrentUserPlaylists = (params?: { limit?: number; offset?: number }) =>
+    useGeneralizedQuery<GetUserTopItemsResponse<Playlist>>(
+      ['getCurrentUserPlaylists', JSON.stringify(params)],
+      SpotifyApiUrls.GET_CURR_USER_PLAYLISTS,
+      params ? stringifyParams(params) : undefined
+    );
+
 // User's Top Tracks and Artists
 export const useGetUserTopTracks = (params?: { time_range?: string; limit?: number; offset?: number }) =>
   useGeneralizedQuery<GetUserTopItemsResponse<Track>>(
@@ -87,11 +94,11 @@ export const useGetUserTopArtists = (params?: { time_range?: string; limit?: num
   );
 
 // Playlist Endpoints
-export const useGetPlaylistTracks = (playlistId: string) =>
+export const useGetPlaylistTracks = (playlistId: string, params:{limit?:number}={}) =>
   useGeneralizedQuery<GetPlaylistTracksResponse>(
     ['getPlaylistTracks', playlistId],
     SpotifyApiUrls.GET_PLAYLIST_TRACKS,
-    stringifyParams({ playlist_id: playlistId })
+    { playlist_id: playlistId, ...params }
   );
 
 export const useCreatePlaylist = (userId: string) =>

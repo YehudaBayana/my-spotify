@@ -29,3 +29,18 @@ console.log("params ",params);
 
   return { get };
 }
+
+
+export const getRequest = async (url:string): Promise<any> => {
+const accessToken = localStorage.getItem("access_token")
+    const headers = {
+      Authorization: `Bearer ${accessToken}`,
+      'Content-Type': 'application/json'
+    };
+    const response = await fetch(url, {
+      method: 'GET',
+      headers,
+    });
+    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+    return response.json();
+};

@@ -11,7 +11,7 @@ const Sidebar: React.FC = () => {
 
   if (isLoading) { return <Spinner /> }
   if (isError) { return <ErrorMessage message={error.message} /> }
-  console.log("data ", data);
+  // console.log("data ", data);
 
   const tracks: any = data?.items;
 

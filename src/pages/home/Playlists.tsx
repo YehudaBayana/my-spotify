@@ -16,18 +16,18 @@ type AspectRatios = Record<AspectRatioKeys, number>;
 const Playlists: React.FC = () => {
   const [aspectRatios, setAspectRatios] = React.useState<AspectRatios>({ main: 1, secondary: 1 });
   const { data: playlistData, isLoading, error } = useSearch("Queen - top", "playlist", { limit: 1 });
-  const { data: michaelRes } = useSearch("Michael Jackson", "playlist", { limit: 2 });
-  const { data: stromaeRes } = useSearch("Stromae", "playlist", { limit: 2 });
-  const { data: eltonRes } = useSearch("Elton John: Best Of", "playlist", { limit: 2 });
+  const { data: michaelRes } = useSearch("Michael Jackson", "playlist", { limit: 10 });
+  const { data: stromaeRes } = useSearch("Stromae", "playlist", { limit: 10 });
+  const { data: eltonRes } = useSearch("Elton John: Best Of", "playlist", { limit: 10 });
 
   if (isLoading) return <Spinner />;
   if (error) return <ErrorMessage message={error.message} />;
 
   const playlists = [
-    playlistData?.playlists.items[0],
-    michaelRes?.playlists.items[0],
-    stromaeRes?.playlists.items[0],
-    eltonRes?.playlists.items[0]
+    playlistData?.playlists.items.filter((item) => item)[0],
+    michaelRes?.playlists.items.filter((item) => item)[0],
+    stromaeRes?.playlists.items.filter((item) => item)[0],
+    eltonRes?.playlists.items.filter((item) => item)[0]
   ].filter(Boolean); // This removes any undefined items
 
   const handleImageLoad = (type: AspectRatioKeys) => (event: React.SyntheticEvent<HTMLImageElement, Event>) => {

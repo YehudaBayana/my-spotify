@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import Paper from "@mui/material/Paper";
 import { useLocation } from "react-router-dom";
 import List from "@mui/material/List";
@@ -9,17 +9,16 @@ import CheckedTracksActions from "./CheckedTracksActions";
 import "./songsList.css";
 import PlaylistHeader from "../playlistHeader/PlaylistHeader";
 import { StoreContext } from "../../../context/ContextProvider";
-import { Playlist, PlaylistUeryRes } from "../../../types";
 // import { addTracksToPlaylist, fetchPlayableItems, getPlaylistTracks, removeFromPlaylist, updatePlaylistOrder } from "../../../customHooks/useFetchMusicInfo";
 import { reducerActionTypes } from "../../../constants";
 import { handleCheckboxToggle, handlePlayTrack, msToMinutesAndSeconds } from "../../../utils";
 import { useQuery } from "@tanstack/react-query";
-import { useGetRequest } from "../../../api/CRUD/useGetRequest";
+import { getRequest } from "../../../api/CRUD/useGetRequest";
 // import { SpotifyApiUrlsDelete, SpotifyApiUrlsGet, SpotifyApiUrlsPost } from "../../../api/utils";
 import { usePostRequest } from "../../../api/CRUD/usePostRequest";
 import { useDeleteRequest } from "../../../api/CRUD/useDeleteRequest";
-import { Artist, GetPlaylistTracksResponse, Track } from '../../../types/spotifyResponses';
-import { useGetPlaylistTracks } from '../../../api/spotifyApi';
+import { Artist, GetPlaylistTracksResponse, Playlist, Track } from '../../../types/spotifyResponses';
+import { useAddTracksToPlaylist, useGetPlaylistTracks } from '../../../api/spotifyApi';
 import Spinner from '../../../components/Spinner';
 import ErrorMessage from '../../../components/ErrorMessage';
 
@@ -51,11 +50,51 @@ const ReorderListPlaylist: React.FC<ReorderListPlaylistProps> = ({ edit, setEdit
   const [isPlaylistEditable, setIsPlaylistEditable] = useState(false);
   const [sourceIndex, setSourceIndex] = useState<number>(0);
   const [destinationIndex, setDestinationIndex] = useState<number>(0);
+  const { mutate: addTracks } = useAddTracksToPlaylist(playlistId);
+
   const res = useGetPlaylistTracks(playlistId);
   const { data: playlistRes
     , isLoading, isError, error } = res
-  console.log("res ", res);
   const [playlist, setPlaylist] = useState<GetPlaylistTracksResponse | null>(null);
+  const boxRef = useRef<HTMLDivElement | null>(null);
+  const [isInView, setIsInView] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      async ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsInView(true);
+          console.log("Box has entered the viewport", playlist?.tracks);
+          if (playlistRes?.tracks.next) {
+            try {
+              const nextTracks = await getRequest(playlistRes?.tracks?.next);
+              console.log("nextTracks ", nextTracks);
+
+              // setTracks(old => ([...old, ...nextTracks.items.map((item:T)=>item.track)]))
+
+            } catch (error) {
+              console.log("error ", error);
+
+            }
+          }
+          // Trigger your event here
+        } else {
+          setIsInView(false);
+        }
+      },
+      { threshold: 0.1 } // Adjust the threshold as needed
+    );
+
+    if (boxRef.current) {
+      observer.observe(boxRef.current);
+    }
+
+    return () => {
+      if (boxRef.current) {
+        observer.unobserve(boxRef.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (playlist?.owner?.id === state?.userName?.id) {
@@ -112,7 +151,7 @@ const ReorderListPlaylist: React.FC<ReorderListPlaylistProps> = ({ edit, setEdit
     try {
       // const added = await addTracksToPlaylist(playlist.id, body);
       // const res = await added.json();
-
+      addTracks(body);
       setEdit(false);
       dispatch({
         type: reducerActionTypes.SET_CHECKED_TRACKS,
@@ -128,6 +167,7 @@ const ReorderListPlaylist: React.FC<ReorderListPlaylistProps> = ({ edit, setEdit
       uris: [track.uri],
       position: 0,
     };
+    addTracks(body);
     // const addToPlaylistRes = await addTracksToPlaylist(playlistId, body);
 
   }
@@ -291,7 +331,8 @@ const ReorderListPlaylist: React.FC<ReorderListPlaylistProps> = ({ edit, setEdit
           })}
         </List>
 
-        <Box margin={"auto"} height={200} width={500} my={4} display="flex" alignItems="center" justifyContent="center" gap={4} p={2}>
+        <Box ref={boxRef} margin={"auto"} height={200} width={500} my={4} display="flex" alignItems="center" justifyContent="center" gap={4} p={2}>
+          {isInView && <p>The Box is in view!</p>}
           <SearchToAdd playlistTracks={tracks} handleAddTrack={handleAddTrack} setTracks={setTracks} />
         </Box>
       </Paper>

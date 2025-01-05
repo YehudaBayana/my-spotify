@@ -45,7 +45,7 @@ snapshot_id:string;
   }
   
   export interface GetPlaylistTracksResponse extends Playlist {
-    tracks:{items: PlaylistTrack[],total:number};
+    tracks:{items: PlaylistTrack[],total:number, next:string};
   }
   
   export interface PlaylistTrack {

@@ -15,9 +15,13 @@ import AddIcon from '@mui/icons-material/Add';
 import { blue } from '@mui/material/colors';
 import { useContext } from 'react';
 import CreatePlaylist from '../../../components/CreatePlaylist';
-import { Playlist } from '../../../types';
+// import { Playlist } from '../../../types';
 import { StoreContext } from '../../../context/ContextProvider';
 import { myColors, reducerActionTypes } from '../../../constants';
+import { useGetCurrentUserPlaylists, useGetUserProfile } from '../../../api/spotifyApi';
+import Spinner from '../../../components/Spinner';
+import ErrorMessage from '../../../components/ErrorMessage';
+import { Playlist } from '../../../types/spotifyResponses';
 
 const emails: string[] = ['username@gmail.com', 'user02@gmail.com'];
 
@@ -43,7 +47,15 @@ interface SimpleDialogProps {
 function SimpleDialog({ onClose, selectedValue, open, handleAddToPlaylist, checkedTracks }: SimpleDialogProps) {
   const { state } = useContext(StoreContext);
   const [openNewPlaylist, setOpenNewPlaylist] = React.useState(false);
-  const userOwnedPlaylists = state.userPlaylists.filter((playlist: Playlist) => playlist.owner.id === state.userName.id);
+  const { data, isError, isLoading } = useGetCurrentUserPlaylists({ limit: 10 })
+  const { data: profileRes, isLoading: isLoading2, isError: isError2 } = useGetUserProfile()
+  if (isLoading || isLoading2) {
+    return <Spinner />
+  }
+  if (isError || isError2) {
+    return <ErrorMessage message='current user playlists' />
+  }
+  const userOwnedPlaylists = data?.items.filter((playlist) => playlist.owner.id === profileRes?.id);
 
   const handleClose = () => {
     onClose(selectedValue);
@@ -62,7 +74,7 @@ function SimpleDialog({ onClose, selectedValue, open, handleAddToPlaylist, check
         <CreatePlaylist checkedTracks={checkedTracks} open={openNewPlaylist} setOpen={setOpenNewPlaylist} />
         <DialogTitle>Choose playlist</DialogTitle>
         <List sx={{ pt: 0 }}>
-          {userOwnedPlaylists.map((playlist: Playlist) => (
+          {userOwnedPlaylists!.map((playlist) => (
             <ListItem disableGutters key={playlist.id}>
               <ListItemButton onClick={() => handleListItemClick(playlist)}>
                 {playlist?.images?.length > 0 ? (
@@ -130,7 +142,7 @@ export default function CheckedTracksActions({ handleDelete, handleAddToPlaylist
       <Grid container spacing={2}>
         <Grid justifyContent="center" alignContent="center" xs={4} md={4}>
           <Tooltip title="cancel" placement="top">
-            <IconButton 
+            <IconButton
               onClick={() =>
                 dispatch({
                   type: reducerActionTypes.SET_CHECKED_TRACKS,

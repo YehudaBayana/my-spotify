@@ -14,6 +14,7 @@ import { makeArrayUnique } from "../utils";
 import { Avatar, ListItemAvatar } from "@mui/material";
 import { Album, Playlist } from "../types";
 import { useQuery } from "@tanstack/react-query";
+import { useGetCurrentUserPlaylists } from '../api/spotifyApi';
 
 // import { Album, Playlist } from 'src/types';
 
@@ -30,6 +31,7 @@ const LibraryList: React.FC<LibraryListProps> = ({ open, search, sortBy }) => {
     mouseX: number;
     mouseY: number;
   } | null>(null);
+  const { data, isError, isLoading } = useGetCurrentUserPlaylists({ limit: 10 })
   // const userAlbumsQuery = useQuery({ queryKey: ["userAlbums"], queryFn: () => useGetRequest(SpotifyApiUrlsGet.GET_USER_ALBUMS) });
   const userPlaylistsQuery = useQuery({
     queryKey: ["userPlaylists", userName.id],
@@ -38,13 +40,13 @@ const LibraryList: React.FC<LibraryListProps> = ({ open, search, sortBy }) => {
   const [menuOptions, setMenuOptions] = useState<Array<{ label: string; action: () => void }>>([]);
   const [selectedItem, setSelectedItem] = useState<any>(null); // Adjust type as per your item structure
   const [openDialog, setOpenDialog] = useState(false);
-  // if (userAlbumsQuery.isLoading || userPlaylistsQuery.isLoading) {
-  //   return <p>loading...</p>;
-  // }
-  // if (userAlbumsQuery.isError || userPlaylistsQuery.isError) {
-  //   return <p>error</p>;
-  // }
-  let filteredPlaylists: any = [];
+  if (isLoading) {
+    return <p>loading...</p>;
+  }
+  if (isError) {
+    return <p>error</p>;
+  }
+  let filteredPlaylists = data?.items;
   // if (userPlaylistsQuery?.data?.data?.items?.length > 0 && userAlbumsQuery?.data?.data.items?.length > 0) {
   //   filteredPlaylists = [...userPlaylistsQuery.data?.data?.items, ...userAlbumsQuery.data?.data.items.map((item: any) => item.album)].filter(
   //     (item) => item.name.toLowerCase().indexOf(search.toLowerCase()) > -1
@@ -105,7 +107,7 @@ const LibraryList: React.FC<LibraryListProps> = ({ open, search, sortBy }) => {
     <List sx={{ background: myColors.background }}>
       {/* <AreYouSurePrompt open={openDialog} onClose={handleDialogClose} onConfirm={handleDeleteConfirm} /> */}
       <RightClickMenu menuOptions={menuOptions} contextMenu={contextMenu} setContextMenu={setContextMenu}>
-        {handleSortBy(filteredPlaylists).map((item, i) => {
+        {handleSortBy(filteredPlaylists!).map((item, i) => {
           return item ? (
             <Link key={item.id} style={{ textDecoration: "none", color: "black" }} to={`/${item.type}/${item.id}`}>
               <ListItem onContextMenu={(event) => handleContextMenu(event, item)} disablePadding sx={{ display: "block" }}>

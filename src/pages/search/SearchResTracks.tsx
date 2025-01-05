@@ -8,11 +8,11 @@ import AddIcon from "@mui/icons-material/Add";
 // import { Playlist, Track } from 'src/types';
 // import { reducerActionTypes } from 'src/constants';
 import CheckedTracksActions from "../playlist/songsList/CheckedTracksActions";
-import { Playlist } from "../../types";
+// import { Playlist } from "../../types";
 import { StoreContext } from "../../context/ContextProvider";
 // import { addTracksToPlaylist } from "../../customHooks/useFetchMusicInfo";
 import { reducerActionTypes } from "../../constants";
-import { Track } from '../../types/spotifyResponses';
+import { Playlist, Track } from '../../types/spotifyResponses';
 
 // interface Track {
 //   id: string;
